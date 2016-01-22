@@ -1,0 +1,61 @@
+<apex:page sidebar="false" controller="FileUploader">
+   <apex:form >
+      <apex:pagemessages />
+      <apex:pageBlock >
+             <center>
+              <apex:inputFile value="{!contentFile}" filename="{!nameFile}" /> <apex:commandButton action="{!ReadFile}" value="Upload File" id="theButton" style="width:70px;" />
+             </center>  
+       <apex:inputText value="{!searchid}"/>
+       <apex:commandButton value="Search record" action="{!SearchrecordonAccount}"/><br/><br/>
+       
+       <apex:pageblockTable value="{!records}" var="recs">
+       
+       <apex:column headerValue="Heading 1">
+              <apex:outputField value="{!recs.Name}"/>
+          </apex:column>
+          <apex:column headerValue="Heading 2">
+              <apex:outputField value="{!recs.ShippingStreet}"/>
+          </apex:column>
+          <apex:column headerValue="Heading 3">
+              <apex:outputField value="{!recs.ShippingCity}"/>
+          </apex:column>
+          <apex:column headerValue="Heading 4">
+              <apex:outputField value="{!recs.ShippingState}"/>
+          </apex:column>
+          <apex:column headerValue="Heading 5">
+              <apex:outputField value="{!recs.ShippingPostalCode}"/>
+          </apex:column>
+          <apex:column headerValue="Heading 6">
+              <apex:outputField value="{!recs.ShippingCountry}"/>
+          </apex:column>
+       
+       
+       </apex:pageblockTable><br/><br/><br/>
+       
+      <apex:pageblocktable value="{!uploadedAccounts}" var="acc" >
+          <!--<apex:column headerValue="Id">
+              <apex:outputField value="{!acc.id}"/>
+          </apex:column>-->
+          <apex:column headerValue="Heading 1">
+              <apex:outputField value="{!acc.Name}"/>
+          </apex:column>
+          <apex:column headerValue="Heading 2">
+              <apex:outputField value="{!acc.ShippingStreet}"/>
+          </apex:column>
+          <apex:column headerValue="Heading 3">
+              <apex:outputField value="{!acc.ShippingCity}"/>
+          </apex:column>
+          <apex:column headerValue="Heading 4">
+              <apex:outputField value="{!acc.ShippingState}"/>
+          </apex:column>
+          <apex:column headerValue="Heading 5">
+              <apex:outputField value="{!acc.ShippingPostalCode}"/>
+          </apex:column>
+          <apex:column headerValue="Heading 6">
+              <apex:outputField value="{!acc.ShippingCountry}"/>
+          </apex:column>
+      </apex:pageblocktable> 
+      
+      </apex:pageBlock>       
+   </apex:form>   
+</apex:page>

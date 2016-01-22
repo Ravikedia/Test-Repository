@@ -1,0 +1,1451 @@
+<apex:page >
+Hello>
+<apex:includeScript value="{!$Resource.Scroll}"/>
+    <script>
+    $('.click').click(function(e)
+    {
+       // prevent default action
+       e.preventDefault();
+       // get id of target div (placed in href attribute of anchor element)
+       // and pass it to the scrollToElement function
+       // also, use 2000 as an argument for the scroll speed (2 seconds, 2000 milliseconds)
+       scrollToElement( $(this).attr('href'), 1500 );
+    });
+
+    var scrollToElement = function(el, ms){
+        var speed = (ms) ? ms : 1000;
+        $('html,body').animate({
+            scrollTop: $(el).offset().top
+        }, speed);
+    }
+    </script>
+ 
+    
+  <html>
+        <a href="#el1" class="click">Click this to scroll to element 1!</a><br />
+        <a href="#el2" class="click">Click this to scroll to element 2!</a><br />
+        <a href="#el3" class="click">Click this to scroll to element 3!</a><br />
+        
+        <div id="el1">
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        
+        
+        
+        
+        
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        
+        
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        
+        
+        
+        
+        
+        
+        
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+          element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        
+        
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+          element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        
+        
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+          element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        
+        
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+          element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        
+        
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+          element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        
+        
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+          element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        
+        
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>  element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        
+        
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+          element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        
+        
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+          element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        
+        
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+          element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        
+        
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+          element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        
+        
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+          element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        
+        
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+          element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        
+        
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+          element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        
+        
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+          element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        element 1
+        
+        
+        
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        
+        
+        </div>
+        <div id="el2">element 2</div>
+        <div id="el3">element 3</div>
+    </html>
+
+</apex:page>

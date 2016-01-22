@@ -1,0 +1,110 @@
+<apex:page controller="Sample" sidebar="false" >
+<style type="text/css">
+    .hideButton{display:none;}
+</style>
+<apex:form >    
+    <apex:pageblock title="Contact Detail" mode="inlineEdit">
+        <apex:pageblockSection columns="4" >
+            <apex:pageblockSectionItem >
+                Contact First Name:
+            </apex:pageblockSectionItem>  
+            <apex:pageblockSectionItem >
+                <apex:outputField value="{!contactDetail.FirstName}">
+                    <apex:inlineEditSupport event="ondblclick" showOnEdit="Save,Cancel" hideOnEdit="Edit"/>
+                </apex:outputField>
+            </apex:pageblockSectionItem>    
+            <apex:pageblockSectionItem >
+                Contact Email:
+            </apex:pageblockSectionItem>  
+            <apex:pageblockSectionItem >
+                <apex:outputField value="{!contactDetail.Email}">
+                    <apex:inlineEditSupport event="ondblclick" showOnEdit="Save,Cancel" hideOnEdit="Edit"/>
+                </apex:outputField>                
+            </apex:pageblockSectionItem>   
+            <apex:pageblockSectionItem >
+                Contact Last Name:
+            </apex:pageblockSectionItem>  
+            <apex:pageblockSectionItem >
+                <apex:outputField value="{!contactDetail.LastName}">
+                    <apex:inlineEditSupport event="ondblclick" showOnEdit="Save,Cancel" hideOnEdit="Edit"/>
+                </apex:outputField>                
+            </apex:pageblockSectionItem>              
+            <apex:pageblockSectionItem >
+                Contact Mobile Number:
+            </apex:pageblockSectionItem>  
+            <apex:pageblockSectionItem >
+                <apex:outputField value="{!contactDetail.MobilePhone}">
+                    <apex:inlineEditSupport event="ondblclick" showOnEdit="Save,Cancel" hideOnEdit="Edit"/>
+                </apex:outputField>                
+            </apex:pageblockSectionItem>   
+            <apex:pageblockSectionItem >
+                Account:
+            </apex:pageblockSectionItem>  
+            <apex:pageblockSectionItem >
+                <apex:outputField value="{!contactDetail.AccountId}">
+                    <apex:inlineEditSupport event="ondblclick" showOnEdit="Save,Cancel" hideOnEdit="Edit"/>
+                </apex:outputField>                
+            </apex:pageblockSectionItem>                         
+            <apex:pageblockSectionItem >
+                Contact Phone Number:
+            </apex:pageblockSectionItem>  
+            <apex:pageblockSectionItem >
+                <apex:outputField value="{!contactDetail.Phone}">
+                    <apex:inlineEditSupport event="ondblclick" showOnEdit="Save,Cancel" hideOnEdit="Edit"/>
+                </apex:outputField>                
+            </apex:pageblockSectionItem> 
+            <apex:pageblockSectionItem >
+                Department:
+            </apex:pageblockSectionItem>  
+            <apex:pageblockSectionItem >
+                <apex:outputField value="{!contactDetail.Department}">
+                    <apex:inlineEditSupport event="ondblclick" showOnEdit="Save,Cancel" hideOnEdit="Edit"/>
+                </apex:outputField>                
+            </apex:pageblockSectionItem>             
+            <apex:pageblockSectionItem >
+                Other Phone:
+            </apex:pageblockSectionItem>  
+            <apex:pageblockSectionItem >
+                <apex:outputField value="{!contactDetail.OtherPhone}">
+                    <apex:inlineEditSupport event="ondblclick" showOnEdit="Save,Cancel" hideOnEdit="Edit"/>
+                </apex:outputField>                
+            </apex:pageblockSectionItem>    
+            <apex:pageblockSectionItem >
+                Description:
+            </apex:pageblockSectionItem>  
+            <apex:pageblockSectionItem >
+                <apex:outputField value="{!contactDetail.Description}">
+                    <apex:inlineEditSupport event="ondblclick" showOnEdit="Save,Cancel" hideOnEdit="Edit"/>
+                </apex:outputField>                
+            </apex:pageblockSectionItem>                                  
+            <apex:pageblockSectionItem >
+                Fax:
+            </apex:pageblockSectionItem>  
+            <apex:pageblockSectionItem >
+                <apex:outputField value="{!contactDetail.Fax}">
+                    <apex:inlineEditSupport event="ondblclick" showOnEdit="Save,Cancel" hideOnEdit="Edit"/>
+                </apex:outputField>                
+            </apex:pageblockSectionItem>                                                                                                                                       
+        </apex:pageblockSection>  
+        <apex:pageBlockSection title="System Information" columns="4" >
+            <apex:pageblockSectionItem >
+                Created By
+            </apex:pageblockSectionItem>
+            <apex:pageblockSectionItem >
+                <apex:outputField value="{!contactDetail.CreatedById}"/>
+            </apex:pageblockSectionItem>
+            <apex:pageblockSectionItem >
+                Last Modified By
+            </apex:pageblockSectionItem>
+            <apex:pageblockSectionItem >
+                <apex:outputField value="{!contactDetail.LastModifiedById}"/>
+            </apex:pageblockSectionItem>            
+        </apex:pageBlockSection>      
+        <apex:pageblockButtons >
+            <apex:commandButton value="Edit" id="Edit" action="{!Editcontact}"/>
+            <apex:commandButton value="Save" id="Save" styleClass="hideButton" action="{!updateContact}" />
+            <apex:commandButton value="Cancel" id="Cancel" styleClass="hideButton"/>
+        </apex:pageblockButtons>        
+    </apex:pageblock>
+</apex:form> 
+</apex:page>

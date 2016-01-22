@@ -1,0 +1,10 @@
+<apex:page controller="MasterDetailRelatedClass">
+    <apex:form >  
+      <apex:pageMessages id="pageMessage"/>
+      <apex:pageBlock title="Relationship related">
+          <apex:inputText value="{!masterobj}" label="Enter master object Api name"/>
+          <apex:inputText value="{!childobj}" label="Enter child object Api name"/>
+          <apex:commandButton value="Retrive records" action="{!Retriverecord}" rerender="pageMessage"/>
+      </apex:pageBlock>
+    </apex:form>     
+</apex:page>

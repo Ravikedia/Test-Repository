@@ -1,0 +1,3 @@
+<apex:page controller="imagecontroller">
+ <apex:image url="{!myimageurl}" width="256" height="256"/>
+</apex:page>

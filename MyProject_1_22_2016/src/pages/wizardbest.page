@@ -1,0 +1,135 @@
+<apex:page controller="wizardcontroller" >
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
+    <!--<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css" />-->
+  <!--  <script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js">
+</script>
+    <script>
+        var j$ = jQuery.noConflict();
+        j$(document).ready(function()
+        {
+        j$("#register").click(function()
+        {
+            registration();
+        });
+       j$("#reg").click(function(){
+           reg();
+        });
+       j$("#reg3").click(function(){
+          alert(" i am clicked step3 ");
+        });
+          j$("#reg4").click(function(){
+          alert(" i am clicked step4 ");
+        });
+         j$("#reg5").click(function(){
+          alert(" i am clicked step5 ");
+        });
+        });
+    </script>
+      <script>
+      var j$ = jQuery.noConflict();
+          j$(document).ready(function(){
+              j$("[id$=a]").click(function()
+              {
+                  var name = j$("[id$=username]").val();
+                  var password = j$("[id$=password]").val();
+                  if ((name.length == 0))
+                  {
+                  alert("Please enter your name");
+                  return false;
+                  }
+                  if ((password.length == 0))
+                  {
+                  alert("Please enter your pasword");
+                  return false;
+                  }
+                  
+             });
+           });
+    </script>
+
+    <apex:form >
+    <apex:actionFunction name="reg" action="{!Step1}" reRender="steps" />
+    <apex:actionFunction name="registration" action="{!Step2}" reRender="steps" />
+    <apex:actionFunction name="reg3" action="{!Step3}" reRender="steps" />
+    </apex:form>
+    <apex:outputPanel id="steps" >
+     
+    
+
+    <table  width="100%" align="center" border="1" >
+    <tr>
+    <td width="30%" bgcolor="cyan" rowspan="5" >
+    
+        <ol  class="nav nav-pills nav-stacked"  >
+          <li class="active" id="reg" ><a href=""><span class="glyphicon glyphicon-play"></span>  Step 1<span class="glyphicon glyphicon-ok-circle"></span> &nbsp;&nbsp;&nbsp; Student registration </a></li><br/>
+          <li class="active" id="register" ><a href=""><span class="glyphicon glyphicon-play"></span> Step 2   &nbsp;&nbsp;&nbsp; Student  qualification</a></li><br/>
+          <li class="active" id="reg3"><a href=""><span class="glyphicon glyphicon-play"></span> Step 3 &nbsp;&nbsp;&nbsp;   Student address</a></li><br/>
+          <li class="active" id="reg4" ><a href=""><span class="glyphicon glyphicon-play"></span> Step 4 &nbsp;&nbsp;&nbsp;   Student age</a></li><br/>
+          <li class="active" id="reg5"><a href=""><span class="glyphicon glyphicon-play"></span> Step 5  &nbsp;&nbsp;&nbsp;  Student's Collage name </a></li><br/><br/>
+          <br/><br/><br/>
+        </ol>
+    </td >
+    <apex:outputpanel rendered="{!checkstep1}">
+        
+            <apex:composition template="step1">
+                <apex:define name="step1">
+                </apex:define>
+            </apex:composition>
+      
+    </apex:outputpanel>
+          
+          
+     <td bgcolor="silver">
+     <apex:outputpanel rendered="{!check}"> 
+     
+        
+             <apex:composition template="Step2">
+                 <apex:define name="step2"></apex:define>
+             </apex:composition>
+              
+             </apex:outputpanel>
+             
+          <apex:outputpanel rendered="{!checkstep3}">        
+       
+           
+                <apex:composition template="Step3">
+                    <apex:define name="step3"></apex:define>
+                </apex:composition>
+          </apex:outputpanel>
+          
+          
+          <apex:outputpanel rendered="{!checkstep4}">        
+       
+           
+                <apex:composition template="Step4">
+                    <apex:define name="step4"></apex:define>
+                </apex:composition>
+          </apex:outputpanel>
+         
+          <apex:outputpanel rendered="{!checkstep5}">        
+       
+       
+           
+                <apex:composition template="Step5">
+                    <apex:define name="step5"></apex:define>
+                </apex:composition>
+          </apex:outputpanel>
+          
+          
+      </td>
+ </tr>
+ 
+ 
+    <tr>
+        <td align="center" bgcolor="silver">
+            <apex:form >
+                <apex:commandButton value="OK" action="{!Recordmaintains}" id="a" />
+            </apex:form>
+        </td>
+    </tr>
+
+    </table>
+</apex:outputpanel>
+ 
+</apex:page>

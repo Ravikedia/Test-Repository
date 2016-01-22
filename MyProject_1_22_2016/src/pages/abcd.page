@@ -1,0 +1,204 @@
+<apex:page tabStyle="Task" id="page1" standardController="task" extensions="LatestTask"  standardStylesheets="false">
+ 
+ <script>
+      function togglePanel(panelType)
+        {
+            if(panelType == 'Daily') 
+            {               
+                document.getElementById('pnlDaily').style.visibility = 'visible';
+                document.getElementById('pnlWeekly').style.visibility = 'hidden';
+                document.getElementById('pnlMonthly').style.visibility = 'hidden'; 
+                              
+                document.getElementById('pnlDaily').style.display = 'block';
+                document.getElementById('pnlWeekly').style.display = 'none';
+                document.getElementById('pnlMonthly').style.display = 'none'; 
+            }
+            else if(panelType == 'Weekly')
+            {
+                document.getElementById('pnlDaily').style.visibility = 'hidden';
+                document.getElementById('pnlWeekly').style.visibility = 'visible';
+                document.getElementById('pnlMonthly').style.visibility = 'hidden'; 
+                              
+                document.getElementById('pnlDaily').style.display = 'none';
+                document.getElementById('pnlWeekly').style.display = 'block';
+                document.getElementById('pnlMonthly').style.display = 'none'; 
+            }
+            else if(panelType == 'Monthly')
+            {                                               
+                document.getElementById('pnlDaily').style.visibility = 'hidden';
+                document.getElementById('pnlWeekly').style.visibility = 'hidden';
+                document.getElementById('pnlMonthly').style.visibility = 'visible'; 
+                              
+                document.getElementById('pnlDaily').style.display = 'none';
+                document.getElementById('pnlWeekly').style.display = 'none';
+                document.getElementById('pnlMonthly').style.display = 'block'; 
+                
+                document.getElementById('radioDayNo').checked = true;
+                toggleMonthItems(1);
+            }                    
+            document.getElementById("{!$Component.SearchForm.selectedFrequency}").value = panelType;
+        }
+      
+      </script>
+<apex:form id="form1">
+<apex:pageBlock id="pb1">
+
+<apex:pageBlockButtons >
+<apex:commandButton action="{!Save}" value="Save" title="Save"/>
+<apex:commandButton action="{!SaveNewTask}" value="Save & New Task" title="Save & New Task"/>
+<apex:commandButton action="{!SaveNewEvent}" value="Save & New Event" title="Save & New Event"/>
+<apex:commandButton action="{!Cancel}" value="Cancel" title="Cancel"/>
+</apex:pageBlockButtons>
+<div style="border: 0px solid rgb(0,191,255); width:100%;height:25px; background:#00bfff;"><p style="margin-left:20px;"><table width="100%"><tr><td  align="left" width="50%"><B>Task Information </B></td><td align="right" width="30%"><b>Required Information</b></td></tr></table></p></div>
+<apex:pageBlockSection id="pbs1" columns="2">
+
+                <apex:inputField value="{!ta.ownerid}"/>
+                <apex:inputField value="{!task.Status}"/>
+                <apex:inputField value="{!task.Subject}"/>
+                <apex:outputPanel >
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <apex:outputLabel >Name  </apex:outputLabel>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+               
+                <apex:commandLink value="  Add Contacts"/>
+                </apex:outputPanel>
+                <apex:inputField value="{!task.ActivityDate}" onfocus="DatePicker.pickDate(false, 'DueDate', false);"/>
+                <apex:inputField value="{!ta.WhatId}"/>
+                <apex:inputField value="{!task.Priority}" />
+                
+                
+
+</apex:pageBlockSection>
+
+<div style="border: 0px solid rgb(0,191,255); width:100%;height:25px; background:#00bfff;"><p style="margin-left:20px;"><table width="100%"><tr><td  align="left" width="50%"><B>Description Information </B></td></tr></table></p></div>
+<apex:pageblockSection id="pbs2" columns="1"  >
+<apex:inputField value="{!task.Description}  " />
+<!--<apex:inputfield value="{!task.SendNotificationEmail__c}"/>--> 
+</apex:pageblockSection>
+
+
+<div style="border: 0px solid rgb(0,191,255); width:100%;height:25px; background:#00bfff;"><p style="margin-left:20px;"><table width="100%"><tr><td  align="left" width="50%"><B>Recurrence </B></td></tr></table></p></div>
+
+<apex:pageBlockSection id="pbs3" >
+<apex:inputfield value="{!task.IsRecurrence}" onclick="CheckDiv(this.checked)"/> 
+</apex:pageBlockSection>
+ 
+  <div id="Recurrencediv"  style="display:none;">   
+            <apex:pageBlockSection columns="1" id="pbs4" > 
+                <apex:pageBlockSectionItem id="pbsi1" >
+                    <apex:panelGroup >
+                    <table border="0px">
+                            <tr>
+                                <td style="width:120px;">&nbsp;</td>
+                                <td><b>Frequency</b></td>
+                                <td style="width:80px;"> 
+                                                                                                                                   
+                                <div >
+                                       <!-- <input type="radio" id="Dailydiv" checked="true"  name="checkrctype" value="RecursEveryWeekday"/>Daily<br/>
+                                        <input type="radio" name="checkrctype"  value="Weekly"/>Weekly<br/>
+                                        <input type="radio" name="checkrctype"  value="RecursMonthly"/>Monthly<br/>
+                                        <input type="radio" name="checkrctype"  value="RecursYearly"/>Yearly-->
+                                        <apex:repeat var="frequencyType" value="{!frequencyTypeList}">
+                                        <input id="radio{!HTMLENCODE(frequencyType.Value)}" type="radio" name="frequencyType" value="{!HTMLENCODE(frequencyType.value)}" onclick="javascript:togglePanel('{!JSENCODE(frequencyType.value)}')"
+                                        onchange="document.getElementById('{!JSENCODE($Component.selectedFrequency)}').value = '{!JSENCODE(frequencyType.value)}';"/>
+                                        <label for="radio{!frequencyType.Value}">{!frequencyType.Name}</label><br/>
+                                        </apex:repeat>
+                                </div>
+                               </td>
+                               <td>
+                               <div name="Daily" id="Daily">
+                                                                
+                                            <input type="radio" id="RecursEveryWeekday"   name="recurrencetype" value="RecursEveryWeekday"/>Every weekday<br/>
+                                            <input type="radio" id="RecursDaily"   name="recurrencetype" value="RecursDaily"/>Every
+                               </div>
+                               </td>
+                                       </tr>  
+                                </table> 
+                                </apex:panelGroup>
+                                    </apex:pageBlockSectionItem>
+                                       </apex:pageBlockSection> 
+                                        </div> 
+                                      <script>
+                                          document.getElementById('radioDaily').checked = true;
+                                          document.getElementById('RecursEveryWeekday').checked = true;
+                                          document.getElementById("{!JSENCODE($Component.selectedFrequency)}").value = 'Daily';
+                                          
+                                          
+                                      </script>
+                
+<apex:pageBlockSection >
+<apex:inputField value="{!task.RecurrenceStartDateOnly}  " />
+</apex:pageBlockSection>
+<apex:pageBlockSection >
+<apex:inputField value="{!task.RecurrenceEndDateOnly}  " />
+</apex:pageBlockSection>
+<div style="border: 0px solid rgb(0,191,255); width:100%;height:25px; background:#00bfff;"><p style="margin-left:20px;"><table width="100%"><tr><td  align="left" width="50%"><B>Reminder </B></td></tr></table></p></div>
+
+<apex:inputField value="{!task.IsReminderSet }"   />
+<!--<apex:inputField value="{!ta.ReminderDate__c}" onfocus="DatePicker.pickDate(false, 'DueDate', false);" />-->
+
+<div class="datePicker" id="datePicker">
+<div class="dateBar">
+<img src="/s.gif" alt="Previous Month"  class="calLeft" onblur="this.className = 'calLeft';" onclick="DatePicker.datePicker.prevMonth();" onfocus="this.className = 'calLeftOn';" onmouseout="this.className = 'calLeft';" onmouseover="this.className = 'calLeftOn';" title="Previous Month"/>
+<select  id="calMonthPicker" name="calMonthPicker" title="Month">
+    <option value="0">January</option>
+    <option value="1">February</option>
+    <option value="2">March</option>
+    <option value="3">April</option>
+    <option value="4">May</option>
+    <option value="5">June</option>
+    <option value="6">July</option>
+    <option value="7">August</option>
+    <option value="8">September</option>
+    <option value="9">October</option>
+    <option value="10">November</option>
+    <option value="11">December</option>
+</select>
+<img src="/s.gif" alt="Next Month"  class="calRight" onblur="this.className = 'calRight';" onclick="DatePicker.datePicker.nextMonth();" onfocus="this.className = 'calRightOn';" onmouseout="this.className = 'calRight';" onmouseover="this.className = 'calRightOn';" title="Next Month"/><select  id="calYearPicker" name="calYearPicker" title="Year">
+    <option value="2009">2009</option>
+    <option value="2010">2010</option>
+    <option value="2011">2011</option>
+    <option value="2012">2012</option>
+    <option value="2013">2013</option>
+    <option value="2014">2014</option>
+    <option value="2015">2015</option>
+</select>
+</div>
+<div class="calBody">
+<!--<table  class="calDays" border="0" cellpadding="0" cellspacing="0" id="datePickerCalendar"><tr><TH class="dayOfWeek" scope="col">Sun</TH><TH class="dayOfWeek" scope="col">Mon</TH><TH class="dayOfWeek" scope="col">Tue</TH><TH class="dayOfWeek" scope="col">Wed</TH><TH class="dayOfWeek" scope="col">Thu</TH><TH class="dayOfWeek" scope="col">Fri</TH><TH class="dayOfWeek" scope="col">Sat</TH></tr>
+<tr class="calRow" id="calRow1"><td onblur="hiOff(this);" onclick="DatePicker.datePicker.selectDate(this);" onfocus="hiOn(this);" onmouseout="hiOff(this);" onmouseover="hiOn(this);">&nbsp;</td><td onblur="hiOff(this);" onclick="DatePicker.datePicker.selectDate(this);" onfocus="hiOn(this);" onmouseout="hiOff(this);" onmouseover="hiOn(this);">&nbsp;</td><td onblur="hiOff(this);" onclick="DatePicker.datePicker.selectDate(this);" onfocus="hiOn(this);" onmouseout="hiOff(this);" onmouseover="hiOn(this);">&nbsp;</td><td onblur="hiOff(this);" onclick="DatePicker.datePicker.selectDate(this);" onfocus="hiOn(this);" onmouseout="hiOff(this);" onmouseover="hiOn(this);">&nbsp;</td><td onblur="hiOff(this);" onclick="DatePicker.datePicker.selectDate(this);" onfocus="hiOn(this);" onmouseout="hiOff(this);" onmouseover="hiOn(this);">&nbsp;</td><td onblur="hiOff(this);" onclick="DatePicker.datePicker.selectDate(this);" onfocus="hiOn(this);" onmouseout="hiOff(this);" onmouseover="hiOn(this);">&nbsp;</td><td onblur="hiOff(this);" onclick="DatePicker.datePicker.selectDate(this);" onfocus="hiOn(this);" onmouseout="hiOff(this);" onmouseover="hiOn(this);">&nbsp;</td></tr>
+<tr class="calRow" id="calRow2"><td onblur="hiOff(this);" onclick="DatePicker.datePicker.selectDate(this);" onfocus="hiOn(this);" onmouseout="hiOff(this);" onmouseover="hiOn(this);">&nbsp;</td><td onblur="hiOff(this);" onclick="DatePicker.datePicker.selectDate(this);" onfocus="hiOn(this);" onmouseout="hiOff(this);" onmouseover="hiOn(this);">&nbsp;</td><td onblur="hiOff(this);" onclick="DatePicker.datePicker.selectDate(this);" onfocus="hiOn(this);" onmouseout="hiOff(this);" onmouseover="hiOn(this);">&nbsp;</td><td onblur="hiOff(this);" onclick="DatePicker.datePicker.selectDate(this);" onfocus="hiOn(this);" onmouseout="hiOff(this);" onmouseover="hiOn(this);">&nbsp;</td><td onblur="hiOff(this);" onclick="DatePicker.datePicker.selectDate(this);" onfocus="hiOn(this);" onmouseout="hiOff(this);" onmouseover="hiOn(this);">&nbsp;</td><td onblur="hiOff(this);" onclick="DatePicker.datePicker.selectDate(this);" onfocus="hiOn(this);" onmouseout="hiOff(this);" onmouseover="hiOn(this);">&nbsp;</td><td onblur="hiOff(this);" onclick="DatePicker.datePicker.selectDate(this);" onfocus="hiOn(this);" onmouseout="hiOff(this);" onmouseover="hiOn(this);">&nbsp;</td></tr>
+<tr class="calRow" id="calRow3"><td onblur="hiOff(this);" onclick="DatePicker.datePicker.selectDate(this);" onfocus="hiOn(this);" onmouseout="hiOff(this);" onmouseover="hiOn(this);">&nbsp;</td><td onblur="hiOff(this);" onclick="DatePicker.datePicker.selectDate(this);" onfocus="hiOn(this);" onmouseout="hiOff(this);" onmouseover="hiOn(this);">&nbsp;</td><td onblur="hiOff(this);" onclick="DatePicker.datePicker.selectDate(this);" onfocus="hiOn(this);" onmouseout="hiOff(this);" onmouseover="hiOn(this);">&nbsp;</td><td onblur="hiOff(this);" onclick="DatePicker.datePicker.selectDate(this);" onfocus="hiOn(this);" onmouseout="hiOff(this);" onmouseover="hiOn(this);">&nbsp;</td><td onblur="hiOff(this);" onclick="DatePicker.datePicker.selectDate(this);" onfocus="hiOn(this);" onmouseout="hiOff(this);" onmouseover="hiOn(this);">&nbsp;</td><td onblur="hiOff(this);" onclick="DatePicker.datePicker.selectDate(this);" onfocus="hiOn(this);" onmouseout="hiOff(this);" onmouseover="hiOn(this);">&nbsp;</td><td onblur="hiOff(this);" onclick="DatePicker.datePicker.selectDate(this);" onfocus="hiOn(this);" onmouseout="hiOff(this);" onmouseover="hiOn(this);">&nbsp;</td></tr>
+<tr class="calRow" id="calRow4"><td onblur="hiOff(this);" onclick="DatePicker.datePicker.selectDate(this);" onfocus="hiOn(this);" onmouseout="hiOff(this);" onmouseover="hiOn(this);">&nbsp;</td><td onblur="hiOff(this);" onclick="DatePicker.datePicker.selectDate(this);" onfocus="hiOn(this);" onmouseout="hiOff(this);" onmouseover="hiOn(this);">&nbsp;</td><td onblur="hiOff(this);" onclick="DatePicker.datePicker.selectDate(this);" onfocus="hiOn(this);" onmouseout="hiOff(this);" onmouseover="hiOn(this);">&nbsp;</td><td onblur="hiOff(this);" onclick="DatePicker.datePicker.selectDate(this);" onfocus="hiOn(this);" onmouseout="hiOff(this);" onmouseover="hiOn(this);">&nbsp;</td><td onblur="hiOff(this);" onclick="DatePicker.datePicker.selectDate(this);" onfocus="hiOn(this);" onmouseout="hiOff(this);" onmouseover="hiOn(this);">&nbsp;</td><td onblur="hiOff(this);" onclick="DatePicker.datePicker.selectDate(this);" onfocus="hiOn(this);" onmouseout="hiOff(this);" onmouseover="hiOn(this);">&nbsp;</td><td onblur="hiOff(this);" onclick="DatePicker.datePicker.selectDate(this);" onfocus="hiOn(this);" onmouseout="hiOff(this);" onmouseover="hiOn(this);">&nbsp;</td></tr>
+<tr class="calRow" id="calRow5"><td onblur="hiOff(this);" onclick="DatePicker.datePicker.selectDate(this);" onfocus="hiOn(this);" onmouseout="hiOff(this);" onmouseover="hiOn(this);">&nbsp;</td><td onblur="hiOff(this);" onclick="DatePicker.datePicker.selectDate(this);" onfocus="hiOn(this);" onmouseout="hiOff(this);" onmouseover="hiOn(this);">&nbsp;</td><td onblur="hiOff(this);" onclick="DatePicker.datePicker.selectDate(this);" onfocus="hiOn(this);" onmouseout="hiOff(this);" onmouseover="hiOn(this);">&nbsp;</td><td onblur="hiOff(this);" onclick="DatePicker.datePicker.selectDate(this);" onfocus="hiOn(this);" onmouseout="hiOff(this);" onmouseover="hiOn(this);">&nbsp;</td><td onblur="hiOff(this);" onclick="DatePicker.datePicker.selectDate(this);" onfocus="hiOn(this);" onmouseout="hiOff(this);" onmouseover="hiOn(this);">&nbsp;</td><td onblur="hiOff(this);" onclick="DatePicker.datePicker.selectDate(this);" onfocus="hiOn(this);" onmouseout="hiOff(this);" onmouseover="hiOn(this);">&nbsp;</td><td onblur="hiOff(this);" onclick="DatePicker.datePicker.selectDate(this);" onfocus="hiOn(this);" onmouseout="hiOff(this);" onmouseover="hiOn(this);">&nbsp;</td></tr>
+<tr class="calRow" id="calRow6"><td onblur="hiOff(this);" onclick="DatePicker.datePicker.selectDate(this);" onfocus="hiOn(this);" onmouseout="hiOff(this);" onmouseover="hiOn(this);">&nbsp;</td><td onblur="hiOff(this);" onclick="DatePicker.datePicker.selectDate(this);" onfocus="hiOn(this);" onmouseout="hiOff(this);" onmouseover="hiOn(this);">&nbsp;</td><td onblur="hiOff(this);" onclick="DatePicker.datePicker.selectDate(this);" onfocus="hiOn(this);" onmouseout="hiOff(this);" onmouseover="hiOn(this);">&nbsp;</td><td onblur="hiOff(this);" onclick="DatePicker.datePicker.selectDate(this);" onfocus="hiOn(this);" onmouseout="hiOff(this);" onmouseover="hiOn(this);">&nbsp;</td><td onblur="hiOff(this);" onclick="DatePicker.datePicker.selectDate(this);" onfocus="hiOn(this);" onmouseout="hiOff(this);" onmouseover="hiOn(this);">&nbsp;</td><td onblur="hiOff(this);" onclick="DatePicker.datePicker.selectDate(this);" onfocus="hiOn(this);" onmouseout="hiOff(this);" onmouseover="hiOn(this);">&nbsp;</td><td onblur="hiOff(this);" onclick="DatePicker.datePicker.selectDate(this);" onfocus="hiOn(this);" onmouseout="hiOff(this);" onmouseover="hiOn(this);">&nbsp;</td></tr>
+</table>-->
+<div class="buttonBar">
+    <a href="javascript&colon;%20void%280%29%3B" class="calToday" onclick="DatePicker.datePicker.selectDate('today');return false;">Today</a>
+</div>
+</div>
+</div>
+
+</apex:pageBlock>
+</apex:form>
+
+<script>
+function CheckDiv(value)
+    {
+    if(value==true)
+    {
+       document.getElementById("Recurrencediv").style.display='block';
+       document.getElementById("Daily").style.display='block';
+    }
+    else
+    {
+            document.getElementById("Recurrencediv").style.display='none';
+           document.getElementById("Daily").style.display='none';
+    }
+   
+
+
+}  
+</script>
+
+</apex:page>

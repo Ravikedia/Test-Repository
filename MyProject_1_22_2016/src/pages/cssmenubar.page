@@ -1,0 +1,53 @@
+<apex:page >
+  
+
+<style type="text/css">
+<!--
+.style2 {font-family: Verdana, Arial, Helvetica, sans-serif}
+-->
+body
+{
+
+background-color:#2F4F4F
+}
+h
+{
+color:white;
+text-align:center;
+}
+p
+{
+font-family:"Time New Room";
+font-size:20px;
+color:white
+
+}
+</style>
+
+<apex:stylesheet value="{!$Resource.topmenu}"/>
+<apex:stylesheet value="{!$Resource.topmenu1}"/>
+
+
+<ul id="css3menu4" class="topmenu">
+<ul id="css3menu1" class="topmenu">
+<table>
+
+
+  <tr>
+    <td height="48" bgcolor="#556B2F"><li class="topmenu"><a href="Fornt Desk.jsp" style="height:18px;line-height:18px;">    &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;       Front Desk   &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp;  &nbsp;   </a></li>   &nbsp;</td>
+  </tr>
+  <tr>
+    <td height="40" bgcolor="#556B2F"><li class="topmenu"><a href="Fees management.jsp" style="height:18px;line-height:18px;">&nbsp;&nbsp; &nbsp; &nbsp;Fees management&nbsp;&nbsp;  &nbsp;&nbsp;</a></li>&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="43" bgcolor="#556B2F"><li class="topmenu"><a href="Timetable.jsp" style="height:18px;line-height:18px;">Time table management&nbsp;</a></li>&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="40" bgcolor="#556B2F"><li class="toplast"><a href="Teacher salary.jsp" style="height:18px;line-height:18px;">&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Accounts&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li>&nbsp;</td>
+  </tr>
+
+
+</table>
+</ul>
+</ul>
+</apex:page>

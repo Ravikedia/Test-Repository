@@ -1,0 +1,48 @@
+<apex:page sidebar="false">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<!-- Latest compiled and minified CSS -->
+ <apex:includeScript value="{! $Resource.jQueryMini}"/> 
+<!--<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />-->
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+
+<!-- Latest compiled and minified JavaScript -->
+<!--<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>-->
+
+<!--<apex:stylesheet value="{!URLFOR($Resource.BootStraps,'bootStrap/css/bootstrap-theme.min.css')}"/>-->
+
+   
+   <apex:includeScript value="{!$Resource.bsmincss}"/>
+   <apex:includeScript value="{!$Resource.bsminjs}"/>
+   
+
+<apex:form >
+<table class="table table-bordered">
+   <caption>Basic Table Layout</caption>
+   <thead>
+      <tr>
+         <th>Name</th>
+         <th>City</th> 
+         <th>DOB</th>
+      </tr>
+   </thead>
+   <tbody>
+      <tr>
+         <td>Tanmay</td>
+         <td>Bangalore</td>
+          <td>Bangalore</td>
+      </tr>
+      <tr>
+         <td>Sachin</td>
+         <td>Mumbai</td>
+          <td>Bangalore</td>
+      </tr>
+
+   </tbody>
+</table>
+
+<apex:commandButton value="Click ME!" styleClass="btn btn-default btn-lg"/>
+<button type="button" class="btn btn-default btn-lg">Large button</button>
+</apex:form>
+</apex:page>

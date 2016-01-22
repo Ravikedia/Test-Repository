@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Resolution_Email</letterhead>
+    <name>Resolution Email</name>
+    <style>freeForm</style>
+    <subject>You Have New Feedback - {!TODAY()} - {!Issue_Resolution__c.Id}</subject>
+    <textOnly>{!Issue_Resolution__c.Email_Template_Greeting__c},
+
+
+Below is some feedback from a referring physician practice concerning {!Issue_Resolution__c.Email_Template_Greeting__c}.  Please refer to the below information for issue and response details.
+
+Please reply directly to this email to provide comments or updates to the resolution status.
+
+
+Feedback Details
+
+
+Resolution Timeframe:
+
+Type of Feedback:
+
+Location:
+
+Subject: {!Issue_Resolution__c.Primary_Issue__c}
+
+Comments: {!Issue_Resolution__c.Comments__c}
+
+
+Feedback Source: {!Issue_Resolution__c.Physician_or_Contact__c}
+
+Title: {!Issue_Resolution__c.Physician_Title__c}
+
+Practice: {!Issue_Resolution__c.Practice__c}
+
+Phone Number: {!Issue_Resolution__c.Physician_Phone__c}
+
+Email: {!Issue_Resolution__c.Physician_EMail__c}
+
+Submitted by: {!Issue_Resolution__c.CreatedBy}, {!Issue_Resolution__c.Created_by_email__c}, {!Issue_Resolution__c.Created_by_phone__c}
+
+Feedback Number: {!Issue_Resolution__c.Name}</textOnly>
+    <type>html</type>
+</EmailTemplate>

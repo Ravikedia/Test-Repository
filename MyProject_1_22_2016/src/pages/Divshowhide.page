@@ -1,0 +1,105 @@
+<apex:page >
+   <head>
+
+   <!-- <apex:includeScript value="{!$Resource.showhidejs}"/>-->
+   <script src="https://code.jquery.com/jquery-2.1.0.min.js"></script>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+   
+   </head>
+   
+   <script>
+   
+   
+   
+   </script>
+   
+   <style>
+   .abc{
+   
+   width:20%;
+   }
+   
+   </style>
+   
+   <style>
+   .abcd{
+   
+   width:80%;
+   color:red;
+   }
+   
+   </style>
+   
+   
+   
+    <script>
+    var $j = jQuery.noConflict();
+    function Showhide()
+    {
+
+     $j('[id$="abcdclass"]').addClass('abcd');
+     $j('[id$="abcdclass1"]').addClass('abcd');
+     <!-- similer $('#sidebarCell').removeClass(); we use -->
+     $j( "#SchedualMAinBlock" ).show();  
+    }
+    
+    </script>
+
+
+    <script>
+    var $j = jQuery.noConflict();
+    function Showhide1()
+    {
+
+    $( "#SchedualMAinBlock" ).hide();  
+    }
+    
+    </script>
+    
+    
+  <apex:form id="SearchForm" >
+      <div id="SchedualMAinBlock" style="display:none">
+      
+        <div style="background:#5e68c4 !important ;border-radius:4px 4px 0px 0px;;height: 30px;">
+                                                <div>
+                                                    <span style="padding:6px;color: #ffffff;font-weight: bold;float:left" > Welcome kedia  </span>
+                                                </div>
+                                                <div style="padding:6px; float:right"   onclick="deselectforLeftright(); check(0)"  >
+                                                    <span style="padding: 10px;color: white;cursor: pointer;" > close </span>
+                                                 </div>
+                                        </div>
+                                        
+                                        <table class="table table-bordered" style="width:30%; margin-left: 34%;" >
+   <caption>Basic Table Layout</caption>
+   <thead>
+      <tr>
+         <th>Name</th>
+         <th>City</th> 
+         <th>DOB</th>
+      </tr>
+   </thead>
+   <tbody>
+      <tr>
+         <td>Tanmay</td>
+         <td>Bangalore</td>
+          <td>Bangalore</td>
+      </tr>
+      <tr>
+         <td>Sachin</td>
+         <td>Mumbai</td>
+          <td>Bangalore</td>
+      </tr>
+
+   </tbody>
+</table>
+      <apex:commandButton value="HI Kedia"/>
+      </div>
+      
+      <apex:commandButton value="Show " onclick="Showhide();"  rerender="none"/>
+       <apex:commandButton value="Hide1" onclick="Showhide1();"  rerender="none"/>
+       
+       <apex:commandButton value="Change class" styleClass="abc" id="abcdclass"/>
+       
+       <button type="button" class="btn btn-success abc" id="abcdclass1" >Large button</button>
+  </apex:form>
+</apex:page>

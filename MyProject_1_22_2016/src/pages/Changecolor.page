@@ -1,0 +1,35 @@
+<apex:page standardStylesheets="false">
+<apex:stylesheet value="{!$Resource.Bootstrapss}"/>
+  <style>
+   {
+  background-color-black!important;
+  background-image:none!important;
+  color:orange!important;
+  font:style:bold!important;
+  border:blue!important;
+  }
+  </style>
+  
+  <style>
+
+        .bPageHeader .phHeader td.right {
+
+        background-color:#FF0000;
+        }
+        .multiforce{
+        color:#FF0000;
+
+            }
+
+            .bPageHeader .phHeader td.searchCell{
+
+        background-color:#FF0000;
+        }
+        .multiforce{
+        color:#FF0000;
+
+            }
+
+</style>
+
+</apex:page>

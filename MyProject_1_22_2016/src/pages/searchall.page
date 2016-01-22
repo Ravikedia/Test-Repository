@@ -1,0 +1,32 @@
+<apex:page controller="searchall">
+<script>
+var searches = [], results = {}, term;
+function startSearch() {
+    searchall.searchableElements(elementResults);
+}
+function elementResults(result) {
+    searches = result;
+    term = searches.shift();
+    doSearch();
+}
+function doSearch(records) {
+    if(records) {
+        results[term] = records;
+        document.getElementById("output").innerHTML = records;
+        if(searches.length) {
+            term = searches.shift();
+        } else {
+            term = null;
+        }
+    }
+    if(term) {
+        document.getElementById("search").innerHTML = 'Searching '+term;
+        searchall.searchQuery(term, document.getElementById('term').value, doSearch);
+    }
+}
+</script>
+<input type="text" id="term"/>
+<button onclick="startSearch()">Search</button>
+<pre id="search"></pre>
+<pre id="output"></pre>
+</apex:page>

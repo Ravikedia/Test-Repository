@@ -1,0 +1,9 @@
+<apex:page controller="KediaXeroController">
+<apex:form >
+    <apex:pageblock >
+        <apex:commandbutton action="{!authenticate}" value="Xzero authentication" >
+             <!-- <apex:inputFile value="{!attachment.body}"  id="file"/>-->
+    </apex:commandbutton></apex:pageblock>
+
+</apex:form>
+</apex:page>

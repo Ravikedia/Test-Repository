@@ -1,0 +1,48 @@
+<apex:page controller="wizardcontroller" >
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
+
+<!-- Optional theme 
+<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css" />-->
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+<!--
+
+<apex:pageBlock title="Wizard for five step" >
+
+<table border="3"   >
+ <apex:form >
+  <tr>
+  
+    <td  height="40%" ><apex:commandButton value="Step1" action="{!Step1}" ></apex:commandButton></td>
+    <td colspan="5" rowspan="4" height="100%" width="100%"><center>Enter the name&nbsp;&nbsp;&nbsp;<apex:inputText required="true" value="{!username }" /><br/>
+    Enter the password<apex:inputSecret value="{!userlastname }" /></center>
+    </td>
+  
+  </tr>
+ 
+  <tr  >
+  <td><apex:commandButton value="Step2" action="{!Step2}" disabled="{!check}" ></apex:commandButton></td>
+  </tr>
+   <tr>
+  <td><apex:commandButton value="Step3" action="{!Step3}" disabled="{!checkstep2}"></apex:commandButton></td>
+  </tr>
+   <tr>
+  <td><apex:commandButton value="Step4" action="{!Step4}"></apex:commandButton></td>
+  </tr>
+   <tr>
+  <td><apex:commandButton value="Step5" action="{!Step5}"></apex:commandButton></td>
+  <td><center><apex:commandButton value="Ok" action="{!Recordmaintains}"  /></center></td>
+  </tr>
+  </apex:form>
+</table>
+<ul class="nav nav-pills">
+  <li class="active"><a href="#">Home</a></li>
+  <li><a href="#">Profile</a></li>
+  <li><a href="#">Messages</a></li>
+</ul>
+</apex:pageBlock>
+
+-->
+</apex:page>

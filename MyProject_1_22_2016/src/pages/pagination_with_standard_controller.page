@@ -1,0 +1,38 @@
+<apex:page controller="SearchController" >
+     <apex:pageBlock >
+        <apex:form >
+            <apex:pageBlockSection columns="1" title="Search Section" collapsible="false" id="searchPanel" >
+                
+                <apex:outputpanel >
+                    <apex:Outputlabel >Select Object</apex:Outputlabel>&nbsp;
+                    <apex:selectList value="{!SelectedSobject}" multiselect="false" size="1">
+                        <apex:selectOptions value="{!ObjectList}"></apex:selectOptions>
+                    </apex:selectList>
+                
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                
+                     <apex:outputLabel >Enter</apex:outputLabel>&nbsp;
+                     <apex:inputtext value="{!searchString}" />
+                &nbsp;&nbsp;&nbsp;
+                <apex:commandButton value="Search" action="{!searchData}" />
+                </apex:outputPanel>
+                
+            </apex:pageBlockSection>
+           
+            <apex:pageBlockSection columns="1" title="Search Results" collapsible="false" id="resultPanel"  >
+            
+                <apex:pageBlockTable rendered="{!IF(currentViewList.size > 0 , true , false)}" value="{!currentViewList}" var="NextRec">   
+                    <apex:column value="{!NextRec.Id}" />   
+                 <!-- Looping all fields of object --->
+                    <apex:repeat value="{!getFields}" var="nextField">
+                     <!-- Mapping data with field --->
+                        <apex:column value="{!NextRec[nextField]}" />   
+                    </apex:repeat>   
+                </apex:pageBlockTable>   
+            </apex:pageBlockSection>
+            
+        </apex:form>     
+     
+     </apex:pageBlock>
+  
+ </apex:page>

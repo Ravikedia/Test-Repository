@@ -1,0 +1,115 @@
+<apex:page controller="CustomAccountLookupController"  title="Search" showHeader="false" sideBar="false" tabStyle="Account" id="pg">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  <style>
+  .backgrnd
+  {
+      background: #fff url(/img/alohaSkin/lookup_bg.png) repeat-x;
+  }
+  .pageTitleIcon
+  {
+    background-image: url(/img/sprites/master.png);
+    background-position: 0 -1202px;
+    width: 32px;
+    height: 32px;
+  }
+  h1
+  {
+      font-size: 1.8em;
+      color: #333435;
+      margin: 8px 0 4px;
+  }
+  h2
+  {
+      padding: 4px 3px;
+      font-family: 'Arial','Helvetica',sans-serif;
+      font-weight: bold;
+      font-size: 118%;
+   }
+    
+  </style>
+  <script>
+  function showNewDiv()
+  {
+      $('[id$="saveRecord"]').show();
+      $('[id$="pnlSearchResults"]').hide();
+      
+  }
+  function showSearchDiv()
+  {
+      $('[id$="saveRecord"]').hide();
+      $('[id$="pnlSearchResults"]').show();
+  }
+  </script>
+  <body class="backgrnd" >
+  <img src="/s.gif" alt="" class="pageTitleIcon" title=""/>
+  <h1>Lookup</h1>
+  <apex:form >
+  <apex:outputPanel id="page" layout="block" >
+
+
+        <apex:actionRegion >  
+          <apex:outputPanel id="top" layout="block" style="margin:5px;padding:10px;padding-top:2px;">
+            <apex:outputLabel value="Search" style="font-weight:Bold;padding-right:10px;" for="txtSearch"/>
+            <apex:inputText id="txtSearch" value="{!searchString}" />
+              <span style="padding-left:5px">
+                  <apex:commandButton id="btnGo" value="Go!" action="{!Search}" rerender="searchResults" onclick="showSearchDiv();" ></apex:commandButton>
+                  <apex:commandButton id="btnNew" value="New" rerender="none" onclick="showNewDiv();"></apex:commandButton>
+              </span>
+              <br/>
+              <span>You can use "*" as a wildcard next to other characters to improve your search results.</span>
+          </apex:outputPanel><br/><br/>
+
+          <apex:outputPanel id="pnlSearchResults" style="margin:10px;height:350px;overflow-Y:auto;position: fixed;width: 98%;" layout="block">
+            <h2>All accounts</h2>
+            <apex:pageBlock id="searchResults"> 
+              <apex:pageBlockTable value="{!results}" var="a" id="tblResults">
+                <apex:column >
+                  <apex:facet name="header">
+                    <apex:outputPanel >Name</apex:outputPanel>
+                  </apex:facet>
+                   <apex:outputLink value="javascript:top.window.opener.lookupPick2('{!FormTag}','{!TextBox}_lkid','{!TextBox}','{!a.Id}','{!a.Name}', false)" rendered="{!NOT(ISNULL(a.Id))}">{!a.Name}</apex:outputLink>     
+                </apex:column>
+                
+                <apex:column >
+                  <apex:facet name="header">
+                    <apex:outputPanel >Phone</apex:outputPanel>
+                  </apex:facet>
+                  <apex:outputPanel >{!a.Phone}</apex:outputPanel> 
+                </apex:column>
+                
+                 <apex:column >
+                  <apex:facet name="header">
+                    <apex:outputPanel >AccountNumber</apex:outputPanel>
+                  </apex:facet>
+                  <apex:outputPanel >{!a.AccountNumber}</apex:outputPanel> 
+                </apex:column>
+                
+                
+                
+              </apex:pageBlockTable>
+            </apex:pageBlock>
+          </apex:outputPanel>
+        </apex:actionRegion>
+        
+         <apex:outputPanel layout="block" id="saveRecord" style="display:none;width: 98%;margin-left: 1%;">
+             <apex:pageBlock id="pbId">
+                 <apex:pageBlockButtons >
+                    <apex:commandButton action="{!saveAccount}" value="Save" rerender="pbId"/>
+                    <apex:commandButton onclick="showSearchDiv();" value="Cancel" rerender="none" />
+                 </apex:pageBlockButtons>
+                 <apex:pageMessages />
+    
+                 <apex:pageBlockSection columns="2">
+                     <apex:repeat value="{!$ObjectType.Account.FieldSets.CustomAccountLookup}" var="f">
+                         <apex:inputField value="{!Account[f]}"/>
+                     </apex:repeat>
+                </apex:pageBlockSection> 
+            </apex:pageBlock>
+        </apex:outputPanel>
+
+
+  </apex:outputPanel>
+  </apex:form>
+  </body>
+  <!--<span><center>Copyright © 2000-2015 salesforce.com, inc. All rights reserved.</center></span>-->
+</apex:page>

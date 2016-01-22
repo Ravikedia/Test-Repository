@@ -1,0 +1,176 @@
+<apex:component >
+
+    <apex:attribute name="leftOptions" description="Options list for left listbox." type="SelectOption[]" required="true"/>
+    <apex:attribute name="rightOptions" description="Options list for right listbox." type="SelectOption[]" required="true"/>
+    
+    <style type="text/css"> 
+        .leftStyle
+        { 
+            padding:10px 0px;
+            width:100px;
+            height:180px;
+            position:relative;
+            float:left;
+        }
+        .middle
+        {
+            position:relative;
+            float:left;
+            padding:90px 0px; 
+        }
+    </style>
+    
+    <script>
+        
+        function moveUp()
+        {
+          var element = document.getElementById('{!JSENCODE($Component.selectedValueID)}');
+          for(i = 0; i < element.options.length; i++) {
+            if(element.options[i].selected == true) {
+              if(i != 0) {
+                var temp = new Option(element.options[i-1].text,element.options[i-1].value);
+                var temp2 = new Option(element.options[i].text,element.options[i].value);
+                element.options[i-1] = temp2;
+                element.options[i-1].selected = true;
+                element.options[i] = temp;
+              }
+            }
+          }
+          return false;
+        }
+        
+        function moveDown()
+        {
+          var element = document.getElementById('{!JSENCODE($Component.selectedValueID)}');
+          for(i = (element.options.length - 1); i >= 0; i--) {
+            if(element.options[i].selected == true) {
+              if(i != (element.options.length - 1)) {
+                var temp = new Option(element.options[i+1].text,element.options[i+1].value);
+                var temp2 = new Option(element.options[i].text,element.options[i].value);
+                element.options[i+1] = temp2;
+                element.options[i+1].selected = true;
+                element.options[i] = temp;
+              }
+            }
+          }
+          return false;
+        }
+        
+        function moveTop()
+        {
+            var obj = document.getElementById('{!JSENCODE($Component.selectedValueID)}');
+            var elements = new Array();
+            for (var i=0; i<obj.length; i++) {
+                if (obj[i].selected) {
+                    elements[elements.length] = new Array(obj[i].text, obj[i].value, obj[i].selected);
+                }
+            }
+            for (i=0; i<obj.length; i++) {
+                if (!obj[i].selected) {
+                    elements[elements.length] = new Array(obj[i].text, obj[i].value, obj[i].selected);
+                }
+            }
+            for (i=0; i<obj.length; i++)
+            {
+                obj[i].text = elements[i][0];
+                obj[i].value = elements[i][1];
+                obj[i].selected = elements[i][2];
+            }
+            return false;
+        }
+        
+        function bottom() 
+        {
+            var obj = document.getElementById('{!JSENCODE($Component.selectedValueID)}');
+            var elements = new Array();
+            for (var i=0; i<obj.length; i++) {
+                if (!obj[i].selected) {
+                    elements[elements.length] = new Array(obj[i].text, obj[i].value, obj[i].selected);
+                }
+            }
+            for (i=0; i<obj.length; i++) {
+                if (obj[i].selected) {
+                    elements[elements.length] = new Array(obj[i].text, obj[i].value, obj[i].selected);
+                }
+            }
+            for (i=obj.length-1; i>-1; i--)
+            {
+                obj[i].text = elements[i][0];
+                obj[i].value = elements[i][1];
+                obj[i].selected = elements[i][2];
+            }
+            return false;
+        }
+        
+        function shiftRight()
+        {
+            var SS2 = document.getElementById('{!JSENCODE($Component.nonSelectedValueID)}');
+            var SS1 = document.getElementById('{!JSENCODE($Component.selectedValueID)}');
+            var SelID='';
+            var SelText='';
+            for (i=SS1.options.length - 1; i>=0; i--)
+            {
+                if (SS1.options[i].selected == true)
+                {
+                    SelID=SS1.options[i].value;
+                    SelText=SS1.options[i].text;
+                    var newRow = new Option(SelText,SelID);
+                    SS2.options[SS2.length]=newRow;
+                    SS1.options[i]=null;
+                }
+            }
+            return false;
+        }
+        
+        function shiftLeft()
+        {
+            var SS1 = document.getElementById('{!JSENCODE($Component.nonSelectedValueID)}');
+            var SS2 = document.getElementById('{!JSENCODE($Component.selectedValueID)}');
+            var SelID='';
+            var SelText='';
+            // Move rows from SS1 to SS2 from bottom to top
+            for (i=SS1.options.length - 1; i>=0; i--)
+            {
+                if (SS1.options[i].selected == true)
+                {
+                    SelID=SS1.options[i].value;
+                    SelText=SS1.options[i].text;
+                    var newRow = new Option(SelText,SelID);
+                    SS2.options[SS2.length]=newRow;
+                    SS1.options[i]=null;
+                }
+            }
+            return false;
+        }
+        
+    </script>
+    
+    <apex:outputPanel >
+        <apex:panelGrid styleClass="leftStyle">
+            <apex:outputLabel value="Available Fields" style="font-size:12px;"/>
+            <apex:selectList multiselect="true" size="15" style="width:200px;" id="nonSelectedValueID">
+                <apex:selectOptions value="{!leftOptions}"/>
+            </apex:selectList>
+        </apex:panelGrid>
+    
+        <apex:panelGrid styleClass="middle" style="margin-top:6%;">
+            <apex:commandButton title="Add" onClick="javascript:return shiftLeft();" image="{!URLFOR($Resource.MultiselectButtons, 'rightButton.png')}" style="height:25px;width:25px;background-image:none;border-style:none"/>
+            <apex:commandButton title="Remove" onClick="javascript:return shiftRight();" image="{!URLFOR($Resource.MultiselectButtons, 'leftButton.png')}" style="height:25px;width:25px;background-image:none;border-style:none"/>
+        </apex:panelGrid>
+    
+        <apex:panelGrid styleClass="leftStyle">
+            <apex:outputLabel value="Selected Fields" style="font-size:12px;"/>
+            <apex:selectList multiselect="true" size="15" style="width:200px;" id="selectedValueID">
+                <apex:selectOptions value="{!rightOptions}" />
+            </apex:selectList>
+        </apex:panelGrid>
+        
+        <apex:panelGrid styleClass="middle">
+            <apex:commandButton title="Top" onClick="javascript:return moveTop();" image="{!URLFOR($Resource.MultiselectButtons, 'topButton.png')}" style="background-image:none;border-style:none;height:25px;width:25px;" />
+            <apex:commandButton title="Up" onClick="javascript:return moveUp();" image="{!URLFOR($Resource.MultiselectButtons, 'upButton.png')}" style="background-image:none;border-style:none;height:25px;width:25px;" />
+            <apex:commandButton title="Down" onClick="javascript:return moveDown();" image="{!URLFOR($Resource.MultiselectButtons, 'downButton.png')}" style="background-image:none;border-style:none;height:25px;width:25px;"/>
+            <apex:commandButton title="Bottom" onClick="javascript:return bottom();" image="{!URLFOR($Resource.MultiselectButtons, 'bottomButton.png')}" style="background-image:none;border-style:none;height:25px;width:25px;"/>
+        </apex:panelGrid>
+        
+    </apex:outputPanel>
+</apex:component>

@@ -1,0 +1,340 @@
+<apex:page controller="HerokufilesplitController"  standardStylesheets="false" sidebar="false">
+<apex:stylesheet value="{!$Resource.Bootstrapss}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.Bootbox, 'bootbox/bootstrap.min.css')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.Bootbox, 'bootbox/jquery.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.Bootbox, 'bootbox/bootstrap.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.Bootbox, 'bootbox/bootbox.js')}"/>
+    
+    
+    <apex:includeScript value="{!URLFOR($Resource.BlockUIfiles, 'Blockuifiles/Jquery.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.BlockUIfiles, 'Blockuifiles/Jquery.BlockUI.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.BlockUIfiles, 'Blockuifiles/BlockUi.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.BlockUIfiles, 'Blockuifiles/Jquery.min.js')}"/>
+    <script>
+     var j$ = jQuery.noConflict();
+     function radioWithText(d)
+     {
+        var radiobuttonvalue=d;
+        if(radiobuttonvalue=="group")
+        {
+            j$.blockUI();
+            OpenPages(1);
+        }
+        if(radiobuttonvalue=="particular")
+        {
+            j$.blockUI();
+            OpenPages(2); 
+        }   
+        if(radiobuttonvalue=="range")
+        {
+            j$.blockUI();
+            OpenPages(3); 
+        }
+        if(radiobuttonvalue=="extract")
+        {
+            j$.blockUI();
+            OpenPages(0); 
+        }
+         document.getElementById('one').style.display = "none"
+         document.getElementById('two').style.display = "none"; 
+         document.getElementById('three').style.display = "none";
+         document.getElementById('four').style.display = "none";
+         document.getElementById('extract').style.display = "none";
+         document.getElementById(d).style.display='inline'; 
+     }
+    </script>
+    <script >
+    var j$ = jQuery.noConflict();
+    var i;
+    function Pagenumber()
+    {
+        var ppage=j$("input.infield");
+        for(i=0; i<ppage.length; i++)
+        {
+            if(ppage[i].value=='null' || ppage[i].value=='')
+            {
+                bootbox.alert("Plese fill text box value");
+                return false;
+            }
+        }
+        callactionfunction();
+    }
+    function removetextbox()
+    {
+        callremovefunction();
+    }
+    </script>
+        
+    <SCRIPT language="Javascript">
+    var chechzero=0;
+    function isNumberKey(evt)
+    {
+        var charCode = (evt.which) ? evt.which : event.keyCode;
+        if(charCode !=48)
+        {
+            chechzero=1;
+            
+        }
+        if(charCode==48 && chechzero==0)
+        {
+            bootbox.alert("Please enter 1-9  in first position");
+            
+            return false;
+        }    
+             
+        if (charCode != 46 && charCode > 31 
+        && (charCode < 48 || charCode > 57))
+        {
+            bootbox.alert("Please enter number only");    
+            return false;
+        }
+        if(charCode ==46)
+        {
+            bootbox.alert("Please enter number only");    
+            return false;
+        }
+        return true;
+    }
+    </SCRIPT>
+          
+    <script >
+        var j$ = jQuery.noConflict();
+        var i;
+        function changeIt()
+        {
+            var ppage=j$("input.infield");
+        
+            for(i=0; i<ppage.length; i++)
+            {      
+                if(ppage[i].value=='null' || ppage[i].value=='')
+                {
+                    bootbox.alert("Plese fill text box value ");
+                    return false;  
+                }
+            }
+              
+                    callactionfunctionforrangetextbox();
+        }
+        function removeit()
+        {
+            callactionfunctionforremoverangetextbox();
+        }
+    </script>
+      
+           
+    <script>
+     var j$ = jQuery.noConflict();
+     function ButtonText()
+     {
+        var aaa= j$("[id$=fileid]").val();
+        if(aaa=='')
+        {
+            bootbox.alert("Please select pdf file ");
+            return false;
+        }
+        if($('[id$="fileid"]')[0].files[0].size > 3000000)
+        {
+            bootbox.alert("You can't send file more then 3 mb in HttpRequest! ");
+            return false;
+        }
+        
+        disappearfile();
+     }
+    </script>
+    
+    <script>
+    function ButtonTextCheck()
+    {
+    }
+    </script>
+    
+    <script>
+        var j$ = jQuery.noConflict();
+        var i;
+        var j;
+        function ButtonTextCheckvalidation()
+        {
+    
+            var ppage=j$("input.infield");
+            for(i=0; i<ppage.length; i++)
+            {
+              
+                  if(ppage[i].value=='null' || ppage[i].value=='')
+                  {
+                  bootbox.alert("Plese fill text box value ");
+                  return false;
+                  
+                  }
+           
+           }
+              j$.blockUI();
+              passfile(); 
+        } 
+    
+    </script>
+    <script>  
+    var j$ = jQuery.noConflict();
+    function beforemethod()
+    {
+    }
+    </script>
+   
+    <script>
+    var j$ = jQuery.noConflict();
+    function aftermethod()
+    {
+        j$.unblockUI();
+
+    }
+    </script>
+    <script>
+    function checkfunction()
+    {
+    }
+    </script>
+        
+    <apex:form id="secondform">
+        <apex:actionFunction action="{!savefiel}" name="disappearfile"  onbeforedomupdate="javascript:checkfunction()" />
+        
+        <apex:outputPanel id="messagepage1" style="font-size: large;">
+            <apex:pagemessages >
+            </apex:pagemessages>
+            
+        </apex:outputPanel>
+        
+        
+        
+        
+        <apex:outputpanel rendered="{!if(hidevalue=='0',true,false)}">
+            <apex:pageblock title="PDF splitter form" >
+                <apex:pageblockSection >
+                    <apex:pageblockSectionItem >
+                        <apex:panelGroup >
+                            Choose pdf file:<apex:inputFile fileName="{!filename}"  value="{!file}"    contentType="{!type}" id="fileid" styleclass="paginationButtons"> </apex:inputFile>
+                        </apex:panelGroup>
+                    </apex:pageblockSectionItem><br/>
+                    
+                    <apex:pageBlockSectionItem >
+                        <apex:panelGroup >
+                            <center>  <input type="button"  onclick="javascript:ButtonText()"  Class="btn-primary"  value="Upload file!"  /></center>
+                        </apex:panelGroup>
+                    </apex:pageBlockSectionItem> 
+                    
+                </apex:pageblockSection>
+            </apex:pageblock>
+        </apex:outputPanel>
+
+        <apex:actionFunction action="{!Sendfiel}"  name="passfile" reRender="messagepage,secondform"  onbeforedomupdate="javascript:beforemethod()" oncomplete="javascript:aftermethod()" />
+            
+        <apex:outputpanel rendered="{!if(secondform== 2,true,false)}">
+        	<apex:outputLink value="{!baseUrl}/servlet/servlet.FileDownload?file={!attachId}" target="_blank" style="margin-left: 433px;"  >{!attachName}</apex:outputLink><br/>
+            <apex:outputPanel id="messagepage" style="font-size: large;">
+                <apex:commandButton value="Back to selct new file" style="margin-left: 433px;" styleClass="btn-primary" action="{!refreshpage}" rendered="{!if(secondform== 2,true,false)}" rerender="secondform" />
+            </apex:outputPanel>
+        </apex:outputpanel>
+        
+        <apex:outputpanel rendered="{!if(hidevalue=='3' && secondform==1 ,true,false)}">   
+            <apex:actionFunction action="{!redirect}" name="OpenPages" reRender="group" onbeforedomupdate="javascript:beforemethod()" oncomplete="javascript:aftermethod()">
+                <apex:param assignTo="{!radiobuttonvalue}" value="" name="param1"/>
+            </apex:actionFunction>
+
+            <apex:actionFunction action="{!Addtextbox}" name="callactionfunction" rerender="group">
+            </apex:actionFunction>
+            
+            <apex:actionFunction action="{!Removetextbox}" name="callremovefunction" reRender="group"/>
+       
+            <apex:actionFunction action="{!Addsecondtextbox}" name="callactionfunctionforrangetextbox" rerender="group"/>
+            <apex:actionFunction action="{!Removesecondtextbox}" name="callactionfunctionforremoverangetextbox" reRender="group"/>
+   
+        
+        <apex:pageBlock title="Split pdf file">
+            <apex:pageBlockSection >
+                <apex:pageblockSectionItem >
+                    <apex:outputLabel value="Extract image from pdf file"/>  
+                        <input type="Radio" name="split" value="radiob" onclick="javascript:radioWithText('extract')" checked="checked" styleClass="radioButtonalign" /> 
+                </apex:pageblockSectionItem><br/>
+                
+                <apex:pageblockSectionItem >
+                    <apex:outputLabel value="Extract pdf into multiple pdf" /> 
+                    <input type="Radio" name="split" value="radiob" onclick="javascript:radioWithText('group')" checked="checked" styleClass="radioButtonalign" />
+                </apex:pageblockSectionItem><br/>
+               
+                <apex:pageblockSectionItem >
+                    <apex:outputLabel value="Extract particular page from pdf file"/>                    
+                    <input type="Radio" name="split" value="radiob" onclick="javascript:radioWithText('particular')" checked="checked" styleClass="radioButtonalign" />   
+                </apex:pageblockSectionItem><br/>
+                
+                <apex:pageblockSectionItem >
+                    <apex:outputLabel value="Extract pdf file in diffrent diffrent part"/>  
+                    <input type="Radio" name="split" value="radiob" onclick="javascript:radioWithText('range')" checked="checked" styleClass=".radioButtonalign" />   
+                </apex:pageblockSectionItem><br/>
+              
+                 <apex:outputPanel id="group">
+                    <apex:outputPanel rendered="{!if(radiobuttonvalue== 1,true,false)}" >
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Number of page in one pdf file " style="margin-left: 104px;"/> 
+                            <apex:inputtext value="{!Numberofpage}" id="nopage"  maxlength="3" onkeypress="return isNumberKey(event)" styleClass="form-control infield" style="display: inherit !important;"/>
+                        </apex:pageBlockSectionItem><br/>
+                    </apex:outputPanel>
+                
+                  
+                    <apex:outputPanel rendered="{!if(radiobuttonvalue== 2,true,false)}" >
+                        <apex:repeat value="{!wrapperclasslist}" var="wclist" id="repeatid" >
+                            <apex:pageBlockSectionItem >              
+                                <apex:outputLabel value="Enter page number that you want to split" style="margin-left: 104px;"/>  
+                                    <apex:panelGroup >
+                                        <apex:inputtext value="{!wclist.fromvalue}" maxlength="3"  onkeypress="return isNumberKey(event)"  styleClass="form-control infield" style="display: inherit !important;" />
+                                    </apex:panelGroup>
+                            </apex:pageBlockSectionItem><br/>
+                        </apex:repeat>
+                         
+                        <apex:pageblockSectionItem >
+                            <apex:panelGroup >
+                                <center> 
+                                    <input type="button" onclick="Pagenumber()" Class="btn-primary"  value="Add" />
+                                    <input type="button" onClick="removetextbox()"  Class="btn-primary"  value="Remove" />
+                                </center>
+                            </apex:panelGroup>
+                         </apex:pageblockSectionItem><br/>
+                    </apex:outputPanel>
+               
+              
+                <apex:outputPanel rendered="{!if(radiobuttonvalue== 3,true,false)}" >
+                    <apex:repeat value="{!wrappertextbox}" var="wclist">
+                        <apex:pageBlockSectionItem >
+                            <apex:panelGroup >
+                                <apex:outputLabel value="Enter a range of page :" style="margin-left: 104px;" /><br/>   
+                                    <apex:outputLabel value="From:" style="margin-left: 104px;" />
+                                    <apex:inputText styleClass="form-control infield"  maxlength="3" onkeypress="return isNumberKey(event)" value="{!wclist.startvalue}" style="display: inherit !important;"  /> 
+                                <apex:outputLabel value="To:" /> 
+                                <apex:inputText styleClass="form-control infield" onkeypress="return isNumberKey(event)"  maxlength="3" value="{!wclist.endvalue}" style="display: inherit !important;" />
+                           </apex:panelGroup>
+                       </apex:pageBlockSectionItem><br/>
+                     </apex:repeat>
+                     
+                     
+                 <apex:pageBlockSectionItem >  
+                     <apex:panelGroup >
+                         <center>
+                             <input type="button" onClick="changeIt()"  Class="btn-primary"  value="Add" />
+                             <input type="button" onClick="removeit()"  Class="btn-primary"  value="Remove" />
+                         </center>
+                     </apex:panelGroup>
+                </apex:pageBlockSectionItem> 
+                 
+            </apex:outputPanel>
+        </apex:outputPanel><br/>
+                
+        <apex:pageblockSectionItem >
+            <apex:panelGroup >
+                Splt file:<apex:commandButton value="Split file!" rerender="none"   onclick="javascript:ButtonTextCheckvalidation()"  styleClass="btn-primary" id="cb"  />
+                          <apex:commandButton value="Select new pdf file"  styleClass="btn-primary" action="{!refreshpage}"   />
+            </apex:panelGroup>
+        </apex:pageblockSectionItem>
+                
+        </apex:pageblockSection>
+        </apex:pageBlock>
+
+      </apex:outputPanel>
+    </apex:form>
+</apex:page>

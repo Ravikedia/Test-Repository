@@ -1,0 +1,5 @@
+<apex:page controller="UpdateAccessToken">
+ <apex:form >
+     <apex:commandButton value="Update Access token using Refresh Token" action="{!UpdateAccessToeknUsingRefreshToken}" rerender="none"/>
+ </apex:form>
+</apex:page>

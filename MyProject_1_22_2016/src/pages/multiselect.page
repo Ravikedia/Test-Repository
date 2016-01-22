@@ -1,0 +1,47 @@
+<apex:page controller="multiselect">
+    <apex:form >
+        <apex:pageblock title="Multiselect List">
+        
+        <apex:panelGrid columns="4" id="abcd">
+        <apex:facet name="header"><b>Available Containts</b></apex:facet>
+            <apex:selectList id="sel1" value="{!leftselected}" multiselect="true" style="width:150px" size="9">
+                <apex:selectOptions value="{!unselectedvalues}" />
+            </apex:selectList>
+            
+                <apex:panelGroup >
+                    <br/><br/>
+                      <apex:image value="/s.gif" alt="Add" styleClass="rightArrowIcon"
+                  title="Add" >
+                   <!-- <apex:image value="select"><!-- value="{!$Resource.multiselected}">-->
+                        <apex:actionSupport event="onclick" action="{!selectclick}" reRender="abcd"/>
+                    </apex:image>
+                    <br/><br/>
+                    
+                    <apex:image value="/s.gif" alt="Remove"
+                  styleClass="leftArrowIcon" title="Remove" >
+                        <apex:actionSupport event="onclick" action="{!unselectclick}" reRender="abcd"/>
+                    </apex:image>
+                </apex:panelGroup>
+              
+            <apex:selectList id="sel2" value="{!rightselected}" multiselect="true" style="width:150px" size="9">
+                <apex:selectOptions value="{!SelectedValues}" />
+            </apex:selectList>
+              <apex:panelGroup >
+                    <br/><br/>
+                    <apex:image value="/s.gif" alt="Up" styleClass="upArrowIcon"
+                  title="Up" >
+                        <apex:actionSupport event="onclick" action="{!upselectclick}" reRender="abcd"/>
+                    </apex:image>
+                    <br/><br/>
+                    
+                      <apex:image value="/s.gif" alt="Down" styleClass="downArrowIcon"
+                  title="Down" >
+                        <apex:actionSupport event="onclick" action="{!downselectclick}" reRender="abcd"/>
+                    </apex:image>
+                </apex:panelGroup>
+            
+        </apex:panelGrid>
+        
+        </apex:pageblock>
+    </apex:form>
+</apex:page>

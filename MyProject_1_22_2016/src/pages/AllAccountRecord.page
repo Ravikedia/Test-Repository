@@ -1,0 +1,72 @@
+<apex:page controller="AccountRecordConfirm" sidebar="false" standardStylesheets="false" >
+
+    <head> 
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
+        <link rel="stylesheet" media="print" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+        
+    </head>    
+    <script>
+        function setvalue(rec)
+        {
+            var id = rec.id;
+            document.getElementById(id).style.backgroundColor="green"
+            var x  = document.getElementById(id).value='Confirmed';   
+        }
+    </script>
+    
+    <script>
+        function setvalue1(rec)
+        {
+            var id = rec.id;
+            var x  = document.getElementById(id).value='Confirm';
+             document.getElementById(id).style.backgroundColor="red";
+        }
+    </script>
+    
+    <script>
+        function setvalue2()
+        {
+            var x  = document.getElementById('butt').value="Confirmed";
+            document.getElementById('butt').style.backgroundColor="blue";
+            setValue();
+        }
+    </script>
+    
+    <script>
+        function setvalue3()
+        {
+            var x  = document.getElementById('butt').value="Confirm";
+            document.getElementById('butt').style.backgroundColor="green";
+        }
+    </script>
+    
+<apex:stylesheet value="{!$Resource.Bootstrapss}"/>
+    <apex:form >
+     <apex:actionFunction name="setValue" action="{!selectedAccountId}"  />
+        
+        <apex:pageblock title="Account record" >
+             
+            <apex:pageblockTable value="{!accrecord}" var="acc"   >
+                <apex:column headerValue="Account Id" >
+                    <a target="_blank"  style="cursor: pointer;">{!acc.id}</a>
+                </apex:column>
+                
+                <apex:column headerValue="Account Name">
+                     <a style="cursor: pointer;">{!acc.Name}</a>
+                </apex:column>
+                
+                <apex:column headerValue="Account Number">
+                    <a style="cursor: pointer;">{!acc.AccountNumber }</a>
+                </apex:column>
+            </apex:pageblockTable>
+            
+            Enter your name: <apex:inputtext value="{!uName}"/>
+            Enter phone number:<apex:inputtext value="{!pNumber}"/>
+           <!--<apex:commandButton value="Confirm"  onclick="setvalue(this);" action="{!selectedAccountId}"  />
+           <button type="submit" value="Confirm" />-->
+           <input type="Button" value="Confirm" onclick="setvalue2();" id="butt"/>
+        </apex:pageblock>
+    </apex:form>  
+</apex:page>

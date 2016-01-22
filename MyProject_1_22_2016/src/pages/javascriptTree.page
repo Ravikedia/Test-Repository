@@ -1,0 +1,126 @@
+<apex:page >
+
+<html>
+
+
+<head>
+
+
+    <!-- head -->
+
+    <!-- demo stylesheet -->
+   <!-- <link type="text/css" rel="stylesheet" href="demo.css?v=1240" />
+    <link type="text/css" rel="stylesheet" href="layout.css?v=1240" />
+    <link type="text/css" rel="stylesheet" href="elements.css?v=1240" />
+
+    <!-- helper libraries -->
+   <!-- <script src="jquery-1.9.1.min.js" type="text/javascript"></script>
+    
+    <!-- daypilot libraries -->
+        
+    <apex:stylesheet value="{!URLFOR($Resource.treesch,'treesch/demo.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.treesch,'treesch/layout.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.treesch,'treesch/elements.css')}"/>
+   <!-- <script src="daypilot-all.min.js?v=1240" type="text/javascript"></script>-->
+    <apex:includeScript value="{!URLFOR($Resource.treesch,'treesch/jquery-1.9.1.min.js')}"/>
+     <apex:includeScript value="{!URLFOR($Resource.treesch,'treesch/daypilot-all.min.js')}"/>
+
+
+</head>     
+<div id="dp"></div>   
+
+<script type="text/javascript">
+
+    $(document).ready(function() {
+        $("#dp").daypilotGantt({
+       
+            startDate: "2014-10-01",
+            days: 31,
+            columns: [
+                {
+                    title: "Name",
+                    width: 50,
+                    property: "text"
+                },
+                {
+                    title: "Info",
+                    width: 50,
+                    property: "info"
+                },
+                {
+                    title: "Duration",
+                    width: 50,
+                    format: function(args) {
+                        var duration = new DayPilot.TimeSpan(new DayPilot.Date(args.task.end).getTime() - new DayPilot.Date(args.task.start).getTime());
+                        return duration.toString("d") + "d " + duration.toString("h") + "h";
+                    }
+                }
+            ],
+            tasks:[
+                {
+                    id: 111,
+                    text: "Group 1",
+                    tags: {
+                        info: "info text"
+                    },
+                    children: [
+                        {
+                            start: "2014-10-02",
+                            end: "2014-10-04",
+                            id: 2,
+                            text: "Subtask 1",
+                            complete: Math.floor(Math.random() * 101) // 0 to 100
+                        },
+                        {
+                            start: "2014-10-04",
+                            end: "2014-10-07",
+                            id: 3,
+                            text: "Subtask 2",
+                            complete: Math.floor(Math.random() * 101) // 0 to 100
+                        },
+                        {
+                            start: "2014-10-10",
+                            id: 4,
+                            text: "Milestone 1",
+                            type: "Milestone"
+                        }
+
+                    ]
+                }
+            ],
+            
+   
+            
+            links: [
+                {from: 2, to: 3}
+            ],
+            
+            
+            
+            
+            onTaskClicked: function(args) {
+                alert("Clicked: " + args.e.id());
+            }
+        });
+    });
+    
+</script>
+
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+    var url = window.location.href;
+    var filename = url.substring(url.lastIndexOf('/')+1);
+    if (filename === "") filename = "javascriptTree";
+    $(".menu a[href='" + filename + "']").addClass("selected");
+});
+        
+</script>
+    <!-- /bottom -->
+
+
+</html>
+
+
+</apex:page>

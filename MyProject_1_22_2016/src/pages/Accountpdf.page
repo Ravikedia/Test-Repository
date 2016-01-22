@@ -1,0 +1,73 @@
+<apex:page controller="AccountRecordConfirm" sidebar="false" standardStylesheets="tre" renderAs="pdf">
+
+    <head> 
+       <!-- <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
+        <link rel="stylesheet" media="print" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>-->
+        <link rel="stylesheet" type="text/css" media="print" href="print.css"/>
+ 
+    <style type="text/css" media="print">
+    @media print {
+    
+        .btn-primary1 {
+        color: black !important;
+        background-color: black !important;
+        border-color:Black !important;
+        font-family: 'Patua One';
+        font-size: 14px;
+        border-radius: 0px;
+        height: 30px;
+        margin-left: 20px;
+        }
+        .headerRow1{
+        background-color:red !important;
+        }
+        .list1{
+        
+        background-color: darkturquoise !important;
+        }
+    }
+</style>
+<style>
+  .list1{
+        
+        background-color: darkturquoise !important;
+        }
+</style>
+
+
+    </head>
+   
+    <apex:stylesheet value="{!$Resource.Bootstrapss}"/>
+    <apex:stylesheet value="{!$Resource.DynamicSearchCSS}"/>
+    
+    
+     <apex:form >
+        <apex:pageblock title="Account record" >
+            
+            <apex:pageblockTable value="{!accrecord}" var="acc" style="border: 2px solid #e0e3e5;" styleClass="list1">
+                <apex:column headerValue="Account Id" style="border: 2px solid #e0e3e5;" StyleClass="headerRow1">
+                   <!-- <apex:outputLink onclick="passAccountId('{!acc.id}')" >{!acc.id} </apex:outputLink>-->
+                    <a target="_blank" onclick="passAccountId('{!acc.id}')" Class="headerRow1" style="cursor: pointer;">{!acc.id}</a>
+                    
+                </apex:column>
+                
+                <apex:column headerValue="Account Name" style="border: 2px solid #e0e3e5;">
+                   <!-- <apex:outputLink  >{!acc.Name} </apex:outputLink>-->
+                     <a style="cursor: pointer;" >{!acc.Name}</a>
+                </apex:column>
+                
+                <apex:column headerValue="Account Number" style="border: 2px solid #e0e3e5;">
+                   <!-- <apex:outputLink disabled="" >{!acc.AccountNumber } </apex:outputLink>-->
+                    <a style="cursor: pointer;">{!acc.AccountNumber }</a>
+                </apex:column>
+                
+            </apex:pageblockTable> <br/>
+           Your name: <apex:outputText value="{!uName}" styleClass="grid1"/>&nbsp;
+           Your phone number:<apex:outputText value="{!pNumber}"/>
+        <apex:commandButton value="Click me" styleClass="btn-primary1"/>
+            <button type="submit"  class="btn-primary1" style="color: blue;margin: 1px;padding: 2px 3px; backgroundColor :blue; border: 1px solid #b5b5b5;border-bottom-color: #7f7f7f;background: #e8e8e9 url('/img/alohaSkin/btn_sprite.png') repeat-x right top;font-weight: bold;font-size: .9em;-moz-border-radius: 3px;-webkit-border-radius: 3px;border-radius: 3px;"> Confirmed </button>
+        </apex:pageblock>
+        </apex:form>
+</apex:page>

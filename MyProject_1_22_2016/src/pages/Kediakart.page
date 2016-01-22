@@ -1,0 +1,206 @@
+<apex:page standardController="Account" sidebar="false" standardStylesheets="false" showHeader="false">
+<style>
+.back
+{
+  background-color: #005387 !important;
+  position: relative !important;
+  z-index: 1 !important; 
+  padding: 4px 0 !important;
+  line-height: 2.428571 !important;
+}
+
+.back1
+{
+  background-color: #0a3151;
+  position: relative !important;
+  z-index: 1 !important;
+  padding: 25px 0 !important;
+  line-height: 6.428571 !important;
+}
+</style>
+
+
+<head> 
+    <title>Create New Account</title>
+    <!-- THIS CSS USE FOR COLLAPSE LIST-->
+    <apex:includeScript value="{! $Resource.jQueryMini}"/>
+    <!--<apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"/>
+    <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js"/>-->
+    
+      <!-- <apex:stylesheet value="{!URLFOR($Resource.BootStrap,'BootStrap/css/bootstrap.min.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.BootStrap,'BootStrap/css/bootstrap-theme.min.css')}"/>-->
+      <!--  <apex:includeScript value="{!URLFOR($Resource.BootStrap,'BootStrap/js/bootstrap.min.js')}"/>-->
+        <apex:includeScript value="{!URLFOR($Resource.bootstrap, 'bootstrap/js/bootstrap.js')}"/>
+    
+        <apex:stylesheet value="{!URLFOR($Resource.bootstrap, 'bootstrap/css/bootstrap.css')}"/>
+    
+    <style type="text/css"><!-- Spacing for the Nav bar -->
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+    </style>
+    
+    <style>
+    .cmdbutton{
+        width: 14%  !important;
+        margin-left: 34% !important;
+        }
+    
+    </style>
+    
+    <style>
+    .colps{
+    width :20% !important;
+    }
+    
+    </style>
+
+    <script type="text/javascript">
+        var $j = jQuery.noConflict();
+    </script>
+</head>
+  
+  
+  
+  
+   <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner back">
+        <div class="container back">
+        <a href="/" class="fk-text-center fk-font-11 logo-img-link fllt">
+            <img width="149px" height="38px" class="logo-img retina-img" data-retina="http://img6a.flixcart.com/www/prod/images/flipkart_india_retina-9eba8425.png" src="http://img6a.flixcart.com/www/prod/images/flipkart_india-b1a41241.png" alt="Flipkart.com: Online Shopping India" title="Online Shopping India | Flipkart.com"/>
+            <div class="text" style="display: block;">
+                The Online Megastore
+            </div>
+        </a>
+        </div>
+      </div>
+    </div>
+  
+  
+  <div class="back1" style="background-color: #0a3151;">
+      <div class="navbar-inner">
+        <div class="container">
+
+        </div>
+      </div>
+    </div>
+    
+    
+      <div class="panel-group colps nav navbar-nav navbar-left" id="accordion">
+             <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                          Home Page
+                        </a>
+                    </h4>
+                 </div>
+                <div id="collapseOne" class="panel-collapse collapse in">
+                  <div class="panel-body">
+                      <ul class="list-group">
+                          <li class="list-group-item">Loan Detail </li>
+                          <li class="list-group-item">Transactions </li>
+                          <li class="list-group-item">Statements </li>
+                          <li class="list-group-item">Loan Documents</li>
+                          <li class="list-group-item">LOC Draft</li>
+                          <li class="list-group-item">Refinance</li>
+                          <li class="list-group-item">PayOff</li>
+                    </ul>
+                  </div>
+                </div>
+            </div>
+            </div>
+            
+
+
+
+<div id="carousel-example-generic" class="carousel slide nav navbar-nav navbar-center" data-ride="carousel">
+  <!-- Indicators -->
+  <ol class="carousel-indicators">
+    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+    <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+    <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+  </ol>
+
+  <!-- Wrapper for slides -->
+  <div class="carousel-inner" role="listbox">
+    <div class="item active">
+        <apex:image url="{!$Resource.TestImage}" width="1000" height="1000"/>
+      <div class="carousel-caption">
+        ...
+      </div>
+    </div>
+    <div class="item">
+      <apex:image url="{!$Resource.TestImage}" width="1000" height="1000"/>
+      <div class="carousel-caption">
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Controls -->
+  <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+    <span class="glyphicon glyphicon-chevron-left"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+    <span class="glyphicon glyphicon-chevron-right"></span>
+    <span class="sr-only">Next</span>
+  </a>
+</div>
+
+
+
+  <div class="panel-group colps nav navbar-nav navbar-right" id="accordion">
+             <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                          Home Page
+                        </a>
+                    </h4>
+                 </div>
+                <div id="collapseOne" class="panel-collapse collapse in">
+                  <div class="panel-body">
+                      <ul class="list-group">
+                          <li class="list-group-item">Loan Detail </li>
+                          <li class="list-group-item">Transactions </li>
+                          <li class="list-group-item">Statements </li>
+                          <li class="list-group-item">Loan Documents</li>
+                          <li class="list-group-item">LOC Draft</li>
+                          <li class="list-group-item">Refinance</li>
+                          <li class="list-group-item">PayOff</li>
+                    </ul>
+                  </div>
+                </div>
+            </div>
+            </div>
+    
+            
+      
+            
+            
+      <div  class="navbar navbar-default navbar-fixed-bottom" role="navigation" >
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+            <a class="brand" href="#">Bootstrap Page</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+            <li><a href="#">Link 1</a></li>
+            <li><a href="#">Link 2</a></li>
+            </ul>
+            <span class="navbar-form span3 pull-right">
+                <li><a href="#">Right Link</a></li>
+            </span>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+</apex:page>

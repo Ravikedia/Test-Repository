@@ -1,0 +1,17 @@
+<apex:page controller="contactController">
+    <apex:form >
+        <apex:pageBlock title="My Content">
+            <apex:pageBlockSection title="My Content Section" columns="2">
+                <apex:pageBlockSectionItem >
+                    <apex:panelGroup >
+                        <apex:outputLabel value="Lookup to an Account" for="theLookup"/>
+                        <apex:inputField id="theLookup" value="{!cont.Accountid}"/>
+                        <apex:commandButton value="get details" action="{!retriveDetail}"/>
+                    </apex:panelGroup>
+                </apex:pageBlockSectionItem>
+                
+                
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

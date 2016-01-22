@@ -1,0 +1,39 @@
+<apex:page id="myPage" controller="DatePickerForDobController">
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css"></link>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+    <apex:form id="myForm">
+      Select Date: <!--<input type="text" id="datepicker" />-->
+      <apex:inputText id="datepicker" value="{!dat}"/>
+      
+      <!--<apex:input type="date" value="{!dat}" id="datepicker"/>-->
+      
+      
+      
+          <script>
+          $(function() {
+            $('[id$="datepicker"]').datepicker({
+              changeMonth: true,
+              changeYear: true,
+              maxDate: 0,
+              inline: true,
+              yearRange: "-80:+0",
+            });
+          });
+          </script>
+          
+          <apex:commandButton value="Save" action="{!SaveData}" reRender="none"/>
+          
+      <!--<script>
+          $(function() {
+            $( "#datepicker" ).datepicker({
+              changeMonth: true,
+              changeYear: true,
+              maxDate: 0,
+              inline: true,
+              yearRange: "-80:+0",
+            });
+          });
+          </script>-->
+    </apex:form>
+</apex:page>

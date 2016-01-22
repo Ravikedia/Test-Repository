@@ -1,0 +1,567 @@
+<apex:page cache="false" controller="IGD.SetupPageController" title="Cirrus Files Setup" action="{!sendAuthenticationRequest}" tabStyle="IGD_Setup__tab" id="pageId">
+    <apex:sectionHeader title="{!pageBlockTitle}" subtitle="Cirrus Files" />
+
+        <c:importvisualstrap theme="default" />
+
+        <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script> 
+
+        <apex:includeScript value="{!URLFOR($Resource.IGD__jQuery, '/js/jquery.snippet.min.js')}"/>
+
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet" />
+        <link href="{!URLFOR($Resource.Clipboard,'clipboard.css')}" rel="stylesheet" type="text/css"/>
+        <script src="{!URLFOR($Resource.Clipboard,'ZeroClipboard.js')}"></script>
+
+        <style>
+        .ui-widget-overlay {
+            background:#FFFFFF;
+            background-color: #222;
+        }
+        .ui-dialog-titlebar {
+            display:none;
+        }
+        .ui-dialog .ui-dialog-content {
+            padding: 0;
+            border: none;
+        }
+        .ui-dialog {
+            padding: 0;
+            border: none;
+        }
+
+        .center {
+            text-align: center !important;
+        }
+
+        div.panelStatus {
+            background-color: #EEE;
+            margin: -15px -15px 15px -15px;
+            padding: 10px 10px 10px 15px;
+            font-size: 10pt;
+        }
+
+        div.taskInstructions {
+            width: 300px;
+            float: left;
+            font-size: 10pt;
+        }
+
+        div.taskDetail {
+            float:left !important;
+        }
+
+        div.clipboardContainer {
+            width: 800px;
+        }
+
+        input.btn.copybtn {
+            position: relative;
+            top: -39px;
+            left: 681px;
+        }
+
+        input.btn.buynow {
+            float: right;
+            position: relative;
+            top: -50px;
+        }
+
+        a.launchvideo {
+            margin-left: 75px;
+        }
+
+        .auth_choices p {
+            height: 50px;
+        }
+        </style>
+
+        <apex:form id="formId">
+
+        <apex:actionFunction name="saveObjectJS" action="{!saveObject}" />  
+        <div id="splashdiv" >
+            <div id="blurybackground" ></div>
+            <div id="statusBox">
+                <img src="/img/loading32.gif" />
+                <div id="textBox">Processing...</div>
+            </div>
+        </div>
+
+        <apex:actionStatus id="splashStatus" >
+            <apex:facet name="start">
+                <div id="blurybackground"></div>
+                <div id="statusBox">
+                    <img src="/img/loading32.gif" />
+                    <div id="textBox">Processing...</div>
+                </div>
+            </apex:facet>
+        </apex:actionStatus>    
+
+    <div id="dialog" />
+    <!-- page panel starts -->
+    <c:visualstrapblock >
+
+    <apex:commandButton action="{!goToBillingPage}" styleClass="btn btn-success buynow" value="Buy Cirrus Files" rendered="{!(!isCustomer)}" />
+    <apex:commandButton action="{!goToBillingPage}" styleClass="btn btn-success buynow" value="Buy Additional Seats" rendered="{!(isCustomer)}" />
+
+    <apex:outputpanel id="mainsection" rendered="{!isAdmin && ISBLANK($CurrentPage.parameters.code)}">
+            <apex:pageMessages escape="false" id="msg"/>
+            <apex:pageMessage summary="Configuration is in Progress..." severity="Info" strength="2" rendered="{!NOT(ISNULL(deployAsyncResult))}" id="deployMsg"/>            
+
+            <apex:outputpanel id="pollerPanel">
+                <apex:actionPoller action="{!checkAsyncRequest}" interval="5" rerender="mainsection,deployMsg" rendered="{!NOT(ISNULL(deployAsyncResult))}" />
+            </apex:outputpanel>
+            <apex:actionFunction name="deployZip" action="{!deployZip}" rendered="{!ISNULL(deployAsyncResult)}" rerender="pollerPanel,deployMsg" >    <!-- rerender="mainsection,deployMsg" -->
+                <apex:param name="data" assignTo="{!zipData}" value=""/>
+            </apex:actionFunction>
+
+            <c:zip name="generateInstallZip" oncomplete="deployZip(data);" rendered="{!(generateZip && ISNULL(deployAsyncResult) && deployAction='add')}">
+                <c:zipEntry path="package.xml" data="{!PackageXml}"/>
+
+                <apex:outputPanel rendered="{!NOT(deployed)}">
+                    <c:zipEntry path="objects/{!selectedObject}.object" data="{!CustomField}" />
+
+                    <c:zipEntry path="pages/{!vfPageName}.page-meta.xml" data="{!VFPageMetadata}" />
+                    <c:zipEntry path="pages/{!vfPageName}.page" data="{!vfPageCodeNew}" />
+
+                    <c:zipEntry path="pages/{!vfPageNameSF1}.page-meta.xml" data="{!VFPageSF1Metadata}" />
+                    <c:zipEntry path="pages/{!vfPageNameSF1}.page" data="{!vfPageCodeSF1}" />
+
+                    <apex:outputPanel rendered="{!apexAllowed}">
+                        <c:zipEntry path="classes/{!className}.cls-meta.xml" data="{!ApexClassMetadata}" />
+                        <c:zipEntry path="classes/{!className}.cls" data="{!TriggerTestCode}" />
+
+                        <c:zipEntry path="triggers/{!triggerName}.trigger-meta.xml" data="{!TriggerMetadata}" />
+                        <c:zipEntry path="triggers/{!triggerName}.trigger" data="{!TriggerCode}" />
+                    </apex:outputPanel>
+                </apex:outputPanel>
+            </c:zip>
+
+            <c:zip name="generateUnInstallZip" oncomplete="deployZip(data);" rendered="{!(generateZip && ISNULL(deployAsyncResult) && deployAction=='delete')}">
+                <c:zipEntry path="package.xml" data="{!PackageXml}"/>
+
+                <apex:outputPanel rendered="{!NOT(deployed)}">
+                    <c:zipEntry path="destructiveChanges.xml" data="{!DestructiveXml}" />
+                </apex:outputPanel>
+            </c:zip>
+
+        <!-- panel for not connected status starts-->
+            <apex:outputPanel rendered="{!(NOT(credentials.IGD__Connection_Status__c) || NOT(userAuthenticated))}">
+                <apex:pageBlock title="{!pageBlockTitle}">
+
+                     <apex:pageBlockSection collapsible="false" columns="1">
+                         <apex:pageBlockSectionItem >  
+                             <p>Click <strong>Connect</strong> to begin the configuration process. You will need to authorize a company Administrator Google account on the following screen.</p>
+                         </apex:pageBlockSectionItem>
+
+                         <apex:pageBlockSectionItem >
+                             <apex:commandButton value="Connect" action="{!goToAuthorizationURL}" rerender="formId,mainsection" status="splashStatus" styleClass="btnPrimary" />
+                         </apex:pageBlockSectionItem>
+                        </apex:pageBlockSection>
+                </apex:pageBlock>
+            </apex:outputPanel>     
+        <!-- panel for not connected status ends-->   
+        
+            <!-- connected status panel starts -->
+        <apex:outputpanel rendered="{!credentials.IGD__Connection_Status__c}" id="configsection">
+        <br/>
+
+        <apex:outputPanel rendered="{!(NOT(showStep2) && userAuthenticated)}">
+            <!-- User Authentication section -->
+            <c:row >
+                <c:column type="col-md-8">
+                    <c:panel title="User Authentication" type="primary">
+                        <p style="font-size: 110%">Choose how your users will use Cirrus Files.</p>
+                        <c:row styleClass="auth_choices">
+                            <c:column type="col-md-6">
+                                <c:panel title="Mirroring" type="{!if(IsSingleUserMode, 'info', '')}">
+                                    <apex:outputPanel rendered="{!NOT(IsSingleUserMode)}" style="float:left;padding-right: 5px;margin-top: -5px;margin-left: -10px;"> <i class="fa fa-check-circle fa-4x"></i> </apex:outputPanel>
+                                    <p>Cirrus Files users have the same permissions as granted in your Google Drive.</p>
+                                    <apex:commandButton value="{!if(IsSingleUserMode, 'Choose', 'Selected')}" action="{!enableMultiUserAuthentication}" styleClass="{!if(IsSingleUserMode, 'btn btn-info', 'btn')}" style="margin-left: 40%;" disabled="{!NOT(IsSingleUserMode)}" status="splashStatus" rerender="mainsection,deployMsg" />
+                                    <!-- 
+                                    <apex:outputPanel rendered="{!NOT(IsSingleUserMode)}" > <i class="fa fa-check-circle fa-4x" style="float:center; padding-left:40%"></i> </apex:outputPanel>
+                                    <apex:commandButton value="{!if(IsSingleUserMode, 'Choose', 'Selected')}" action="{!enableMultiUserAuthentication}" styleClass="{!if(IsSingleUserMode, 'btn btn-info', 'btn')}" style="margin-left: 40%;" disabled="{!NOT(IsSingleUserMode)}" status="splashStatus" rerender="mainsection,deployMsg" rendered="{!IsSingleUserMode}" />
+                                    -->
+                                </c:panel>
+                            </c:column>
+                            <c:column type="col-md-6">
+                                <c:panel title="Administrator Only" type="{!if(IsSingleUserMode, '', 'info')}">
+                                    <apex:outputPanel rendered="{!IsSingleUserMode}" style="float:left;padding-right: 5px; margin-top: -3px;margin-left: -10px;" > <i class="fa fa-check-circle fa-4x"></i> </apex:outputPanel>
+                                    <p>Cirrus Files operates under one user, the Administrator. Users can add and view files, but files are under the Administrator’s control to edit, share, and delete.</p>
+                                    <apex:commandButton value="{!if(IsSingleUserMode, 'Selected', 'Choose')}" action="{!enableAdminAuthentication}" styleClass="{!if(IsSingleUserMode, 'btn', 'btn btn-info')}" style="margin-left: 40%" disabled="{!IsSingleUserMode}" status="splashStatus" rerender="mainsection,deployMsg" />
+                                    <!-- 
+                                    <apex:outputPanel rendered="{!IsSingleUserMode}" > <i class="fa fa-check-circle fa-4x" style="float:center; padding-left:40%"></i> </apex:outputPanel>
+                                    <apex:commandButton value="{!if(IsSingleUserMode, 'Selected', 'Choose')}" action="{!enableAdminAuthentication}" styleClass="{!if(IsSingleUserMode, 'btn', 'btn btn-info')}" style="margin-left: 40%" disabled="{!IsSingleUserMode}" status="splashStatus" rerender="mainsection,deployMsg" rendered="{!NOT(IsSingleUserMode)}" />
+                                    -->
+                                </c:panel>
+                            </c:column>
+                        </c:row>
+                    </c:panel>
+                </c:column>
+
+                <c:column type="col-md-4">
+                    <c:panel type="info" title="Installation Walkthrough">
+                        <div style="text-align: center; height: 185px">
+                            <a href="//fast.wistia.net/embed/iframe/iwjw5u661r?popover=true" class="wistia-popover[height=450,playerColor=7b796a,width=800]"><img src="https://embed-ssl.wistia.com/deliveries/9ef4f77fd5941f19e91793b6c848c922b309ec2e.jpg?image_play_button=true&image_play_button_color=7b796ae0&image_crop_resized=251x141" alt="" /></a>
+                            <!-- <script charset="ISO-8859-1" src="//fast.wistia.com/assets/external/popover-v1.js"></script> -->
+                        </div>
+                    </c:panel>
+                </c:column>
+            </c:row>
+
+            <!-- Configured object list section starts -->
+            <c:row >
+                <c:column type="col-md-8">
+                    <c:panel title="Available Objects" type="primary">
+                        <p>Enable Cirrus Files for any objects listed below to sync between Salesforce and Google Drive.</p>
+
+                        <apex:dataTable styleClass="table-hover" width="100%" value="{!configuredObjects}" var="obj" cellpadding="5">
+                            
+                            <apex:column headerValue="Status" headerClass="center" width="100" rendered="{!showConfigure}" style="text-align: center">
+                                <apex:outputPanel rendered="{!(NOT(obj.isConfigured) || ISBLANK(obj.cirrusFilesObject.Id))}" style="width: 100px">
+                                    <i class="fa fa-info-circle"></i>&nbsp;
+                                    <apex:commandLink value="Enable" action="{!configureObject}" rerender="mainsection,deployMsg" oncomplete="generateInstallZip();" status="splashStatus" >
+                                        <apex:param name="selectedObject" assignTo="{!selectedObject}" value="{!obj.cirrusFilesObject.IGD__Cirrus_Files_Object_API_Name__c}" />
+                                        <apex:param name="autoEnable" value="1" />
+                                        <apex:param name="deployAction" assignTo="{!deployAction}" value="add"/>
+                                    </apex:commandLink>
+                                </apex:outputPanel>
+
+                                <apex:outputPanel rendered="{!(obj.isConfigured && NOT(ISBLANK(obj.cirrusFilesObject.Id)))}" style="color: #090; width: 100px">
+                                    <i class="fa fa-check-circle"></i>&nbsp;Configured
+                                </apex:outputPanel>
+                            </apex:column>
+
+                            <apex:column value="{!obj.cirrusFilesObject.Name}" headerValue="Object"/> 
+
+                            <apex:column headerValue="Auto Connect">
+                                <apex:inputCheckbox value="{!obj.cirrusFilesObject.IGD__Auto_Connect__c}" disabled="{!(NOT(obj.isConfigured) || ISBLANK(obj.cirrusFilesObject.Id))}" >
+                                    <apex:actionSupport event="onchange" action="{!obj.save}" status="splashStatus" rerender="msg" />
+                                </apex:inputCheckbox>
+                                &nbsp;
+                            </apex:column>
+
+                            <apex:column headerValue="Attachments">
+                                <apex:inputField value="{!obj.cirrusFilesObject.IGD__Attachments__c}" style="width: 78px;" rendered="{!(obj.isConfigured && NOT(ISBLANK(obj.cirrusFilesObject.Id)))}" >	<!-- disabled="{!(NOT(obj.isConfigured) || ISBLANK(obj.cirrusFilesObject.Id))}" -->
+                                    <apex:actionSupport event="onchange" action="{!obj.save}" status="splashStatus" rerender="msg" />
+                                </apex:inputField>
+
+                                <apex:outputPanel rendered="{!(NOT(obj.isConfigured) || ISBLANK(obj.cirrusFilesObject.Id))}" >
+									<select disabled="true" style="width: 78px;" >										
+									  	<option value="Move">Move</option>
+									  	<option value="Copy">Copy</option>
+									</select>
+								</apex:outputPanel>
+                                &nbsp;
+                            </apex:column>
+
+                            <apex:column headerValue="Action" rendered="{!showConfigure}" >	<!--headerClass="center" width="100" style="text-align: center" -->
+                                <apex:outputPanel rendered="{!(obj.isConfigured && NOT(ISBLANK(obj.cirrusFilesObject.Id)))}" >	<!-- style="width: 100px" -->
+                                    <i class="fa fa-info-circle"></i>&nbsp;
+                                    <apex:commandLink value="Disable" onclick="if(!disableObject('{!obj.cirrusFilesObject.Name}')) return;" action="{!configureObject}" rerender="mainsection,deployMsg" oncomplete="generateUnInstallZip();" status="splashStatus" >
+                                        <apex:param name="selectedObject" assignTo="{!selectedObject}" value="{!obj.cirrusFilesObject.IGD__Cirrus_Files_Object_API_Name__c}" />
+                                        <apex:param name="autoEnable" value="1" />
+                                        <apex:param name="deployAction" assignTo="{!deployAction}" value="delete"/>
+                                    </apex:commandLink>
+                                </apex:outputPanel>
+                            </apex:column>
+                        </apex:dataTable>
+                    </c:panel>
+                </c:column>
+
+                <c:column type="col-md-4">
+                    <c:panel title="Helpful Tips" type="info">
+                        <ul>
+                            <li>A new folder named "Cirrus Files" has been added to your root directory in Google Drive. Make sure you share that folder with other groups so that they can access the files.</li>
+                            <br/>
+                            <li>If you need to change the user that is connected to Cirrus Files, click the <b>Change Authorization</b> button below.</li>
+                            <br/>
+                            <li>Under Attachments, select which action works best for your organization when adding an attachment to a Salesforce record. <b>"Move"</b> will move the attachment, and any other attachments on the record, to the Cirrus Files folder hierarchy.  <b>"Copy"</b> will copy the attachment, and any other attachments on the record, to the Cirrus Files folder hierarchy. </li>
+                        </ul>
+                    </c:panel>
+                </c:column>
+            </c:row>
+
+<!--
+            <c:row >
+                <c:column type="col-md-8">
+                    <c:panel title="Salesforce1 Options" type="primary">
+                        <apex:inputCheckbox value="{!credentials.Open_files_in_native_app__c}" id="open_files_in_native_app">
+                            <apex:actionSupport event="onchange" action="{!saveOptions}" status="splashStatus" reRender="msg" />
+                        </apex:inputCheckbox>
+                        <apex:outputLabel for="open_files_in_native_app">&nbsp;&nbsp;Open files in Google Drive</apex:outputLabel>
+                    </c:panel>
+                </c:column>
+            </c:row>
+-->
+
+            <c:row >
+                <c:column type="col-md-8">
+                    <c:panel title="Advanced Configuration Options" type="primary">
+                        <p style="font-weight: bold; font-size: 110%"><c:label type="warning">New!</c:label>&nbsp;&nbsp;Customize Record Folder Names</p>
+                        <p>By default, a folder will be created for a record using the record's Name field.</p>
+                        <p>You can change this behavior if you create a formula field named "Cirrus Files Folder Name" (API Name: "Cirrus_Files_Folder_Name__c"). The value of this formula will determine the name that is used for the folder.</p>
+
+                        <p style="font-weight: bold; font-size: 110%"><c:label type="warning">New!</c:label>&nbsp;&nbsp;Group Record Folders By Parent Record</p>
+                        <p>By default, folders are created under a parent folder with the name of the object. For example, a folder named "Tim Barr" may be created for a Contact record under the "Cirrus Files / Contacts" folder. But if you want the "Tim Barr" folder to be created under the parent Account, "Grand Hotels &amp; Resorts Ltd", you can! </p>
+                        <p>Create a formula field named "Cirrus Files Nest Under" (API Name: "Cirrus_Files_Nest_Under__c"). This formula should point to the "Collection ID" field on the object it wants to be nested under; in this example, "Account.IGD__Collection_Id__c". The parent object should also be enabled for Cirrus Files.</p>
+
+                        <p style="font-weight: bold; font-size: 110%"><c:label type="warning">New!</c:label>&nbsp;&nbsp;Categorize Record Folders</p>
+                        <p>You can configure Cirrus Files to categorize Record Folders according to any scheme you choose. For example, you may want Account Record Folders to be grouped into "Customer" and "Partner" parent folders, according to the Account Type field.</p>
+                        <p>Create a formula field named "Cirrus Files Folder Group" (API Name: "Cirrus_Files_Folder_Group__c"). This value of this formula will be used as the parent folder for this Record Folder; in this example, "Account_Type__c".</p> 
+
+                    </c:panel>
+                </c:column>
+
+                <c:column type="col-md-4">
+<!--                    <c:panel title="Helpful Tips" type="info">
+                        <ul>
+                            <li>A new folder named "Cirrus Files" has been added to your root directory in Google Drive. Make sure you share that folder with other groups so that they can access the files.</li>
+                            <br/>
+                            <li>If you need to change the user that is connected to Cirrus Files, click the <b>Change Authorization</b> button below.</li>
+                        </ul>
+                    </c:panel> -->              
+                </c:column>
+            </c:row>
+
+            <apex:commandButton styleClass="btn btn-warning btn-xs" value="Change Authorization" action="{!changeAuthorization}" rerender="formId,mainsection" status="splashStatus" onclick="if(!changeAuthorization()) return;" />    <!-- rendered="{!!showObjectConfigure}" -->
+
+        </apex:outputPanel>
+
+
+<!-- ***** STEP 2 ***** -->
+
+        <apex:outputPanel rendered="{!showStep2}">
+            <!-- <div id="dialog" /> -->
+
+            <c:alert type="warning">
+                <p><c:glyph icon="warning-sign" />&nbsp;
+                    Enterprise Edition Users: These changes should be made in your <b>Sandbox</b> environment.
+                </p>
+            </c:alert>
+
+            <c:row >
+                <c:column type="col-md-8">
+                    <h2 class="heading">Validation</h2>
+                    <p class="subheading">Here you will validate the objects connections between Salesforce and Google.</p>
+                </c:column>
+
+                <c:column type="col-md-4">
+                    <apex:commandButton value="Refresh" action="{!configureObject}" status="splashStatus" styleClass="btn btn-info" style="float:right" />
+                </c:column>
+            </c:row>
+
+            <c:panel title="Custom Fields" type="primary" styleClass="step-one">
+                <div class="panelStatus">
+                    <b>Status</b>: <i class="{!if(hasCollectionIdField, 'fa fa-check-circle', 'fa fa-times-circle')}"></i> {!if(hasCollectionIdField, 'Complete', 'Incomplete')}
+                </div>
+                <div class="taskInstructions">
+                    <p>This is the first validation test. To the side are the specific fields associated with the object that need to be synced.</p>
+
+                    <a href="//fast.wistia.net/embed/iframe/u16i6h478w?popover=true" class="wistia-popover[height=450,playerColor=7b796a,width=800] launchvideo"><img src="https://embed-ssl.wistia.com/deliveries/8bc44b855547c41f486d64565a09f13ea204ae12.jpg?image_play_button=true&image_play_button_color=7b796ae0&image_crop_resized=150x84" alt="" /></a>
+
+                </div>
+                <div class="taskDetail">
+                    <ul>
+                        <li>Name: "Collection Id" (Collection_Id__c)</li>
+                        <li>Type: Text (255)</li>
+                    </ul>
+                </div>
+            </c:panel>
+
+            <c:panel title="VisualForce Page" type="primary" styleClass="step-two">
+                <div class="panelStatus">
+                    <b>Status</b>: <i class="{!if(hasVFPage, 'fa fa-check-circle', 'fa fa-times-circle')}"></i> {!if(hasVFPage, 'Complete', 'Incomplete')}
+                </div>
+                <div class="taskInstructions">
+                    <p>The Visualforce page "{!vfPageName}" also needs to be properly setup and you can find the required code snippet to the right.</p>
+
+                    <a href="//fast.wistia.net/embed/iframe/vmfisg51jt?popover=true" class="wistia-popover[height=450,playerColor=7b796a,width=800] launchvideo"><img src="https://embed-ssl.wistia.com/deliveries/fe2fe0f22bf3b0f1d5998b31466fd108c233c472.jpg?image_play_button=true&image_play_button_color=7b796ae0&image_crop_resized=150x84" alt="" /></a>
+
+                </div>
+                <div class="taskDetail">
+                    <c:clipboardcopy textid="vfPageId" text="{!vfPageCode}" type="hidden" rendered="{!vfPageCode!=''}" />
+                </div>
+            </c:panel>
+
+            <c:panel title="Apex Trigger" type="primary" styleClass="step-three">
+                <div class="panelStatus">
+                    <b>Status</b>: <i class="{!if(hasTrigger, 'fa fa-check-circle', 'fa fa-times-circle')}"></i> {!if(hasTrigger, 'Complete', 'Incomplete')}
+                </div>
+                <div class="taskInstructions">
+                    <p>The Trigger also needs to be properly setup and you can find the required code snippet to the right.</p>
+
+                    <a href="//fast.wistia.net/embed/iframe/0t3qchm9d0?popover=true" class="wistia-popover[height=450,playerColor=7b796a,width=800] launchvideo"><img src="https://embed-ssl.wistia.com/deliveries/3f1f72779d77ff54065b30617651ad7758f80ff4.jpg?image_play_button=true&image_play_button_color=7b796ae0&image_crop_resized=150x84" alt="" /></a>
+
+                </div>
+                <div class="taskDetail">
+                    <c:clipboardcopy textid="triggerId" text="{!triggerCode}" type="hidden" rendered="{!triggerCode!=''}" />
+                </div>
+            </c:panel>
+
+            <c:panel title="Apex Unit Tests" type="primary" styleClass="step-four">
+                <div class="panelStatus">
+                    <b>Status</b>: <i class="{!if(hasUnitTests, 'fa fa-check-circle', 'fa fa-times-circle')}"></i> {!if(hasUnitTests, 'Complete', 'Incomplete')}
+                </div>
+                <div class="taskInstructions">
+                    <p>Finally, the Apex Unit Tests need to be properly setup and you can find the required code snippet to the right.</p>
+                    <p>This code will set values for required fields, but if you have custom validation rules on these objects, <i>you</i> may need to modify this code.</p>
+                    <p>Do <i>not</i> change the name of the class.</p>
+
+                    <a href="//fast.wistia.net/embed/iframe/mm411e7i8j?popover=true" class="wistia-popover[height=450,playerColor=7b796a,width=800] launchvideo"><img src="https://embed-ssl.wistia.com/deliveries/44f3b8fc52528d615e932f3a249843d4a7ababfb.jpg?image_play_button=true&image_play_button_color=7b796ae0&image_crop_resized=150x84" alt="" /></a>
+
+                </div>
+                <div class="taskDetail">
+                    <c:clipboardcopy textid="testCodeId" text="{!triggerTestCode}" type="hidden" rendered="{!triggerTestCode!=''}" />
+                </div>
+            </c:panel>
+
+            <c:panel title="Create and Upload the Change Set" type="primary" styleClass="step-five">
+                <div class="taskInstructions">
+                    <p>A change set has to be created and uploaded to production.</p>
+
+                    <a href="//fast.wistia.net/embed/iframe/uols3qjy23?popover=true" class="wistia-popover[height=450,playerColor=7b796a,width=800] launchvideo"><img src="https://embed-ssl.wistia.com/deliveries/3fb1facc554240361dd6d1624e09eccbb0b064c8.jpg?image_play_button=true&image_play_button_color=7b796ae0&image_crop_resized=150x84" alt="" /></a>
+
+                </div>
+                <div class="taskDetail">
+                    <p>Steps</p>
+                    <ol>
+                        <li>Create a new Change Set entitled "Cirrus Files - [object name]".</li>
+                        <li>Add the [trigger name] Apex Trigger to the change set.</li>
+                        <li>Add the [unit tests class name] Apex Class to the change set.</li>
+                        <li>Upload the Change Set to Production.</li>
+                        <li>Deploy the Change Set.</li>
+                    </ol>
+
+                    <p>Once that change set is deployed successfully, you can add the new Visualforce page to the [object] page layout(s).</p>
+                </div>
+            </c:panel>
+
+            <apex:commandButton value="Cancel" styleClass="previous" action="{!cancel}" rerender="configsection,msg" immediate="true" />
+            <!-- <apex:commandButton value="Finish" styleClass="next btn btn-primary" action="{!saveObject}" status="splashStatus"/>     rerender="configsection,msg" -->
+            <apex:commandButton value="Finish" styleClass="next btn btn-primary" onclick="saveObject(this); return false;" status="splashStatus"/>
+        </apex:outputPanel>
+
+    </apex:outputpanel>
+<!-- connected status panel starts -->
+
+    </apex:outputpanel> 
+    </c:visualstrapblock>
+    <!-- page panel ends -->
+    
+    <script>
+        function createMetadataRemoteSite() {
+
+            //debugger;
+            //var host = window.location.host;
+            if ({!hasMetadataRemoteSiteSettings} == false) {
+                // Calls the Metdata API from JavaScript to create the Remote Site Setting to permit Apex callouts
+                var binding = new XMLHttpRequest();
+                var request = 
+                    '<?xml version="1.0" encoding="utf-8"?>' + 
+                    '<env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">'+
+                        '<env:Header>' + 
+                            '<urn:SessionHeader xmlns:urn="http://soap.sforce.com/2006/04/metadata">' + 
+                                '<urn:sessionId>{!$Api.Session_ID}</urn:sessionId>' + 
+                            '</urn:SessionHeader>' + 
+                        '</env:Header>' + 
+                        '<env:Body>' +
+                            '<createMetadata xmlns="http://soap.sforce.com/2006/04/metadata">' + 
+                                '<metadata xsi:type="RemoteSiteSetting">' + 
+                                    '<fullName>Cirrus_Files_Metadata_API</fullName>' + 
+                                    '<description>Cirrus Files Metadata API Remote Site Setting</description>' + 
+                                    '<disableProtocolSecurity>false</disableProtocolSecurity>' + 
+                                    '<isActive>true</isActive>' + 
+                                    '<url>https://{!Host}</url>' +
+                                '</metadata>' +
+                            '</createMetadata>' +
+                        '</env:Body>' + 
+                    '</env:Envelope>';
+                binding.open('POST', 'https://{!Host}/services/Soap/m/31.0');
+                binding.setRequestHeader('SOAPAction','""');
+                binding.setRequestHeader('Content-Type', 'text/xml');
+                binding.onreadystatechange = 
+                    function() {
+                        if(this.readyState==4) {
+                            var parser = new DOMParser();
+                            var doc  = parser.parseFromString(this.response, 'application/xml');
+                            var errors = doc.getElementsByTagName('errors');
+                            var messageText = '';
+                            for(var errorIdx = 0; errorIdx < errors.length; errorIdx++)
+                                messageText+= errors.item(errorIdx).getElementsByTagName('message').item(0).innerHTML + '\n';
+
+                            console.log(messageText);
+                        }
+                    }
+                binding.send(request);
+            }
+        }
+
+        createMetadataRemoteSite();
+    </script>
+
+</apex:form>
+    <!-- form ends -->
+
+    <apex:includeScript value="{!URLFOR($Resource.IGD__jszip, '/jszip.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.IGD__jszip, '/jszip-load.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.IGD__jszip, '/jszip-deflate.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.IGD__jszip, '/jszip-inflate.js')}"/>
+
+    <script type="text/javascript">
+
+        var j$ = jQuery.noConflict();
+        j$(document).ready(function() {
+            //j$('#splashdiv').hide();
+            hideSplash();
+
+            $("pre.htmlCode").snippet("html",{style:"whitengrey"});
+            $("pre.styles").snippet("css",{style:"whitengrey"});
+            $("pre.js").snippet("javascript",{style:"whitengrey"});
+            
+            j$('#dialog').dialog({
+                autoOpen: false,
+                height: 450,
+                width: '50%',
+                modal: true,
+                resizable: false,
+                beforeClose: function(event, ui) { 
+                    j$("#dialog").html('');        
+                },
+                open: function(event, ui) { 
+                    j$('.ui-widget-overlay').bind('click', function(){ 
+                        j$("#dialog").dialog('close'); 
+                    }); 
+                },
+                show: {
+                    effect: "fade", duration: 800
+                },
+                title:"Youtube : Preview"
+            });
+        });
+
+        function hideSplash() {
+            j$('#splashdiv').hide();
+        }
+
+        function changeAuthorization() {
+            return confirm('This will erase the Google credentials used by Cirrus Files and request new credentials.\n\nDo you want to continue?');
+            // return confirm('Are you sure you want to delete the current setup and reconfigure the App with a new gmail Account?');
+        }
+        
+        function disableObject(objName) {
+            return confirm('Are you sure you want to disable the Object ' + objName + '?');
+        }
+
+        function saveObject(ele) {
+            ele.disabled = true;
+            saveObjectJS();
+        }
+
+        function preview(videoUrl) {  
+             j$("#dialog").html('<center><iframe id="player" type="text/html" width="100%" height="450" src="//www.youtube.com/embed/'+videoUrl+'?autoplay=1&rel=0" frameborder="0" wmode="Opaque"></iframe></center>');        
+             j$("#dialog").dialog("open");
+         }       
+    </script>
+    <script charset="ISO-8859-1" src="//fast.wistia.com/assets/external/popover-v1.js"></script>
+</apex:page>

@@ -1,0 +1,107 @@
+<apex:page standardController="Endev__Networking__c" extensions="Endev.AddMembersController">
+	
+	<style>
+    	#blockbckanim
+	    {
+		    background-color:rgba(0, 14, 44, 0.7);
+		    width:100%;
+		    height:100%;
+		    position: fixed;
+		  	top: 0px;
+		  	left: 0px;
+		  	z-index: 1000;
+		  	rgba(0, 0, 0, 0.71);
+		  	cursor: wait;
+	    }
+	    #apimgld
+	    {
+	    	top:49%;
+	    	left:45%;
+	    	position:fixed;
+	    	border-radius: 2px;
+	    	-webkit-border-radius: 2px ;
+            -moz-border-radius: 2px ;
+	    }
+    </style>
+    <script type="text/javascript" language="javascript">
+	    function YUIShowLoading() {
+	       document.getElementById('blockbckanim').style.display="block"; 
+	    }
+		function YUIHideLoading() {
+	       document.getElementById('blockbckanim').style.display="none"; 
+	    }
+    </script>
+    <div id="blockbckanim" style="display:none">
+    	<img id="apimgld" style="" src="/img/loading32.gif" />
+    </div>
+	
+	
+	<apex:form >
+		<apex:actionFunction status="processingStatus" action="{!removeNetworkingEvent}" reRender="all" name="oldDelete">
+			<apex:param assignTo="{!removeNetworkingEventId}" name="removeNetworkingEventId" value=""/>
+		</apex:actionFunction>	
+
+	</apex:form>
+	<apex:form id="allform">
+		<apex:actionFunction status="processingStatus" action="{!removeNew}" reRender="newItems" name="newDelete" >
+			<apex:param assignTo="{!newRemoveIndex}" name="newRemoveIndex" value=""/>
+		</apex:actionFunction>
+		
+		<apex:actionStatus id="processingStatus" onStart="YUIShowLoading();" onstop="YUIHideLoading();" />
+		
+		<apex:actionFunction status="processingStatus" action="{!addNewNetworkingEvent}" name="addnewItem" />
+			
+		<input type="hidden" id="index" name="index" value=""/>
+		
+		<apex:pageMessages />
+		<apex:pageBlock id="all">
+			<apex:pageBlockButtons >
+				<apex:commandButton status="processingStatus" value="Save" action="{!checkAndSave}"/>
+				<apex:commandButton value="Add Member" onclick="addnewItem();" reRender="newItems" />
+				<apex:commandButton value="Cancel" action="{!CancelSave}"/>
+			</apex:pageBlockButtons>
+			
+			<apex:pageBlockSection title="Networking Events" columns="4" rendered="{!if(networkingEventsList.size > 0,true,false)}" >
+					<apex:repeat value="{!networkingEventsList}" var="item" id="old">
+						<apex:outputField value="{!item.Endev__Contact__c}"/>
+						<apex:outputField value="{!item.Endev__Networking__c}"/>
+						<apex:inputField value="{!item.Endev__Status__c}" required="true"/>
+						<apex:commandButton value="Remove" onClick="processDelete(confirm('Are You Sure?'),'{!item.id}');" reRender="none"/> 
+					</apex:repeat>
+			</apex:pageBlockSection>
+			
+			<apex:pageBlockSection title="New Members" columns="4" id="newItems">
+				
+				<apex:repeat value="{!newMap}" var="key" >
+					<apex:inputField value="{!newMap[key].Contact__c}"/>
+					<apex:outputField value="{!newMap[key].Networking__c}"/>
+					<apex:inputField value="{!newMap[key].Status__c}" required="true" />
+					<!-- <apex:variable var="listIndex" value="{!listIndex + 1}"/>-->
+					<apex:commandButton value="Remove" onClick="processNewDelete(confirm('Are You Sure?'),'{!key}');" reRender="none"/>
+				</apex:repeat>
+				
+				<apex:outPutPanel rendered="{!showMsg}" >
+					No member is added, please add a member.
+				</apex:outPutPanel>
+				
+			</apex:pageBlockSection>
+		</apex:pageBlock>
+	</apex:form>
+	<script>
+		var myindex ;
+		 
+		function processDelete(b, id) {
+			if(b){
+				oldDelete(id);
+			}
+			return b;
+		}
+		function processNewDelete(b, index) {
+			if(b){
+				myindex = document.getElementById('index').value = index;
+				newDelete(index);
+			}
+			return b;
+		}
+	</script>
+</apex:page>

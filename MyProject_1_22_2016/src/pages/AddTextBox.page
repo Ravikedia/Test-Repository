@@ -1,0 +1,79 @@
+<apex:page controller="SOSLController">
+
+<apex:includeScript value="{! $Resource.jQueryMini}"/>
+    <head> 
+        <script type="text/javascript">
+            var $j = jQuery.noConflict();
+        </script>
+        <apex:stylesheet value="{!$Resource.Bootstrapss}"/>
+    </head>
+     <script language="javascript" type="text/javascript">
+        function stopRKey(evt) {
+           var evt = (evt) ? evt : ((event) ? event : null);
+           var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
+           if ((evt.keyCode == 13) && (node.type=="text")) {return false;}
+        }
+        
+        document.onkeypress = stopRKey; 
+    </script>
+    
+  <apex:form >
+  	Enter text : <apex:inputText value="{!searchStr}"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <apex:commandButton value="Search in Activities" action="{!soslDemo_method}" reRender="acct,error,oppt,cont" status="actStatusId" styleClass="btn-primary"  />
+    <apex:actionStatus id="actStatusId">
+                <apex:facet name="start" >
+                    <img src="/img/loading.gif"/>                    
+                </apex:facet>
+    </apex:actionStatus>
+  </apex:form>
+ 
+    <apex:outputPanel title="" id="error">
+    	<apex:pageMessages ></apex:pageMessages>
+    </apex:outputPanel>    <br/>
+
+    <apex:outputPanel id="acct">
+    	<apex:outputPanel rendered="{!if(taskList.size !=0 , true, false) }"  >
+    		<apex:pageBlock title="Task" >
+    			<apex:pageblockTable value="{!taskList }" var="tsk">
+        			<apex:column headervalue="Task id" >    
+             			<apex:outputLink value="/{!tsk.id}" target="_blank">{!tsk.id}</apex:outputLink>  
+         			</apex:column>
+		          	<apex:column value="{!tsk.Subject}"/>
+		          	<apex:column value="{!tsk.Status}"/>
+		          	<apex:column value="{!tsk.Priority}"/>
+		          	<apex:column value="{!tsk.ActivityDate}"/>
+		          	<apex:column value="{!tsk.AccountId}"/>
+		          	<apex:column value="{!tsk.CallDisposition}"/>
+		          	<apex:column value="{!tsk.CallDurationInSeconds}"/>
+		          	<apex:column value="{!tsk.CallObject}"/>
+		          	<apex:column value="{!tsk.CallType}"/>
+		          	<apex:column value="{!tsk.Description}"/>
+       			</apex:pageblockTable>
+    		</apex:pageBlock>
+ 		</apex:outputPanel>
+ 	</apex:outputPanel>
+ 
+	<apex:outputPanel id="cont">
+    	<apex:outputPanel rendered="{!if(eventList.size !=0 , true, false) }"  >
+ 			<apex:pageBlock title="Event" >
+    			<apex:pageblockTable value="{!eventList}" var="evt">
+         			<apex:column headervalue="Task id" >    
+             			<apex:outputLink value="/{!evt.id}" target="_blank">{!evt.id}</apex:outputLink>  
+         			</apex:column>
+         			<apex:column value="{!evt.Subject}"/>
+          			<apex:column value="{!evt.OwnerId}"/>
+          			<apex:column value="{!evt.ActivityDate}"/>
+          			<apex:column value="{!evt.AccountId}"/>
+          			<apex:column value="{!evt.ActivityDateTime}"/>
+          			<apex:column value="{!evt.Description}"/>
+          			<apex:column value="{!evt.DurationInMinutes}"/>
+          			<apex:column value="{!evt.EndDateTime}"/>
+          			<apex:column value="{!evt.Location}"/>
+          			<apex:column value="{!evt.RecurrenceDayOfMonth}"/>
+          			<apex:column value="{!evt.RecurrenceDayOfWeekMask}"/>
+          			<apex:column value="{!evt.RecurrenceEndDateOnly}"/>
+				</apex:pageblockTable>
+ 			</apex:pageBlock>
+ 		</apex:outputPanel>
+ 	</apex:outputPanel> 
+</apex:page>

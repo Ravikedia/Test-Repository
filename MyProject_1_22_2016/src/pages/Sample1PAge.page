@@ -1,0 +1,26 @@
+<apex:page controller="Sample1">
+    <script>
+    function reDirectToAnotherPage()
+    {
+      callAction();
+      
+    }
+    
+    function reDirectToAnotherPage1()
+    {
+       console.log('##############');
+        document.getElementById('btnId').click();
+    }
+    
+    </script>
+<apex:form >
+    <apex:actionFunction action="{!switch}" oncomplete="reDirectToAnotherPage1();" name="callAction"/>
+    <apex:pageblock >
+    
+        <input type="button" value="openPopup" onclick="window.open('http://www.google.com', '_blank');" id="btnId"/>
+        
+       <apex:commandButton value="Test button" onclick="reDirectToAnotherPage();" rerender="none"/>
+       
+    </apex:pageblock>
+</apex:form>
+</apex:page>

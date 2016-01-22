@@ -1,0 +1,7 @@
+<apex:page controller="PieChartController" title="Pie Chart">
+    <apex:chart height="550" width="450" data="{!pieData}" animate="false" background="blue" colorSet="yellow" resizable="false" >
+        <apex:pieSeries dataField="data" labelField="name"    highlight="true" colorSet="#00F,#0F0,#F00,yellow,pink,green" donut="30"/>
+                
+        <apex:legend position="right"  font="24px Helvetica" padding="12" spacing="13"/>
+    </apex:chart>
+</apex:page>

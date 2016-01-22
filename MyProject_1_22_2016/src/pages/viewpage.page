@@ -1,0 +1,12 @@
+<apex:page controller="DynamicTab"  contentType="application/vnd.ms-excel#FILENAME.xls">
+<apex:pageBlock title="This is Excel Page" >
+
+
+ <apex:pageblockTable value="{!Selectedproducts}"   var="items" >
+              <apex:column value="{!items['id']}"/>
+               
+                <apex:column value="{!items['name']}" />
+                <!--<apex:column value="{!item.con['name']}"/>-->
+            </apex:pageblockTable>
+</apex:pageBlock>
+</apex:page>

@@ -1,0 +1,80 @@
+<apex:page controller="FacebookFavoriteController" action="{!login}" 
+  cache="false" sidebar="false" title="Facebook Favorite Number">
+    <div id='fb-root'></div>
+    <script src='https://connect.facebook.net/en_US/all.js' />
+    <apex:pageBlock title="Welcome, {!me.name}!">
+        <!-- Collect a favorite number from the user -->
+        <apex:form >
+            <apex:outputLabel >Enter your favorite number:</apex:outputLabel>
+            <apex:inputText value="{!favorite}"/>
+            <apex:commandButton value="Submit" action="{!save}"/>
+        </apex:form>
+        <br/>
+        <!-- Only show the 'Share' button if the user has entered a favorite -->
+        <apex:outputPanel rendered="{!NOT(ISBLANK(favorite))}">
+            <input type="submit" class="btn" 
+                onclick="postToFeed(); return false;" 
+                value="Share with Friends"/>
+            <p id='msg'></p>
+            <script> 
+              FB.init({appId: '{!appId}', status: true, cookie: true});
+
+              function postToFeed() {
+                var obj = {
+                  method: 'feed',
+                  link: '{!$CurrentPage.URL}',
+                  picture: 'http://www.developerforce.com/assets/developerforcesite/images/forcebug.png',
+                  name: 'Force.com Favorite Number Facebook App',
+                  caption: 'A Demonstration of the Force.com Toolkit for Facebook',
+                  description: 'My favorite number is {!favorite}! What\'s yours?'
+                };
+
+                function callback(response) {
+                    if (response['post_id']) {
+                        var postId = response['post_id'].split('_')[1];
+                        document.getElementById('msg').innerHTML = 
+                            "Posted to your wall. "+
+                            "<a href=\"https://www.facebook.com/permalink.php?"+
+                            "id={!me.id}&v=wall&story_fbid="+postId+"\">View your post</a>";
+                    }
+                }
+
+                FB.ui(obj, callback);
+              }
+            </script>
+        </apex:outputPanel>
+        <br />
+        <apex:pageBlockSection title="Your Friends' Favorite Numbers" 
+            columns="2" id="friendsFaves">
+            <apex:pageBlockSectionItem >
+                <apex:outputPanel >
+                    <apex:pageBlockTable value="{!friendsFavorites}" var="fave">
+                        <apex:column headerValue="Name">
+                            <!-- Link to each friend's Facebook page -->
+                            <apex:outputLink target="_new" 
+                                value="https://www.facebook.com/{!fave.id}">
+                                {!fave.Name}
+                            </apex:outputLink>
+                        </apex:column>
+                        <apex:column value="{!fave.Favorite_Number__c}" 
+                            headerValue="Favorite Number"/>
+                    </apex:pageBlockTable>
+                    <br/>
+                    <apex:actionStatus startText="Updating List" 
+                        stopText="Click Refresh to update friends list" 
+                        id="friendsStatus"/>
+                </apex:outputPanel>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <!-- Blank section item so Refresh button is rendered below list -->
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:form >
+                    <apex:commandButton value="Refresh" 
+                        action="{!refreshFriendsFavorites}" 
+                        rerender="friendsFaves" status="friendsStatus"/>
+                </apex:form>
+            </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+    </apex:pageBlock>
+</apex:page>

@@ -1,0 +1,10 @@
+<apex:page showheader="false" sidebar="false" cache="false" contenttype="text/html" controller="BoxConnect">
+    <apex:form >
+        <apex:pageblock title="Box.com Integration" >
+            <apex:commandbutton id="connectToBox" value="Connect to Box" action="{!boxConnect}" />
+            <apex:inputfile value="{!file}" contentType="{!type}"  filename="{!filename}"/>
+              <apex:commandButton value="Upload fiel" action="{!UploadFile}"/>
+               <apex:commandButton value="Download fiel" action="{!DownloadFile}" />
+        </apex:pageblock>
+    </apex:form>
+</apex:page>

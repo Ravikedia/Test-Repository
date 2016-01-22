@@ -1,0 +1,10 @@
+<apex:page standardController="Account">
+  <!-- Begin Default Content REMOVE THIS -->
+  <apex:form >
+  <h1>Congratulations</h1>
+  This is your new Page
+  <!-- End Default Content REMOVE THIS -->
+  <apex:commandButton value="Save"/>
+  <apex:commandButton action="{!Edit}" value="   EDit"/>
+  </apex:form>
+</apex:page>

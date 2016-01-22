@@ -1,0 +1,352 @@
+<apex:page controller="fbcontroller" sidebar="false" standardStylesheets="false" >
+   <!--  <apex:stylesheet value="{!$Resource.PopupCSS}"/>
+    <script src="{!$Resource.PopupNEWJQUERY}"/>  -->
+<apex:includeScript value="{! $Resource.jQueryMini}"/>
+    <head> 
+        <script type="text/javascript">
+            var $j = jQuery.noConflict();
+        </script>
+        <apex:stylesheet value="{!$Resource.Bootstrapss}"/>
+    </head>
+    
+    <style>
+     .massupdatecss{
+      background-color: rgba(0, 30, 37, 0.70);
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0px;
+        z-index: 999;
+        border-radius: 7px;
+        margin-left: -0.65%;
+     }
+     </style>
+     <style>
+     .massupdateinner{
+     background: white;
+        width: 32%;
+        margin-top: 10%;
+        position: absolute;
+        float: left;
+        margin-left: 28%;
+        border-radius: 6px;
+        border: solid 2px #5e68c4;
+        }
+     </style>
+    
+    <script>
+    function DialBoxMassUpdate(x)
+    {
+        
+         var $ = jQuery.noConflict();
+        
+        if(x==1)
+        {
+             var newwindow =  window.open("https://c.ap1.visual.force.com/apex/UploadPhotoOnFacebook", "myWindow", "toolbar=yes, scrollbars=yes, resizable=yes, top=500, left=500, width=400, height=400");   
+        }
+        else
+        {
+            $( "#OuterdivForMassUpdate" ).hide();
+        }
+        
+    }
+    </script>
+    
+    <script>
+    function DialBoxMassUpdate1(x)
+    {
+         var $ = jQuery.noConflict();
+        if(x==1)
+        { 
+             $( "#OuterdivForMassUpdate1" ).show();
+        }
+        else
+        {
+            $( "#OuterdivForMassUpdate1" ).hide();
+        }
+        
+    }
+    </script>
+    
+    
+        <script type="text/javascript">
+        var $ = jQuery.noConflict();
+        $(function() {
+          $('form').submit(function(){
+              window.location = 'https://c.ap1.visual.force.com/apex/face';
+            });
+            return false;
+        });
+        </script>
+ 
+     <!--  pop up for massUpdate pending approval records -->
+     <apex:outputpanel id="Outerpanel">
+        <div id="OuterdivForMassUpdate" style="display:none;" class="massupdatecss">
+        <div id="InnerDivForMassUpdate" class="massupdateinner">
+            <div style="background:#5e68c4 !important ;border-radius:4px 4px 0px 0px;;height: 30px;">
+                <div>
+                    <span style="padding:6px;color: #ffffff;font-weight: bold;float:left" >Upload photo on facebook</span>
+                    </div>
+                    <div style="padding:6px; float:right" onclick="DialBoxMassUpdate(0)"  >
+                      <span style="padding: 10px;color: white;cursor: pointer;" >Close</span>
+                    </div>
+               </div>
+               <table align = "center" >
+                  <form enctype="multipart/form-data" target="_blank" id="form" action="https://graph.facebook.com/v2.0/me/photos?access_token=CAAHNGSULfrUBAP35ZAhuTlo1JnAYRmtLjCGlWZCO0yt3a8r8EDoQlyZCFRUlX2LoQYy646oKPCC9vyWCjWXqMkyXgTooR8pbtp2NMnPtirSORIbQCMWMJgrCvYgWJYekcd9p29uk2EKMYtNhZBcZBwPhZATvgTZB7ZCIogr60RLmYjIuzsQJP2hwov6nlZAdhfnnhgIqksjYwmJdoN00UohqO" method="POST" >
+                        <tr>
+                            <td> <apex:outputLabel value="Please choose a photo:" /></td><td><input name="source" type="file" /></td><br/>
+                        </tr>
+                        <tr>
+                            <td><apex:outputLabel value="Say something about this photo:" /></td><td> <input name="message" type="text" value="" /></td>
+                        </tr>
+                        <tr>
+                            <td ><input type="submit" value="Upload"  style ="margin-left:80%" /><br/></td>
+                        </tr>
+                   </form>  
+                  </table>
+        </div>
+     </div>
+    </apex:outputpanel>
+    
+
+      
+
+     <apex:outputpanel id="Outerpanel1">
+        <div id="OuterdivForMassUpdate1" style="display:none;" class="massupdatecss">
+        <div id="InnerDivForMassUpdate1" class="massupdateinner">
+            <div style="background:#5e68c4 !important ;border-radius:4px 4px 0px 0px;;height: 30px;">
+                <div>
+                    <span style="padding:6px;color: #ffffff;font-weight: bold;float:left" >Upload Video on facebook</span>
+                    </div>
+                    <div style="padding:6px; float:right" onclick="DialBoxMassUpdate1(0)"  >
+                      <span style="padding: 10px;color: white;cursor: pointer;" >Close</span>
+                    </div>
+               </div>
+               <table align = "center" >
+                 <form enctype="multipart/form-data" action="https://graph-video.facebook.com/me/videos?access_token=CAAHNGSULfrUBAP35ZAhuTlo1JnAYRmtLjCGlWZCO0yt3a8r8EDoQlyZCFRUlX2LoQYy646oKPCC9vyWCjWXqMkyXgTooR8pbtp2NMnPtirSORIbQCMWMJgrCvYgWJYekcd9p29uk2EKMYtNhZBcZBwPhZATvgTZB7ZCIogr60RLmYjIuzsQJP2hwov6nlZAdhfnnhgIqksjYwmJdoN00UohqO" method="POST" >
+                        <tr>
+                            <td> <apex:outputLabel value="Please choose a video" /></td><td><input name="source" type="file" /></td><br/>
+                        </tr>
+                        <tr>
+                            <td><apex:outputLabel value="Say something about this video" /></td><td> <input name="message" type="text" value="" /></td>
+                        </tr>
+                        <tr>
+                            <td ><input type="submit" value="Upload"  style ="margin-left:80%" onsubmit ="DialBoxMassUpdate(0);" /><br/></td>
+                        </tr>
+                   </form>  
+                  </table>
+        </div>
+     </div>
+    </apex:outputpanel>
+
+<apex:form >
+     <apex:pageblock title="Facebook salesforce integration">
+     <apex:pageBlockSection title="Facebook salesforce integration" columns="1">
+        <apex:pageBlockSectionItem >
+            <apex:outputLabel value="Authentication :" />
+            <apex:commandbutton action="{!fbAuth}" value="Facebook Authentication"  styleClass="btn-primary" />
+         </apex:pageBlockSectionItem>
+    
+             
+         <apex:pageBlockSectionItem >
+            <apex:outputLabel value="User self data :" />
+            <apex:commandbutton action="{!retriveData}" value="Retrive data" rerender="pbtable,all" styleClass="btn-primary"  />
+         </apex:pageBlockSectionItem>
+        
+         <apex:pageBlockSectionItem >
+             <apex:outputLabel value="Friend detail:" />
+             <apex:commandbutton action="{!retriveFriendData}" value="Retrive friend detail" rerender="fpbtable,all" styleClass="btn-primary" />
+         </apex:pageBlockSectionItem>
+          
+         <apex:pageBlockSectionItem >
+            <apex:outputLabel value="User events :" />
+            <apex:commandButton value="Events" action="{!Userevents}" reRender="eventtable,all" styleClass="btn-primary" />
+         </apex:pageBlockSectionItem>
+          
+         <!-- <apex:pageBlockSectionItem >
+        <apex:outputLabel value=" Pass comments: " />
+        <apex:commandbutton action="{!passComents}" value="Pass coments" />
+          </apex:pageBlockSectionItem>-->
+     
+        <apex:pageBlockSectionItem >
+            <apex:outputLabel value="User Tag photos: " />
+            <apex:commandbutton action="{!albumPhoto}" value="Tags photos" rerender="tagtable,all" styleClass="btn-primary" />
+        </apex:pageBlockSectionItem>
+      
+      
+        <apex:pageBlockSectionItem >
+            <apex:outputLabel value="User uploaded photos : " />
+            <apex:commandbutton action="{!publishedPhoto}" value="your uploaded photos" rerender="uploadbtable,all" styleClass="btn-primary"  />
+        </apex:pageBlockSectionItem>
+        
+         <apex:pageBlockSectionItem >
+             <apex:outputLabel value=" User connection : " />
+             <apex:panelGroup >
+                 <apex:commandbutton action="{!Books}" value="Books" rerender="pbbooks,all"  styleClass="btn-primary" />
+                 <apex:commandbutton action="{!Movies}" value="Movies" rerender="pbmovie,all"  styleClass="btn-primary"  />
+                 <apex:commandbutton action="{!Television}" value="Television" rerender="pbtv,all"  styleClass="btn-primary" />
+             </apex:panelGroup>
+         </apex:pageBlockSectionItem>
+        
+          <apex:pageBlockSectionItem >
+            <apex:outputLabel value=" Status message :  " />
+            <apex:commandbutton action="{!Status}" value="Statuses" rerender="pbstatus,all" styleClass="btn-primary"  />
+          </apex:pageBlockSectionItem>
+            
+           <apex:pageBlockSectionItem >
+             <apex:outputLabel value="  Enter any message :" />
+             <apex:panelGroup >
+                <apex:inputText value="{!message}"/> 
+                <apex:commandButton action="{!publishedPost}" value="Update status" styleClass="btn-primary"  />
+             </apex:panelGroup>
+         </apex:pageBlockSectionItem>
+         
+          <apex:pageBlockSectionItem >
+         <apex:outputLabel value="  Upload photo :" />
+          <apex:panelGroup >
+            <!-- <apex:inputfile value="{!file}" contentType="{!filetype}"  filename="{!filename}" styleclass="paginationButtons" /> -->
+          <apex:commandButton value="Upload photo" styleClass="btn-primary"  onclick="DialBoxMassUpdate(1);"  Rerender="none"/>
+         </apex:panelGroup>
+          </apex:pageBlockSectionItem>
+          
+          <apex:pageBlockSectionItem >
+         <apex:outputLabel value="  Upload video :" />
+          <apex:panelGroup >
+            <!-- <apex:inputfile value="{!file}" contentType="{!filetype}"  filename="{!filename}" styleclass="paginationButtons" /> -->
+          <apex:commandButton value="Upload video" styleClass="btn-primary"  onclick="DialBoxMassUpdate1(1);"  Rerender="none"/>
+         </apex:panelGroup>
+          </apex:pageBlockSectionItem>
+          
+       </apex:pageBlockSection> <br/>
+        
+       
+        
+        <apex:outputpanel id="all" >
+        <apex:outputPanel id="pbbooks"  >
+            <apex:outputpanel rendered="{!if(flag==3 &&flag>0,true,false)}">
+            <apex:pageblock title="User Books" rendered="{!if(books!= null && books.size>0,true,false)}" >
+            <apex:pageBlockTable value="{!books}" var="b"  >
+                <apex:column value="{!b.id}" headerValue="Id" width="50%" />
+                <apex:column value="{!b.name}" headerValue="name" width="50%" />
+            </apex:pageBlockTable>
+            </apex:pageblock>
+            </apex:outputpanel>
+        </apex:outputPanel>
+       
+       <apex:outputPanel id="eventtable"  >
+            <apex:outputpanel rendered="{!if(flag==9 &&flag>0,true,false)}">
+            <apex:pageblock title="User events" rendered="{!if(events!= null && events.size>0,true,false)}" >
+            <apex:pageBlockTable value="{!events}" var="b"  >
+                <apex:column value="{!b.id}" headerValue="Id" width="33%" />
+                <apex:column value="{!b.name}" headerValue="Name" width="33%" />
+                <apex:column value="{!b.location}" headerValue="Location" width="34%"/>
+            </apex:pageBlockTable>
+            </apex:pageblock>
+            </apex:outputpanel>
+       </apex:outputPanel>
+       
+       
+        <apex:outputPanel id="pbstatus" >
+      
+           <apex:outputpanel rendered="{!if(flag==7 &&flag>0,true,false)}">
+           <apex:pageblock title="User message status" rendered="{!if(ustatus!= null && ustatus.size>0,true,false)}" >
+            <apex:pageBlockTable value="{!ustatus}" var="b"  >
+                <apex:column value="{!b.id}" headerValue="Id" width="50%" />
+                <apex:column value="{!b.message}" headerValue="Message" width="50%" />
+                <apex:column value="{!b.updatetime}" headerValue="Updated time" />
+            </apex:pageBlockTable>
+            </apex:pageblock>
+       </apex:outputPanel>
+        </apex:outputPanel>
+        
+       <apex:outputPanel id="pbmovie" >
+           <apex:outputpanel rendered="{!if(flag==4 &&flag>0,true,false)}">
+           <apex:pageblock title="User Movies"  rendered="{!if(movie!= null && movie.size>0,true,false)}" >
+            <apex:pageBlockTable value="{!movie}" var="M"  >
+                <apex:column value="{!M.id}" headerValue="Id" width="50%" />
+                <apex:column value="{!M.name}" headerValue="name" width="50%" />
+            </apex:pageBlockTable>
+            </apex:pageblock>
+            </apex:outputpanel>
+       </apex:outputPanel>
+       
+         <apex:outputPanel id="pbtv" >
+          
+            <apex:outputpanel rendered="{!if(flag==5 &&flag>0,true,false)}">
+           <apex:pageblock title="User Television"  rendered="{!if(Tv!= null && Tv.size>0,true,false)}" >
+            <apex:pageBlockTable value="{!Tv}" var="t" >
+                <apex:column value="{!t.id}" headerValue="Id" width="50%" />
+                <apex:column value="{!t.name}" headerValue="name" width="50%" />
+            </apex:pageBlockTable>
+            </apex:pageblock>
+               </apex:outputPanel>
+       </apex:outputPanel>
+        
+        
+        <apex:outputPanel id="pbtable" >
+        <apex:outputpanel rendered="{!if(flag==1 &&flag>0,true,false)}">
+        <apex:pageblock title="Self detail"  rendered="{!if(data!= null && data.size>0,true,false)}" >
+        <apex:pageBlockTable value="{!data}" var="l" >
+           <apex:column value="{!l.id}" headerValue="Id"/>
+           <apex:column value="{!l.email}" headerValue="Emailid"/>
+           <apex:column value="{!l.bio}"  headerValue="Biography"/>
+        </apex:pageBlockTable>
+        </apex:pageblock>
+        </apex:outputPanel>
+       </apex:outputPanel>
+       
+         <apex:outputPanel id="fpbtable" >
+      
+            <apex:outputpanel rendered="{!if(flag==2 &&flag>0,true,false)}">
+            <apex:pageblock title="Friends detail"  rendered="{!if(data!= null && data.size>0,true,false)}" >
+            <apex:pageBlockTable value="{!data}" var="l" >
+                <apex:column value="{!l.friendname}"  headerValue="Name" width="20%"/>
+                <apex:column headerValue="image"  >
+          
+                <apex:image url="{!l.friendid}" width="100" height="100"/>
+                </apex:column>
+                <apex:column headervalue="Send message" >
+                Send messgae:<br/> <apex:inputTextarea cols="40" rows="4"/>
+                </apex:column>
+             </apex:pageBlockTable>
+             </apex:pageblock>
+             </apex:outputPanel>
+        </apex:outputPanel>
+       
+       
+        <apex:outputPanel id="uploadbtable" >
+       
+           <apex:outputpanel rendered="{!if(flag==8 &&flag>0,true,false)}">
+           <apex:pageblock title="User uploaded photos"  rendered="{!if(photos!= null && photos.size>0,true,false)}">
+           <apex:pageBlockTable value="{!photos}" var="P" >
+            
+                <apex:column headerValue="image" rowspan="4" >
+                     <apex:image url="{!P.picture}" width="100" height="100"/>
+                </apex:column>
+          </apex:pageBlockTable>
+          </apex:pageblock>
+          </apex:outputPanel>
+       </apex:outputPanel>
+       
+       
+          <apex:outputPanel id="tagtable" >
+             <apex:outputpanel rendered="{!if(flag==6 &&flag>0,true,false)}">
+             <apex:pageblock title="User tag photos" rendered="{!if(tagphotos!= null && tagphotos.size>0,true,false)}" >
+             <apex:pageBlockTable value="{!tagphotos}" var="t"  columns="2" >
+            
+                <apex:column headerValue="image" rowspan="4" >
+                     <apex:image url="{!t.tagphotos}" width="150" height="150"/>
+                </apex:column>
+             </apex:pageBlockTable>
+   
+    
+        </apex:pageblock>
+        </apex:outputPanel>
+       </apex:outputPanel>
+       
+       </apex:outputpanel>
+       
+   </apex:pageblock>
+  
+</apex:form>
+</apex:page>

@@ -1,0 +1,77 @@
+<apex:page controller="RegisterOrganizationController">
+	<apex:includeScript value="{!URLFOR($Resource.WrappedBootstrap, 'WrapedBootstrap/js/jquery.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.WrappedBootstrap, 'WrapedBootstrap/js/blockui.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.WrappedBootstrap, 'WrapedBootstrap/js/bootstrap.js')}" />  
+    <apex:includeScript value="{!URLFOR($Resource.WrappedBootstrap, 'WrapedBootstrap/js/bootstrap.min.js')}" /> 
+    <apex:includeScript value="{!URLFOR($Resource.WrappedBootstrap, 'WrapedBootstrap/js/angular.min.js')}" /> 
+    <apex:stylesheet value="{!URLFOR($Resource.WrappedBootstrap, 'WrapedBootstrap/css/style.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.WrappedBootstrap, 'WrapedBootstrap/css/style.min.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.WrappedBootstrap, 'WrapedBootstrap/css/font-awesome.css')}" />
+	<apex:pagemessages id="msg_cred"/> 
+	<apex:form > 
+		<apex:actionfunction name="checkAndSave" action="{!checkAndSave}" oncomplete="showError('{!erroMsg}');" rerender="creds,msg_cred,nonevalue" />
+		<div class="bootstrapped">
+			<div class="panel panel-default">
+			  	<div class="panel-heading"><h4>Add Organizations</h4></div>
+			  	<div class="panel-body">
+			  		<apex:outputlabel value="Authorization Code" for="authorize"/>&nbsp;&nbsp;
+					<apex:inputtext id="authorize" value="{!authorizationCode}" styleclass="form-control"/>
+			  	</div>
+			  	<div class="panel-footer" style="padding: 5px;  text-align: center;  background-color: white;  border-top: 0px;">
+			  		<apex:commandbutton value="Get Authorize Uri"  onclick="prompt('Copy the following link and open in other browser or in incognito mode to get autorization code', '{!JSENCODE(loginUrl)}');return false;" />&nbsp;&nbsp;
+			   		<apex:commandbutton value="Authorize" onclick="auth();"  rerender="none"/>
+			  	</div>
+			</div>
+		</div>
+	</apex:form>
+	<script> 
+		    
+		function auth() 
+		{
+			$('[id$="authorize"]').css('border','1px solid #ccc');
+			if($('[id$="authorize"]').val() == '') 
+			{
+				$('[id$="authorize"]').css('border','2px solid red');
+				alert('Please provide an authorization code.');
+			} 
+			else 
+			{
+				blockPage();
+				checkAndSave();
+			}
+			return false;
+		}
+		
+		function showError(erroMsg)
+		{
+			unblockPage();
+			if(erroMsg != '')
+				alert(erroMsg);
+			else
+			{
+				alert('Successfully authorized.');
+				location.reload();
+			}	
+				
+		}
+		function blockPage()
+        {  
+            $.blockUI({ message: '<img src="/img/loading32.gif" /><h1> Processing...</h1>',   
+                css: 
+                {   
+                    border: 'none',   
+                    padding: '15px',   
+                    '-webkit-border-radius': '10px',   
+                    '-moz-border-radius': '10px',   
+                    opacity: .9  
+                }   
+            });   
+            return false;  
+        }  
+        //function to unblock the page  
+        function unblockPage()
+        {  
+            $.unblockUI(); 
+        }  
+	</script>
+</apex:page>

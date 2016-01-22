@@ -1,0 +1,5 @@
+<apex:page controller="MultiSelectGoodPageController">
+    <apex:form >
+        <c:MultiSelectGoodcomponenet leftOptions="{!leftOptions}" rightOptions="{!rightOptions}"/>
+    </apex:form>
+</apex:page>

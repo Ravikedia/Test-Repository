@@ -1,0 +1,15 @@
+<apex:page controller="PieChartController1" title="Pie Chart">#################{!pieData}
+<apex:chart height="400" width="700" data="{!pieData}">
+    <apex:axis type="Numeric" position="left" fields="data"
+        title="Opportunities Closed" grid="true"/>
+    <apex:axis type="Numeric" position="right" fields="data"
+        title="Revenue (millions)"/>
+    <apex:axis type="Category" position="bottom" fields="name"
+        title="Month of the Year"/>
+    <apex:barSeries title="Monthly Sales" orientation="vertical" axis="right"
+        xField="name" yField="data">
+        <apex:chartTips height="20" width="120"/>
+    </apex:barSeries>
+    <apex:lineSeries title="Closed-Won" axis="left" xField="name" yField="data"/>
+</apex:chart>
+</apex:page>

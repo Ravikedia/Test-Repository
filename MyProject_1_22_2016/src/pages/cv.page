@@ -1,0 +1,23 @@
+<apex:page >
+
+   <head> 
+ <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js" >
+ </script>
+ 
+ 
+ 
+ <script>
+  var jq = $.noConflict();
+ jq (document).ready(function(){
+  jq ("#a").click(function(){
+    alert(" I am alert box");
+  });
+});
+</script>
+</head>
+  
+  <apex:form >
+     <input type="button" id="a"  value="Click me"/>
+    </apex:form>
+
+</apex:page>

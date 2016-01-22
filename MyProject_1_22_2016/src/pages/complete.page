@@ -1,0 +1,6 @@
+<apex:page controller="wizardcontroller" sidebar="false" showHeader="false" >
+
+
+
+<br/><br/><br/><br/> <center><b> "Your process is completeated" </b></center>
+</apex:page>

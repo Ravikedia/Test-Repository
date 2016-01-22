@@ -1,0 +1,32 @@
+<apex:page controller="uploadCSVcontroller" readOnly="true" >
+
+  <apex:form >
+  <apex:inputFile value="{!contentFile}" filename="{!nameFile}" />
+  <apex:commandButton value="Upload" id="theButton"/><br/>
+
+  <apex:outputPanel id="results">
+      <apex:inputText value="{!searchid}"/>
+     <apex:commandButton value="Search record" action="{!searchRecord}"/><br/><br/>
+     <table title="Search result" border="1" width="100%">
+     <apex:repeat value="{!ResultList}" var="rows">
+           <tr>
+               <apex:repeat value="{!rows}" var="cells">
+                   <td> {!cells} </td>
+               </apex:repeat>
+           </tr>
+       </apex:repeat>
+     </table><br/><br/>
+    <hr/>
+    
+    <table title="CSV Output" border="1" width="100%">
+       <apex:repeat value="{!results}" var="row">
+           <tr>
+               <apex:repeat value="{!row}" var="cell">
+                   <td> {!cell} </td>
+               </apex:repeat>
+           </tr>
+       </apex:repeat>
+     </table>
+  </apex:outputPanel>
+    </apex:form>
+</apex:page>

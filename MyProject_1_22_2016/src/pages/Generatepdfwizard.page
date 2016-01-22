@@ -1,0 +1,17 @@
+<apex:page controller="Pdfgenerate">
+  <!-- Begin Default Content REMOVE THIS -->
+  <script>
+  
+ <!-- window.onload =function()-->
+ function ravi()
+  {
+     
+         <!--window.open("//www.w3schools.com", "_blank", "toolbar=yes, scrollbars=yes, resizable=yes, top=500, left=500, width=400, height=400");-->
+         var myWindow = window.open("https://c.ap1.visual.force.com/apex/Openpdfpage", "MsgWindow", "width=1000, height=850,  toolbar=0, scrollbars=0,top=100, left=100, resizable=no");
+         
+  }
+  </script>
+  <apex:form >
+<apex:commandButton onclick="ravi()" value="Open pdf window" />
+</apex:form>
+</apex:page>

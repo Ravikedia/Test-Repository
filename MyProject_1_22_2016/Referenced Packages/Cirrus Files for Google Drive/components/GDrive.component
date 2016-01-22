@@ -1,0 +1,919 @@
+<apex:component allowDML="true" selfClosing="true" controller="IGD.GDrive_Component_Controller" access="global" id="page" >
+    <apex:attribute name="recordType" assignTo="{!rType}" description="type of the record that needs to be displayed" type="String" required="true" access="global"/>
+    <apex:attribute name="recordId" assignTo="{!rId}" description="id of the record that needs to be displayed" type="String" required="true" access="global"/>
+    <apex:attribute name="showWarning" description="Display OAuth Warning message" type="String" required="false" access="global"/> <!-- assignTo="{!showWarningValue}" -->
+
+    <!-- jQuery data + action status data -->
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet" />
+    <apex:includeScript value="{!URLFOR($Resource.IGD__jQuery, '/js/jquery-1.7.2.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.IGD__jQuery, '/js/jquery-ui-1.8.20.custom.min.js')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.IGD__jQuery, '/css/ui-lightness/jquery-ui-1.8.20.custom.css')}"/>
+    <apex:includeScript value="{!$Resource.IGD__multiSelectButton_js}"/>
+    <apex:includeScript value="https://apis.google.com/js/client.js" />
+
+<!-- File 56 : Lister Changes : The javascript file is for Clipboard functionality -->  
+    <script src="{!URLFOR($Resource.Clipboard,'ZeroClipboard.js')}"></script>
+
+    <!-- DataTables -->
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.5/css/jquery.dataTables.min.css"/>
+
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js"></script>
+    <!-- <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/plug-ins/f2c75b7247b/sorting/alt-string.js"></script> -->
+
+    <style>
+        .placeholder{color:#999;font-style:italic;}
+        .changecss {background-color:#00ff00;}
+        .headerRow .headerStyle{text-align:center}
+        .totalRow .footerStyle{background-color:#638658;color:#FFFFFF;text-align:center}
+
+        .ui-widget-overlay {
+            background:gray;
+            background-color: #222;
+        }
+
+        /*-----------Spalsh Panel -------*/
+        .button { background: url('{!$Resource.GDriveBG}') no-repeat center; width:260px; height:180px;}
+        
+        .circle {
+            width:70px;
+            height:70px;
+            margin-top:20px;
+            margin-left:auto;
+            margin-right:auto;
+        }
+                
+        .txt {
+            font-family:Georgia,"Times New Roman", serif;
+            font-size:19px;
+            color:#506eb2;
+            text-align:center;
+            line-height:20px;
+            width: 260px;
+            font-style:italic;
+            margin-top:20px;
+            font-weight:normal; 
+        }
+        
+        #blurybackground {
+            z-index:1000;
+            //bottom:0;
+            position:absolute;
+            left:0px;
+            top:0px;
+            width:100%;
+            height:100%;
+            text-align:center;
+            vertical-align: middle;
+            background-color: #222;
+            //background-color: white;
+            opacity:0.6;
+            filter:alpha(opacity=60);
+            //display:table;
+        }
+        
+        #statusBox {
+            // for Modzilla
+            -moz-background-clip:border;
+            -moz-background-inline-policy:continuous;
+            -moz-background-origin:padding;
+            -moz-border-radius-bottomleft:5px;
+            -moz-border-radius-bottomright:5px;
+            -moz-border-radius-topleft:5px;
+            -moz-border-radius-topright:5px;
+            -moz-box-shadow:1px 6px 5px #888888;
+            
+            -webkit-border-bottom-left-radius:5px;
+            -webkit-border-bottom-right-radius:5px;
+            -webkit-border-top-left-radius:5px;
+            -webkit-border-top-right-radius:5px;
+            -webkit-box-shadow:1px 6px 5px #888888;
+            
+            box-shadow: 1px 6px 5px #888888;
+            
+            z-index:1000;
+            
+            background:#FFFFFF none repeat scroll 0 0;
+            height:42px;
+            width:150px;
+            left:45%;
+            top:45%;
+            padding-left:15px;
+            padding-top:11px;
+            position:absolute;
+            vertical-align:middle;
+        }
+        
+        #textBox {
+            margin-left:40px;
+            margin-top:-20px;
+            font-weight:bold;
+            font-size:14px;     
+        }
+    
+        div.bPageBlock.brandSecondaryBrd.apexDefaultPageBlock.secondaryPalette div.pbHeader td.pbTitle {
+            background: url('{!$Resource.Drive16}') no-repeat 13px 10px;
+        }
+    
+        div.bPageBlock.brandSecondaryBrd.apexDefaultPageBlock.secondaryPalette div.pbHeader td.pbTitle h2 {
+            margin-left: 20px;
+        }
+
+        a.folderContents:visitied, a.folderContents:link {
+            text-decoration:none;
+        }
+        a.folderContents:active, a.folderContents:hover {
+            text-decoration:underline;
+        }
+        
+        .imageDropdown {
+            width:30;
+            height:30;
+            vertical-align:middle;
+        }
+        .spanDropdown {
+            vertical-align:middle;
+        }
+        .mainDiv {
+            height: 40;
+        }
+        .divBgColor {
+            background-color:#E0E0E0;
+        }
+        
+        <!--Lister -->
+        .fileuploadblock{
+        border-bottom: 1px solid rgb(165, 165, 165);
+        margin-bottom: 4px;
+        height: 25px;
+        }
+        
+        #fileuploadicon{
+            width: 20px;
+            position: absolute;
+            margin-right: 5px;
+            margin-top: -3px;
+        }
+        #fileuploadHeader {
+            overflow: auto;
+            max-height: 300px;   
+        }
+        table.dataTable thead th, table.dataTable thead td {
+            padding: 1px;
+            border-bottom: 1px solid #111111;
+            }
+        td.dataCol.first.last{
+          display:none;
+        }
+        
+        table.dataTable tbody td {
+        padding-left: 3px;
+        }
+        
+        .paddingleft{
+         padding-left:15px;
+        }
+
+		.thColumn {
+			padding-left:20px !important;
+			background-position: 1px !important;
+		}
+
+		.tdColumn {
+			//padding-left:9px !important;
+		}				
+
+    </style>
+
+    <script language="JavaScript">
+        function submitOnEnter(e) {
+            var key;
+
+            if (window.event)
+                key = window.event.keyCode; //IE
+            else
+                key = e.which; //Firefox & others
+        
+            if (key == 13) {
+                //createDocumentJS();
+                //j$('.createDocument').removeClass('placeholder');
+                j$('.createDocument').click(); 
+                return false;
+            }
+            else
+                return true;
+        }
+       
+<!-- Lister Changes : The javascript code is to copy url to clipboard and showing an alert message after the url is copied --> 
+var fileIdIndex;
+function copyToClipBoard() {
+		//debugger;
+
+       var clip = new ZeroClipboard(j$('.copybtn'), {
+                                moviePath: "{!URLFOR($Resource.Clipboard,'ZeroClipboard.swf')}"
+                            });
+
+       clip.on( 'load', function(event) {
+         console.log( 'movie is loaded' );
+         clip.on( 'beforecopy', function(event) {
+         //console.log(' beforecopy event');
+        });
+       clip.on( 'copy', function(event) {
+       	 //debugger;
+         event.clipboardData.setData('text/plain', event.target.innerHTML);
+        });
+       clip.on( 'complete', function(event,args) {
+            debugger;
+            var str = args.text;
+
+            // Lister implementation - may not the best approach to find fileId
+            // TO DO - re-write this logic, as Google may change the Drive links in the future.
+            var fileId;
+
+            // for folders
+            if(str.indexOf("id=")>0){
+                var index1 = str.indexOf("id=");
+                var index2 = str.indexOf("&");
+                var fileId = str.substring(index1+3,index2);
+                
+            } else {
+            	// for files
+                //var res = str.split("/");
+                //fileId = res[5];
+
+                var index1 = str.indexOf("/d/");
+                var index2 = str.indexOf("/edit");
+                if (index2 == -1) index2 = str.indexOf("/view");
+                var fileId = str.substring(index1+3, index2);
+            }
+           
+            console.log('File Id: ' + fileId);
+            //console.log(event);
+            console.log('This File ' + fileId + ' has been copied to your clipboard. You may now paste it into an email.');
+            fileSharePermission(fileId);	//actionfunction called
+        });
+
+      });
+}
+	var j$ = jQuery.noConflict();
+	j$(document).ready(function() {
+		//debugger;
+		copyToClipBoard();
+
+		//console.log(' init data table 2');
+    	loadJqueryDataTable();
+
+    }); 
+
+var table;
+
+function loadJqueryDataTable(){
+
+if ( j$.fn.dataTable.isDataTable( '#recordDetailsTable' ) ) {
+    table = j$('#recordDetailsTable').DataTable();
+}
+else {
+    table = j$('#recordDetailsTable').DataTable( {
+        "paging": false,
+        "searching": false,
+        "order": [[ 6, "desc" ]],
+        "aoColumnDefs": [
+          { 'bSortable': false, 'aTargets': [ 0,1 ] }
+       ],
+
+       "language": {
+       "zeroRecords": "No Files to display. Drag files here or use the Upload button."}
+      
+    } );
+}
+}
+        
+        
+<!-- Lister Changes Ends --> 
+        
+    </script>
+  
+    <!--   
+    <div id="div" style="display:none;">
+        <apex:form id="uploadForm">
+            <apex:inputFile styleClass="testInput" fileName="{!fileResource.fileName}" fileSize="{!fileResource.fileSize}" contentType="{!fileResource.fileType}" value="{!fileResource.fileContent}" />
+            &nbsp;<apex:commandButton value="Upload" action="{!upload}" styleClass="uploadButton" disabled="false" onclick="$('#div').dialog('close');" />
+        </apex:form>
+    </div>
+    -->
+
+    <div id="uploadDiv" style="display:none;">
+        <apex:form id="uploadFormNew">
+
+            <input type="file" id="filePicker" />
+            <apex:outputPanel id="loadingId" styleClass="loadingId" style="display:none;" >&nbsp;&nbsp;&nbsp;<img src="/img/loading.gif" />&nbsp;Uploading...</apex:outputPanel>    <!--  &nbsp;Uploading...  -->
+
+        <script>
+            var j$ = jQuery.noConflict();
+
+            function uploadFile(evt) {
+                //debugger;
+                j$('.loadingId').show();
+                gapi.client.load('drive', 'v2', function() {
+                    //debugger;
+                    var file = evt.target.files[0];
+                    //console.log('File : ');
+                    //console.log(file);
+                    insertFile(file);
+                });
+            }
+            
+            var totalFilesUploaded = 0;
+            function insertFile(fileData, callback) {
+                const boundary = '-------314159265358979323846';
+                const delimiter = "\r\n--" + boundary + "\r\n";
+                const close_delim = "\r\n--" + boundary + "--";
+
+                var allFilesUploaded = false;
+                
+                var reader = new FileReader();
+                reader.readAsBinaryString(fileData);
+                reader.onload = function(e) {
+                    //debugger;
+                    var contentType = fileData.type || 'application/octet-stream';
+                    var metadata = {
+                      'title': fileData.name,
+                      'mimeType': contentType,
+                      'parents': [{
+                                     //"id": "{!JSENCODE($CurrentPage.parameters.gdocsId)}"
+                                     "id": currentParentFolderId
+                                   }]
+                    };
+
+                    var base64Data = btoa(reader.result);
+                    var multipartRequestBody =
+                        delimiter +
+                        'Content-Type: application/json\r\n\r\n' +
+                        JSON.stringify(metadata) +
+                        delimiter +
+                        'Content-Type: ' + contentType + '\r\n' +
+                        'Content-Transfer-Encoding: base64\r\n' +
+                        '\r\n' +
+                        base64Data +
+                        close_delim;
+
+                    var request = gapi.client.request({
+                        'path': '/upload/drive/v2/files',
+                        'method': 'POST',
+                        'params': {'uploadType': 'multipart'},
+                        'headers': {
+                          'Content-Type': 'multipart/mixed; boundary="' + boundary + '"',
+                          'Authorization' :  'Bearer ' + "{!accessToken}"
+                        },
+                        'body': multipartRequestBody});
+    
+                    if (!callback) {
+                      callback = function(file) {
+                        console.log(file);
+
+                        //debugger;
+                        j$('.loadingId').hide();
+
+                        // close the dialog box
+                        //j$('#uploadDiv').dialog('close');
+                        
+                        //Lister Changes
+                        var fileIdName = file.originalFilename.substring(0,file.originalFilename.indexOf('.'));
+                        fileIdName  = fileIdName.replace(/[_\W]+/g, "-");
+                        //j$('#a'+fileIdName+'>#fileuploadicon').attr('src',' { ! $ Resource.greenCheck}');
+                        j$('#a'+fileIdName+'>#fileuploadicon').attr('src',"{!URLFOR($Resource.IGD__driveImages, '/images/GreenCheck.png')}");
+                        j$('#a'+fileIdName+'>#uploadfilestats').text('Complete');
+                        j$('#a'+fileIdName+'>#uploadfilesize').text('Size:'+file.fileSize/1000+' KB');
+                        
+                        totalFilesUploaded++;
+                        console.log('Total Files Uplaoded : '+totalFilesToUpload+' : uploaded : '+totalFilesUploaded);
+                
+                        if(totalFilesToUpload==totalFilesUploaded){
+                                setTimeout(function(){j$("#fileuploadHeader").dialog('close');},5000);  
+                        }
+                       // Lister Changes Ends
+                        
+                        resetGdriveListFilesJS();
+                        
+                      };
+                    }else{
+                      console.log('callback undefined : '+callback);
+                    }
+                    request.execute(callback);
+                }
+                
+            }
+        </script>            
+        </apex:form>
+    </div>    
+
+    <script>
+        var j$ = jQuery.noConflict();       
+    </script>
+<!-- Lister Changes -->            
+    
+      <div id="fileuploadHeader" title="Basic dialog">
+            <p id="fileuploadStatus"></p>
+        </div>
+        
+        
+         <div id="drop-area" style="z-index: 999;height: 105%;display:none;background-color: white;position: fixed;width: 100%;margin-top: -18px;margin-left: -5px;">
+          <div id="uploadFiles" style="pointer-events:none;margin-top: 10%;color: rgb(121, 121, 121);font-size: 12px;text-align: center;">
+          
+          <i class="fa fa-cloud-upload" style="margin-right: 25px;margin-left: 10px;color: rgb(121, 121, 121); font-size: 70px;"> </i>  
+          <div id="uploadText" style="font-size: 30px;"> Drop files here </div>
+          <div style="font-size:large"> <img src="{!URLFOR($Resource.driveImages, '/images/gdrive128.png')}" width="30px"/> Cirrus Files </div>
+        </div>
+        </div> 
+        
+<!--Lister Changes Ends-->      
+ 
+
+    <apex:form id="componentForm">
+        <apex:actionFunction action="{!createDocument}" name="createDocumentaf" status="splashStatus" reRender="opid,msgId">
+            <apex:param name="param1" assignTo="{!selectedType}" value=""/>
+            <apex:param name="param2" assignTo="{!documentName}" value=""/>
+        </apex:actionFunction>
+        <apex:actionFunction action="{!processJob}" name="processJob" reRender="msgId"/>
+        <apex:actionFunction name="dummyAction" reRender="opid,msgId" oncomplete="loadJqueryDataTable();" />
+
+        <apex:actionPoller id="pollerId" enabled="{!enablePoller}" interval="12" action="{!methodForActionPoller}" reRender="opid,msgId" oncomplete="endSplash();processJob();"/>
+        <!-- 
+        <apex:actionFunction action="{!methodForActionPoller}" name="methodForActionPollerJS" reRender="opid,msgId" oncomplete="endSplash();processJob();" />
+        <apex:actionPoller id="pollerId" enabled="{!enablePoller}" interval="12" reRender="opid,msgId" oncomplete="methodForActionPollerJS();"/>
+        -->
+        <apex:actionStatus id="splashStatus" onstart="startSplash();" onstop="endSplash(); "/>
+
+        <div id="blurybackground" style="display:none;"></div>
+        <div id="statusBox" style="display:none;">
+            <img src="/img/loading32.gif" />
+            <div id="textBox">Processing...</div>
+        </div>
+
+        <script language="javascript">
+        	loadJqueryDataTable();
+            startSplash();
+            endSplash();
+            // temporarily added the dummy action to resolve the "Title" sort issue on the initial load
+            //dummyAction();
+
+            function startSplash() {
+                //debugger;
+                document.getElementById('blurybackground').style.display = '';
+                document.getElementById('statusBox').style.display = '';
+            }
+            
+            function endSplash() {
+                document.getElementById('blurybackground').style.display = 'none';
+                document.getElementById('statusBox').style.display = 'none';
+                
+               //Lister Changes
+                copyToClipBoard();
+
+                //debugger;
+                console.log(' init data table 1');
+                loadJqueryDataTable();
+            }
+            
+            function createDocumentJS(docType, docName) {
+                //debugger;
+                console.log('docName ' + docName);
+                if (docName == null || docName == '' || docName == 'Enter name here') {
+                    alert(docType + ' Name must be entered.');
+                    j$('.docName').focus();
+                    return false;
+                }
+                createDocumentaf(docType, docName);
+                j$('.docName').val('');
+                j$('#divFileName').dialog('close');
+                return false;
+            }
+
+            function openOAuthPage() {
+                debugger;
+                //window.open('{!AuthorizationURL}', '_blank', 'toolbar=0, location=0, menubar=0');
+                //var url = '{!AuthorizationURL}';
+                window.top.location.href = '{!AuthorizationURL}'; 
+            }
+        </script>
+        
+        
+       <!--Lister Changes -->          
+       <div id="file-drag" style="height:95%">
+        <apex:outputPanel id="opid">
+        
+        <script>
+            var docType = '';
+            j$(function() {
+                j$(".mainDiv").hover(
+                function() {
+                    j$(this).addClass("divBgColor");
+                },function() {
+                    j$(this).removeClass("divBgColor");
+                });
+            });
+            
+        </script>
+
+        <!-- <apex:pageBlock id="GDocs" title="Cirrus Files"> -->
+        <apex:pageBlock id="GDocs" title="{!if(userAuthenticated, 'Cirrus Files', 'Connect Google Drive')}">
+            <!-- <apex:pageMessage summary="To complete the App configuration, you must authorize google drive access to our Application by Accepting the consent page." severity="Info" strength="2" rendered="{!(showWarningValue=='1')}" /> -->
+            <apex:pageMessage summary="To complete the App configuration, you must authorize google drive access to our Application by Accepting the consent page." severity="Info" strength="2" rendered="{!$CurrentPage.parameters.showwarning}=='1'" />
+            <apex:pageMessages escape="false" id="msgId" />
+
+            <apex:outputPanel id="jsPanel">
+                <apex:actionFunction action="{!resetGdriveListFiles}" name="resetGdriveListFilesJS" reRender="opid,msgId,jsPanel" oncomplete="j$('#uploadDiv').dialog('close');copyToClipBoard();loadJqueryDataTable();" >
+                    <apex:param name="gdocsId" value="{!currentParentFolderId}" />
+                </apex:actionFunction>
+                
+<!--File 56 : Lister Changes : The below code is for the Share link in the Action Column --> 
+                <apex:actionFunction name="fileSharePermission" action="{!setFileSharePermission}" status="splashStatus" reRender="opid,msgId">
+                     <apex:param name="fileindexId" value="" />
+                </apex:actionFunction> 
+                
+<!--File 56 : Lister Changes Ends -->                
+
+                <script>
+                    //debugger;
+                    currentParentFolderId = "{!currentParentFolderId}";
+                </script>   
+            </apex:outputPanel> 
+            <apex:pageMessage summary="Sync is in Progress." severity="Info" strength="2" rendered="{!enablePoller}" id="progressMsg"/>
+
+            <apex:pageBlockButtons location="top" rendered="{!(userAuthenticated)}">
+
+                <apex:commandButton value="Refresh" action="{!resetGdriveListFiles}" status="splashStatus" reRender="opid,jsPanel,dragdrop" rendered="{!enablePoller}"/> <!-- rendered="{!enablePoller && recordConnectionStatus}" -->
+                <apex:commandButton value="Manual Connect" title="Manual Connect" action="{!connectandSyncFiles}" status="splashStatus" reRender="pollerId,opid,connectionStatusId,msgId,dragdrop" rendered="{!(NOT(ISBLANK(objectToView)) && !autoConnect && !enablePoller && !recordConnectionStatus && isUserWriter)}"/>
+
+                <c:multiSelectButton uniqueId="driveFileType" buttonText="CREATE" rendered="{!(NOT(ISBLANK(recordCollectionId)) && recordConnectionStatus && isUserWriter)}" >
+                    <br/>
+                    <apex:repeat value="{!docTypes}" var="docType">
+                        <div onclick="docType='{!docType}'; j$('#divFileName').dialog({modal: true, title: 'Enter {!docType} Name', resizable: false, height: 75, width:350}).parent().appendTo(j$('page\\:componentForm'));return false;" class="mainDiv">
+                            <img src="{!URLFOR($Resource.driveImages, '/images/'+docType+'.png')}" class="imageDropdown"/>
+                            <span class="spanDropdown">&nbsp;{!docType}&nbsp;</span>
+                        </div>
+                    </apex:repeat>
+                    <br/>
+                </c:multiSelectButton>
+
+                <apex:outputPanel rendered="{!(NOT(ISBLANK(recordCollectionId)) && recordConnectionStatus && isUserWriter)}">
+                   <div name="multiButtonNew" id="uploadNew" class="menuButton" onclick="filePicker.onchange = uploadFile; j$('#uploadDiv').dialog({show: 'drop', hide: 'drop', modal: true, title: 'Upload file to Google Drive', resizable: false, height: 75, width:375});return false;">
+                        <div id="uploadButtonNew" class="menuButtonButton" onmouseover="divHover = 'uploadButton';" onmouseout="divHover = '';" style="padding-right: 5px;background:#e8e8e9 url('/img/alohaSkin/btn_sprite.png') " >Upload&nbsp;&nbsp;<i class="fa fa-upload fa-lg"></i></div>	<!--style="padding-right: 5px;background:#e8e8e9 url('/img/alohaSkin/btn_sprite.png') repeat-x right top;" style="background-color:#e8e8e9;background-image: url('/s.gif');" -->
+                   </div>
+                   <span style="font-size: inherit;margin-left: 5px;">Drag files in the Window&nbsp;&nbsp;<img src="{!URLFOR($Resource.driveImages, '/images/DragImage.png')}" style="vertical-align: middle;"/></span>
+                </apex:outputPanel>
+
+                <apex:outputPanel id="connectionStatusId" style="float:right;padding-right:5px" rendered="{!(userAuthenticated && userHasDriveAccess)}">
+	                <apex:outputLabel style="font-weight:bold;" value="Connection Status: " />&nbsp;&nbsp;
+	                <apex:outputPanel >
+	                    <apex:image value="{!$Resource.IGD__Red}" style="vertical-align: middle;" rendered="{!(NOT(recordConnectionStatus) && NOT(enablePoller))}" width="15px"/>
+	                    <apex:image value="{!$Resource.IGD__Green}" style="vertical-align: middle;" rendered="{!(recordConnectionStatus || enablePoller)}" width="15px"/>
+	                </apex:outputPanel>
+				</apex:outputPanel>
+            </apex:pageBlockButtons>
+
+            <apex:outputPanel id="userConnectionId" rendered="{!NOT(userAuthenticated)}">
+                 
+                <!-- title="Connect Google Drive" -->
+                <apex:pageBlockSection collapsible="false" columns="1">
+                    <apex:pageBlockSectionItem >  
+                        <!-- <p>Click <strong>Connect</strong> to begin the configuration process. You will need to authorize your Google account on the following screen.</p> -->
+                        <p>Click <strong>Connect</strong> to connect your Google account in order to use Cirrus Files. You will need to authorize your Google account on the following screen.</p>
+                    </apex:pageBlockSectionItem>
+
+                    <apex:pageBlockSectionItem >
+                        <!-- <apex:commandButton value="Connect" action="{!resetGdriveListFiles}" status="splashStatus" styleClass="btnPrimary" /> -->
+                        <input type="button" value="Connect" onclick="openOAuthPage()" class="btn btnPrimary" />
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+
+            </apex:outputPanel>
+
+            <!-- render this for debugging purposes -->
+            <apex:outputPanel rendered="false">
+                <apex:outputText value="userAuthenticated - {!userAuthenticated}" /> <br/>
+                <apex:outputText value="userHasDriveAccess - {!userHasDriveAccess}" /> <br/>
+                <apex:outputText value="isUserWriter in the current Folder - {!isUserWriter}" /> <br/>
+            </apex:outputPanel>
+
+            <apex:outputPanel id="userPermissionId" rendered="{!(userAuthenticated && NOT(userHasDriveAccess) && NOT(ISBLANK(cirrusFilesObject)))}">
+                <!-- <apex:commandButton value="Request Access" action="{!SendAccessRequestEmail}" styleClass="btnPrimary" reRender="msgId" /> -->
+
+                <apex:pageBlockSection collapsible="false" columns="1">
+                    <apex:pageBlockSectionItem >
+                        <p>You do not have sufficient permission to access the files in this folder. Click <strong>Request Access</strong> to request the access from the owner.</p>
+                    </apex:pageBlockSectionItem>
+
+                    <apex:pageBlockSectionItem >
+                        <apex:commandButton value="Request Access" action="{!SendAccessRequestEmail}" styleClass="btnPrimary" reRender="msgId,dragdrop" />
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+            </apex:outputPanel>
+
+            <!-- folder navigation -->
+            <apex:outputPanel id="navPanelId" style="padding-left:10px;line-height:150%;" rendered="{!(userAuthenticated && userHasDriveAccess)}">
+                <apex:variable var="counter" value="{!1}"/>
+                <apex:repeat value="{!drivePaths}" var="path">
+                    <apex:outputPanel rendered="{!counter!=1}">&nbsp;&nbsp;<i style="color:gray;" class="fa fa-caret-right fa-lg"></i>&nbsp;&nbsp;</apex:outputPanel>
+                    <apex:commandLink value="{!path.FolderName}" action="{!resetGdriveListFiles}" title="{!path.FolderName}" reRender="opid,msgId,jsPanel" styleClass="folderContents" style="color:gray;font-size:0.9em;{!if(counter==drivePaths.size, 'font-weight:bold;', '')}" status="splashStatus">	<!-- ,dragdrop -->
+                        <apex:param name="gdocsId" value="{!path.FolderId}" />
+                        <apex:param name="gdocsName" value="{!path.folderName}" />
+                    </apex:commandLink>
+                    <apex:variable var="counter" value="{!counter+1}"/>
+                </apex:repeat>
+
+                <apex:commandLink value="Home" title="Home" reRender="opid,msgId" styleClass="folderContents" style="color:gray;font-size:0.9em;font-weight:bold;" status="splashStatus" rendered="{!(NOT(ISBLANK(recordCollectionId)) && (ISBLANK(drivePaths) || drivePaths.size==0))}">
+                </apex:commandLink>
+	            &nbsp;&nbsp;
+	            <apex:outputLink value="https://drive.google.com/drive/folders/{!currentParentFolderId}" target="_blank" id="driveLink" rendered="{!NOT(ISNULL(currentParentFolderId))}">Open in Drive</apex:outputLink>
+            </apex:outputPanel>
+            <br/>
+ 
+            <apex:outputPanel id="recordDetails" rendered="{!(userAuthenticated && userHasDriveAccess && recordConnectionStatus)}">
+
+            <!-- Lister Changes JQuery Datatable Implementation-->
+            <table id="recordDetailsTable" >
+            <thead>
+                <tr>
+
+					<!-- 
+                    <th style="width:152px">Action</th>
+                    <th style="width:5px;padding-right: 5px;background-position: 1px;">Type</th> 
+                    <th class="thColumn">Title</th>
+                    <th class="thColumn">Owner Name</th>
+                    <th class="thColumn">Created Date</th>
+                    <th class="thColumn">Last Modified By</th>
+                    <th class="thColumn">Last Modified Date</th>
+                    -->
+
+                    <th style="width:140px">Action</th>
+                    <!-- <th style="width:45px;background-position: 28px;">Type</th> --> 
+                    <th style="width:5px;padding-right: 5px;background-position: 1px;">Type</th>
+                    <th style="background-position: 25px;">Title</th>
+                    <th style="background-position: 75px;">Owner Name</th>
+                    <th style="background-position: 75px;">Created Date</th>
+                    <th style="background-position: 98px;">Last Modified By</th>
+                    <th style="background-position: 110px;">Last Modified Date</th>                    
+                    
+                </tr>
+            </thead>
+            <tbody>
+                <apex:repeat value="{!Items}" var="item">
+                    <tr>
+                        <td >
+                           
+                        <apex:commandLink value="Del" title="Delete" action="{!trashFile}" status="splashStatus" reRender="opid,msgId" rendered="{!item.isUserWriter}">
+                            <apex:param name="fileId" value="{!item.Id}"/>
+                        </apex:commandLink>
+                        
+                        
+<!-- File 56 : Lister Changes : The below code is for a Showing link to Share a Folder -->                        
+                        <apex:outputPanel rendered="{!(item.isFolder)}">
+                            <apex:outputPanel rendered="{!item.isUserWriter}">
+                            | <a href="#" title="Share" data-clipboard-text="{!item.alternateLink}" class="copybtn" id="{!item.id}" >Share</a> 
+                            </apex:outputPanel>
+                        </apex:outputPanel>
+<!-- File 56 : Lister Changes Ends -->
+                        
+
+                        <apex:outputPanel rendered="{!(NOT(item.isFolder))}">
+                            <apex:outputPanel rendered="{!item.isUserWriter}">
+                                |&nbsp;
+                      <apex:outputLink title="Edit" onclick="javascript:window.open('{!item.alternateLink}'); return false;">Edit</apex:outputLink>
+                                |
+<!--File 56 : Lister Changes : The below code is for the Share link in the Action Column --> 
+<a href="#" title="Share" data-clipboard-text="{!item.alternateLink}" class="copybtn" id="{!item.id}" >Share</a> 
+                               
+                                |&nbsp;
+<!-- File 56 : Lister Changes Ends -->                                 
+                            </apex:outputPanel>
+                            
+   <apex:outputLink title="Preview" onclick="javascript:window.open('{!if(ISBLANK(item.embedLink), if(item.mimeType=='application/vnd.google-apps.form', item.alternateLink, SUBSTITUTE(item.alternateLink, '/edit', '/preview')), item.embedLink)}');return false;"><!-- selfLink webContentLink webViewLink-->View</apex:outputLink>
+                        </apex:outputPanel>
+
+                        <!-- 
+                        <apex:outputPanel rendered="{!(NOT(item.isFolder) && NOT(ISBLANK(item.alternateLink)))}">
+                            |&nbsp;
+                            <apex:outputLink onclick="javascript:window.open('{!item.alternateLink}');return false;" > 
+                                <i class="fa fa-download fa-lg"></i>
+                            </apex:outputLink>
+                        </apex:outputPanel>
+                        -->
+
+                        </td>
+                        <td >
+    						<apex:image url="{!item.iconLink}" alt="{!item.mimeType}"/>
+                        </td> 
+
+                        <!-- <td style="padding-left:7px"> -->
+                        <td class="tdColumn">
+                         <apex:outputPanel rendered="{!(NOT(item.isFolder))}">
+                            <apex:outputLink onclick="javascript:window.open('{!if(ISBLANK(item.embedLink), SUBSTITUTE(item.alternateLink, '/edit', '/preview'), item.embedLink)}');return false;">
+                                {!item.title}
+                            </apex:outputLink>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!item.isFolder}">
+                            <apex:commandLink value="{!item.Title}" action="{!resetGdriveListFiles}" style="align:center" status="splashStatus" reRender="opid,msgId,jsPanel">	<!-- ,dragdrop -->
+                                <apex:param name="gdocsId" value="{!item.id}" />
+                                <apex:param name="gdocsName" value="{!item.title}" />
+                            </apex:commandLink>
+                        </apex:outputPanel>
+                        </td>
+                        
+                        <!-- <td class="tdColumn">{!item.id}</td> -->
+                        <td class="tdColumn">{!item.ownerNames}</td>
+                        <td class="tdColumn">{!item.createdDateTime}</td>
+                        <td class="tdColumn">{!item.lastModifyingUserName}</td>
+                        <td class="tdColumn">{!item.modifiedDateTime}</td>
+                    </tr>
+                </apex:repeat>
+            </tbody>
+        </table>
+            
+              
+            </apex:outputPanel>
+
+         <apex:pageBlockSection id="noFiles" rendered="{!(NOT(ISBLANK(recordCollectionId)) && (ISBLANK(Items) || Items.size==0))}">  <!-- rendered="{!(NOT ISBLANK(recordCollectionId) && (ISBLANK(Items) || Items.size==0))}" -->
+                    <apex:outputPanel id="userPermissionId" rendered="{!(userAuthenticated && userHasDriveAccess)}">
+                        No files to display
+                    </apex:outputPanel>
+                </apex:pageBlockSection>
+                <apex:pageBlockSection id="manualConnect" rendered="{!(!enablePoller && !ISBLANK(objectToView) && ISBLANK(recordCollectionId) && !autoConnect && userAuthenticated && userHasDriveAccess)}">
+                    Click <strong>Manual Connect</strong> button to connect this record to Google Drive.
+                </apex:pageBlockSection>
+                
+               
+        </apex:pageBlock>
+
+        </apex:outputPanel>
+        
+        </div>
+ 
+         
+<!--File 69 : Lister Changes : Droping Area for Files-->
+       <apex:outputPanel id="dragdrop">
+        
+           <script language="JavaScript">
+
+             //function handleDragOver(event) {
+             var handleDragOver = function(event) {
+                 event.stopPropagation();
+                 event.preventDefault();
+                 event.dataTransfer.dropEffect = 'copy';
+                 //console.log('handleDragOver 1');
+
+                 j$('#drop-area').css('display','block');                
+             };
+
+             //function handleDragLeave(event) {
+             var handleDragLeave = function(event) {             
+	             event.stopPropagation();
+	             event.preventDefault();
+	             event.dataTransfer.dropEffect = 'none';
+	             //console.log('handleDragLeave 2');
+	             j$('#drop-area').css('display','none');
+             };
+
+             //function handleDrop(event) {
+             var handleDrop = function(event) {
+               	//console.log('drop event');
+               	event.stopPropagation();
+               	event.preventDefault();
+               	var files = event.dataTransfer.files;  // FileList object.
+               	var file = files[0]                  // File     object.
+               	//alert(file);
+               	totalFilesUploaded = 0;
+               	//console.log(files);
+               
+               	totalFilesToUpload = files.length;
+               
+               	//Code for showing waiting status of the Files ready to upload
+               	for(var i=0;i<files.length;i++){
+               	var filesize = 'Size:'+files[i].size/1000+' KB';
+               	var position = 'absolute';
+               	var styleing = '';
+               	var iconImage = '{!$Resource.spinner}';
+              
+               	var fileUploadStatus = 'Uploading...';
+               	if(files[i].name.length>15){
+                   console.log('length is more than 13');
+                   position = 'relative';
+                   styleing = 'padding-bottom: 15px';
+                }      
+
+               	//Checking if Folder
+               	debugger;
+               	console.log(' file name: ' + files[i].name + ' type: ' + files[i].type);
+               	console.log(' file ' + files[i]);
+               	// Handling arf file, as the file type is blank
+               	//if(files[i].name.indexOf('.')<0 || files[i].type==''){
+               	if (files[i].name.indexOf('.')<0 || (files[i].type=='' && files[i].name.indexOf('.arf') < 0) ) {
+               	//iconImage = '{ ! $ Resource.redCross}';
+               	iconImage = "{!URLFOR($Resource.driveImages, '/images/RedCross')}";	//.svg
+               	fileUploadStatus = 'Folders cannot be Uploaded';
+               	filesize = '';
+               	}
+
+				var fileIdName = files[i].name.substring(0,files[i].name.indexOf('.'));
+				    fileIdName  = fileIdName.replace(/[_\W]+/g, "-");
+				                 
+				var fileUploadHTML = '<div id="a'+fileIdName+'" class="fileuploadblock" style="'+styleing+'"><img id="fileuploadicon" src="'+iconImage+'">'+
+				'<div id="uploadfilename" style="position: '+position+';margin-left: 25px;color:rgb(0, 96, 205)"> '+files[i].name+' </div>'+
+				'<div id="uploadfilestats" style="margin-left: 30%;margin-right: 30%;position: absolute;"> '+fileUploadStatus+' </div>'+
+				'<div id="uploadfilesize" style="margin-left: 75%;"></div></div>';
+				                    
+				j$("#fileuploadHeader").dialog({show: 'drop', hide: "drop",close : function(){j$('#fileuploadStatus').text('');},maxHeight:300,title: 'Files Uploaded', width:475});
+				
+				j$('#fileuploadStatus').append(fileUploadHTML);
+    
+               }
+
+               for(var i=0;i<files.length;i++){
+               	insertFile(files[i]);
+                   console.log(' file name and size : ' + files[i].name + ' : ' + files[i].size);
+                }
+               
+               j$('#drop-area').css('display','none');
+               };
+
+           	//File 59 : Lister Changes : Script Event Handler For Drag and Drop
+
+            //var allowDragDrop = '{!recordConnectionStatus}';            
+            //var userAuthenticated = '{!userAuthenticated}';
+            //var userHasDriveAccess = '{!userHasDriveAccess}';
+            //console.log(' isUserWriter: ' + isUserWriter + ' authenticated: ' + userAuthenticated + ' hasdrive access: ' + userHasDriveAccess);
+
+            var isUserWriter = '{!isUserWriter}';
+            console.log(' isUserWriter: ' + isUserWriter);
+
+           	//if(allowDragDrop == 'true' && userAuthenticated=='true' && userHasDriveAccess=='true')
+
+           	//console.log(' removing event handlers');
+           	//debugger;
+       		//j$('#file-drag').off();
+       		//j$('#drop-area').off();
+
+       		//j$('#file-drag').unbind();
+       		//j$('#drop-area').unbind();       		
+
+           	var file_drag = document.getElementById('file-drag');
+           	var file_drop = document.getElementById('drop-area');
+
+       		file_drag.removeEventListener('dragenter', handleDragOver, false);
+
+       		//file_drop.removeEventListener('dragover', handleDragOver, false);
+       		file_drop.removeEventListener('dragleave', handleDragLeave, false);
+       		file_drop.removeEventListener('drop', handleDrop, false);
+
+           if (isUserWriter == 'true') {
+              console.log('Allow Drag and Drop');
+              //var file_drag = document.getElementById('file-drag');
+              //var file_drop = document.getElementById('drop-area');
+
+              var totalFilesToUpload; 
+                //1
+                    file_drag.addEventListener(
+                    'dragenter',
+                    handleDragOver,
+                        false
+                    );                    
+                    //j$('#file-drag').on('dragenter', handleDragOver);
+                    
+                //1, 2 , 3              
+                     file_drop.addEventListener(
+                    'dragover',
+                        handleDragOver,
+                        false
+                    );
+                    //j$('#drop-area').on('dragover', handleDragOver);
+
+
+                    file_drop.addEventListener(
+                    'dragleave',
+                    handleDragLeave,
+                    false
+                    );
+                    //j$('#drop-area').on('dragleave', handleDragLeave);
+
+                    file_drop.addEventListener(
+                    'drop',
+                    handleDrop,
+                    false
+                   );
+                   //j$('#drop-area').on('drop', handleDrop);
+           }
+
+            //File 59 : Ends
+            </script>
+        </apex:outputPanel> 
+<!-- Lister Changes Ends -->
+
+        <div id="divFileName" style="display:none">
+
+            <apex:inputText style="width:225px" maxlength="255" styleclass="{!IF(documentName=='Enter name here','docName placeholder','docName')}" onKeyPress="return submitOnEnter(event);"
+                    onfocus="if (this.value == '' || this.value == 'Enter name here') {this.value = '';j$(this).removeClass('placeholder');}" onblur="if (this.value == '') {this.value ='Enter name here';j$(this).addClass('placeholder');}" />   <!-- rendered="{!NOT(enablePoller) && recordConnectionStatus}" -->
+
+            &nbsp;<apex:commandButton value="Create" onclick="createDocumentJS(docType, j$('.docName').val());" styleClass="createDocument" rerender="msgId" />
+        </div>
+
+    </apex:form>
+</apex:component>

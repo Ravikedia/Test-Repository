@@ -1,0 +1,16 @@
+<apex:page controller="Mycontroller">
+    <apex:form >
+        <apex:pageblock >
+            <apex:selectList size="1"  id="myvalue" value="{!filterId}">
+              <apex:actionSupport event="onchange" action="{!renderdiffview}" rerender="cases_table"/>
+                <apex:selectOptions value="{!Myname}">
+                </apex:selectOptions>
+                 </apex:selectList>
+                <apex:pageblockTable value="{!results}" var="item" id="cases_table">
+                
+                  <apex:column value="{!item.id}"/>
+                </apex:pageblockTable>
+           
+        </apex:pageblock>
+    </apex:form>
+</apex:page>

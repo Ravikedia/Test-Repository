@@ -1,0 +1,186 @@
+<apex:page controller="wizardcontroller" >
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
+    <!--<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css" />-->
+  <!--  <script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js">
+
+</script>
+   <!-- <script>
+        var j$ = jQuery.noConflict();
+        j$(document).ready(function()
+        {
+       j$("#reg").click(function(){
+           reg();
+        });
+        });
+    </script>
+      <script>
+      
+          j$(document).ready(function(){
+              j$("[id$=a]").click(function()
+              {
+                  var name = j$("[id$=username]").val();
+                  var password = j$("[id$=password]").val();
+                  if ((name.length == 0))
+                  {
+                  alert("Please enter your name");
+                  j$("[id$=username]").focus();
+                   return false;
+                  }
+                  if ((password.length == 0))
+                  {
+                  alert("Please enter your pasword");
+                  return false;
+                  }
+                  
+             });
+           });
+    </script>-->
+    
+    
+    
+    
+
+    <style type="text/css">
+    .button1 {
+           
+          
+            border:  100px;
+            font-size:20px;
+         
+            text-align:left;
+            width: 75%;
+            color:white;
+            background-color: blue;
+          
+
+        }
+    </style>   
+
+  
+    <script>
+        var v=1;
+        var flag=0;
+        var str;
+    function checksteps()
+    {
+        
+       if(v==1)
+       {
+       alert("Please select step");
+       return false;
+       }
+           v++;
+           recordmaintain();
+       }
+     
+    
+      function  OpenPage(str)
+      {
+          v++;
+          OpenPages(str);
+      }
+    </script>
+    
+
+    <apex:form >
+    <!--<apex:actionFunction name="reg" action="{!Step1}" reRender="steps" />
+    <apex:actionFunction name="registration" action="{!Step2}" reRender="steps" />
+    <apex:actionFunction name="reg3" action="{!Step3}" reRender="steps" />
+    <apex:actionFunction name="registration4" action="{!Step4}" reRender="steps" />
+    <apex:actionFunction name="registration5" action="{!Step5}" reRender="steps" />-->
+    <apex:actionfunction name="recordmaintain" action="{!Recordmaintains}" reRender="steps"/>
+    
+    <apex:actionFunction action="{!redirect}" name="OpenPages" reRender="steps,theIframe">
+    <apex:param assignTo="{!Page}" value="" name="param1"/>
+     </apex:actionFunction>
+    
+   <apex:pageBlock title="" >
+  
+    <apex:outputPanel id="steps" >
+     
+    
+
+    <table  width="95%" align="center" border="1" >
+    <tr>
+    <td width="30%" bgcolor="cyan" rowspan="5" >
+    
+        <ol  class="nav nav-pills nav-stacked"  >
+        
+           <apex:outputpanel rendered="{!checkstep1}">
+           
+            
+        <ol  class="nav nav-pills nav-stacked"  >
+         <!-- <li class="active" id="reg"  onclick="OpenPage('step1'); return false; " >-->
+          
+          <li  class="active" id="reg" onclick="return OpenPage('step1')">
+          <a href=""><span class="glyphicon glyphicon-play"></span>  Step 1 &nbsp;&nbsp;&nbsp;
+          
+           <apex:outputpanel rendered="{!check}"> 
+          <span class="glyphicon glyphicon-ok"></span></apex:outputpanel> &nbsp;&nbsp;&nbsp;  </a></li><br/>
+           <!-- <apex:commandButton value="Google" onclick="OpenPage('google'); return false;"  styleclass="button1"/-->
+        <!--<apex:repeat  value="{!stepvalue}"  var="step">
+           <input type="button" class="button1" style="button1"  value="{!step.Stepnumber__c }" /><br/><br/>
+          </apex:repeat>-->
+         </ol>
+         </apex:outputPanel>
+         <apex:outputpanel rendered="{!check}"> 
+          <ol  class="nav nav-pills nav-stacked"  >
+          <li class="active" id="register"  onclick="OpenPage('step2'); return false;" ><a href=""><span class="glyphicon glyphicon-play"></span>
+           Step 2  &nbsp;&nbsp;&nbsp;
+           <apex:outputpanel rendered="{!checkstep3}"> 
+            <span class="glyphicon glyphicon-ok"></span></apex:outputPanel> &nbsp;&nbsp;&nbsp; </a></li><br/>
+          </ol>
+         </apex:outputPanel>
+         
+        
+        
+         <apex:outputpanel rendered="{!checkstep3}"> 
+          <ol  class="nav nav-pills nav-stacked"  >
+              <li class="active" id="reg3" onclick="OpenPage('step3'); return false;" ><a href=""><span class="glyphicon glyphicon-play"></span>Step 3 &nbsp;&nbsp;&nbsp;
+              <apex:outputpanel rendered="{!checkstep4}">
+              <span class="glyphicon glyphicon-ok"></span></apex:outputpanel>  &nbsp;&nbsp;&nbsp;   </a></li><br/>
+          </ol>
+         </apex:outputPanel>
+         
+         
+          <apex:outputpanel rendered="{!checkstep4}">
+           <ol  class="nav nav-pills nav-stacked"  >
+         
+               <li class="active" id="reg4" onclick="OpenPage('step4'); return false;"><a href=""><span class="glyphicon glyphicon-play"></span>
+               
+                Step 4 &nbsp;&nbsp;&nbsp; <apex:outputpanel rendered="{!checkstep5}"  >
+                 <span class="glyphicon glyphicon-ok"></span>
+                 </apex:outputPanel>  </a></li><br/>
+            </ol>
+           </apex:outputPanel>
+           
+         
+          <apex:outputpanel rendered="{!checkstep5}"  >
+          <ol  class="nav nav-pills nav-stacked"  >
+              <li class="active" id="reg5"  onclick="OpenPage('step5'); return false;"><a href=""><span class="glyphicon glyphicon-play"></span>Step 5 &nbsp;&nbsp;&nbsp;
+               <apex:outputpanel rendered="{!checkstep6}"  >
+              <span class="glyphicon glyphicon-ok"></span> </apex:outPutpanel>    </a></li><br/><br/>
+          </ol>
+          </apex:outputPanel>
+          <br/><br/><br/>
+          </ol>
+    </td >
+    <td bgcolor="white">
+        <apex:iframe id="theIframe" src="{!total.url__c}"  scrolling="false"/>
+    </td>
+    </tr>
+ 
+ 
+    <tr>
+        <td align="center" bgcolor="silver">
+            <apex:commandButton value="Click Me!"  id="a" rerender="none"  onclick="return checksteps()"/>
+            
+        </td>
+    </tr>
+
+    </table>
+    </apex:outputpanel>
+    </apex:pageBlock>
+   </apex:form>
+</apex:page>

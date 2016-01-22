@@ -1,0 +1,53 @@
+<apex:page controller="DynamicTable">  
+   <!--Allows users to enter input-->
+    <apex:form id="ataTable">
+   
+    <!--An area of a page that uses styling -->
+        <apex:pageblock title="Dynamic Table" >
+           <!-- List for selecting object from picklist-->
+           
+            <apex:selectList size="1"  id="myvalue" value="{!filterId}">
+          
+            <!--Actionsupport component that adds AJAX support to another component, 
+              allowing the component to be refreshed asynchronously by the server when a particular event occurs-->
+                   <apex:actionSupport event="onchange" action="{!view}" rerender="DataTable" />
+                 
+                  Select Object From List &nbsp;  <apex:selectOptions value="{!Myname}" />
+               
+            </apex:selectList> 
+            
+            
+            &nbsp; Enter The Name of Record That You Want To search &nbsp;<apex:inputText />
+            <apex:commandButton action="{!search}" value="SEARCH!" />
+            <br/><br/>
+            
+            <apex:outputPanel id="DataTable">
+            
+            <!--creating table for storing fields value of object-->
+            <apex:pageblockTable value="{!results}" var="item" id="cases_table"   Title="Select value from Picllist" rendered="{!if(results != null && results.size>0,true,false)}"  >
+                <apex:column headerValue="Checkbox" width="10%">
+                 <apex:inputCheckbox />
+                 </apex:column>
+                <apex:column value="{!item.id}" />
+                <apex:column value="{!item['name']}"/>
+            </apex:pageblockTable>
+            
+         
+             <apex:outputPanel rendered="{!if(results != null && results.size=0,true,false)}">
+                <apex:outputLabel > Not found any record</apex:outputLabel>
+            </apex:outputPanel>
+            
+           </apex:outPutPanel>
+           
+            <apex:outputPanel >
+            {!Total_size}
+        <apex:commandButton action="{!Beginning}" title="Beginning" value="<<" disabled="{!disablePrevious}" reRender="myPanel,myButtons"/>
+        <apex:commandButton action="{!Previous}" title="Previous" value="<" disabled="{!disablePrevious}" reRender="myPanel,myButtons"/>        
+        <apex:commandButton action="{!Next}" title="Next" value=">" disabled="{!disableNext}" reRender="myPanel,myButtons"/>
+        <apex:commandButton action="{!End}" title="End" value=">>" disabled="{!disableNext}" reRender="myPanel,myButtons"/>        
+        </apex:outputPanel>
+          </apex:pageblock>
+          
+          
+    </apex:form>
+</apex:page>

@@ -1,0 +1,31 @@
+<apex:page controller="sampleCode">
+
+<apex:form >
+
+<apex:outputPanel id="ContactDetail">
+
+<apex:repeat value="{!contactsInformation}" var="contact">
+<p>{! contact.FirstName & ' ' & contact.LastName}</p>
+</apex:repeat>
+</apex:outputPanel>
+
+<apex:pageBlock >
+     <apex:pageBlockTable value="{!wrapperList}" var="b" >
+                         <apex:column value="{!b.Name}" headerValue="Account Name"/>
+                   
+                         <apex:column headerValue="Total Contacts">  
+                             <apex:commandlink action="{!accountClicked}" rerender="ContactDetail">
+                             <apex:outputText value="{! b.con}"/>
+                               <apex:param name="id" value="{!b.recordid}" assignTo="{!selectedcountofcontact}"/>
+                         </apex:commandLink>                             
+                         </apex:column>
+                         
+                         <apex:column headerValue="Total Opportunities">
+                             <apex:commandLink value="{!b.Opp}"/>
+                         </apex:column>                     
+
+    </apex:pageBlockTable>
+</apex:pageBlock>
+</apex:form>
+
+</apex:page>

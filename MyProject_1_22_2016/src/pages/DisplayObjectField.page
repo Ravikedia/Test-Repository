@@ -1,0 +1,52 @@
+<!-- Purpose to show all object in a selected list and related fields in dependent list and show selected fields to the page block table -->
+<apex:page controller="ObjectFieldRecordsController">
+<apex:form id="theForm">
+<!-- Action funtion having information about the state of next button and getCall during onClick event of next button -->
+<apex:actionfunction action="{!next}" name="next"/>
+<!-- Action funtion having information about the state of previous button and getCall during onClick event of previous button -->
+<apex:actionFunction action="{!previous}" name="previous"/>
+<apex:pageBlock title="Select Object and field">
+<apex:pageBlockSection >
+<apex:pageBlockSectionItem >
+<apex:outputLabel value="Select any Object"/>
+<!-- Selected list to display all objects present in this organization -->
+<apex:SelectList value="{!objectName}" size="1">
+<!-- PickList of object -->
+<apex:selectOptions value="{!listOfObject}"/>
+<apex:actionSupport event="onchange" reRender="theForm" action="{!function}"/>
+</apex:SelectList>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem id="field">
+<apex:outputLabel value="Select any Field"/>
+<!-- Selected list to display all fields related to selected object from object's selected list in this organization -->
+<apex:SelectList size="6" value="{!stringFieldName}" disabled="{!if(fieldName.size==1,true,false)}" multiselect="true">
+<apex:Selectoptions value="{!fieldName}"/>
+</apex:SelectList>
+</apex:pageBlockSectionItem>
+<apex:commandButton value="click to show" reRender="theForm"><apex:actionSupport event="onclick" action="{!query}"/> </apex:commandButton>
+</apex:pageBlockSection>
+</apex:pageBlock>
+<apex:outputLabel id="out" rendered="{!if(objectName!='' && objectName!='',true,false)}">
+<!-- Pageblock table to display id of record of selected object -->
+<apex:pageBlock >
+<apex:pageblocktable value="{!listOfFieldRecord}" var="rowItem">
+<apex:repeat value="{!listFieldToShow}" var="colItem">
+<apex:column value="{!rowItem[mapFieldToShow[colItem]]}"/>
+</apex:repeat>
+</apex:pageblocktable>
+</apex:pageBlock>
+</apex:outputLabel>
+<!-- this block shown only if more than one page is exist contain next and previous button to show the next and previous page if exist -->
+<apex:pageBlock rendered="{!if(totalPage>1,true,false)}">
+<apex:pageBlockSection >
+<apex:pageBlockSectionItem >
+<!-- next and previous link state information -->
+<apex:commandLink value="Previous" reRender="out" onclick="previous()" rendered="{!DisablePrevious}"/>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+<apex:commandLink value="Next" reRender="out" onclick="next()" rendered="{!DisableNext}"/>
+</apex:pageBlockSectionItem>
+</apex:pageBlockSection>
+</apex:pageBlock>
+</apex:form>
+</apex:page>

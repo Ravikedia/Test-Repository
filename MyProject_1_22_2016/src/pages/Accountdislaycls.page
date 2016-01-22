@@ -1,0 +1,50 @@
+<apex:page controller="Accountdislaycls" standardstylesheets="false" showHeader="false">
+    <head>
+      <meta charset="utf-8"></meta>
+      <meta name="viewport" content="width=device-width, initial-scale=1"/>
+      <title>dialog demo</title>
+      <link rel="stylesheet" href="//code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.css"/>
+      <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+      <script src="//code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js"></script>
+      <style>
+            th
+            {
+                border-bottom: 1px solid #d6d6d6;
+            }
+            tr:nth-child(even)
+            {
+                background:#e9e9e9;
+            }
+    </style>
+    </head>
+    <div data-role="page">
+        <div data-role="header">
+             <h1>Account Table</h1>
+        </div>
+        <div data-role="main">
+            <table data-role="table"  data-mode="columntoggle" class="ui-responsive ui-shadow" data-column-btn-text="Click me to hide or show columns!">
+                <thead>
+                <tr>
+                    <th data-priority="1">Account Id</th>
+                    <th data-priority="2">Account Name</th>
+                    <th data-priority="3">Type</th>
+                    <th data-priority="4">Industry</th>
+                    </tr>
+                </thead>
+                <tbody>
+                     <apex:repeat value="{!lstaccount}" var="act">
+                         <tr>
+                            <td>{!act.id}</td>
+                            <td>{!act.name}</td>
+                            <td>{!act.type}</td>
+                            <td>{!act.industry}</td>
+                         </tr>
+                     </apex:repeat>
+                </tbody>
+            </table>
+        </div>
+        <div data-role="footer">
+            <h1>Account Details</h1>
+        </div>
+    </div>
+</apex:page>

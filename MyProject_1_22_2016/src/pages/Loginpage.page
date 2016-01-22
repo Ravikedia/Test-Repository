@@ -1,0 +1,42 @@
+<apex:page controller="wizardcontroller" >
+  
+<!--
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
+ <script>
+   
+ function retrivevalue()
+ {
+  var j$ = jQuery.noConflict();
+    var name = j$("[id$=username]").val();
+   
+     OpenPages(name);
+
+ }
+ 
+ 
+ </script>
+ 
+ 
+ <apex:form >
+ 
+  <apex:actionFunction action="{!loginuser}" name="OpenPages"  >
+    <apex:param assignTo="{!inputlookup}" value="" name="param1"/>
+     </apex:actionFunction>
+
+
+
+
+-->
+ <apex:form >
+ <apex:pageBlock title="User login">
+ <center>
+ Choose user name &nbsp;<apex:inputField value="{!rmaintain.User__c}"  id="username" /><br/><br/>
+ Enter your password<apex:inputsecret value="{!password}"/><br/><br/>
+
+ 
+ <apex:commandButton value="Next" action="{!loginuser}" /><br/>
+  </center>
+ </apex:pageBlock>
+ 
+ </apex:form>
+</apex:page>

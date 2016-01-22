@@ -1,0 +1,383 @@
+<apex:component selfClosing="true" controller="IGD.GDrive_Component_Controller" access="global" allowDML="true" >
+	<apex:attribute name="recordType" assignTo="{!rType}" description="type of the record that needs to be displayed" type="String" required="true" access="global"/>
+	<apex:attribute name="recordId" assignTo="{!rId}" description="id of the record that needs to be displayed" type="String" required="true" access="global"/>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<apex:stylesheet value="{!URLFOR($Resource.IGD__OneStarter,'styles.css')}"/>
+<apex:includeScript value="https://apis.google.com/js/client.js" />
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet" />
+
+<style type="text/css">
+	span.btn-text {
+		padding-left: 20px;
+		padding-right: 20px;
+	}
+
+	.modal-container {
+		position: absolute;
+		width: 80%;
+		z-index: 3;
+
+		top: 20%;
+		left: 10%;
+	}
+
+	.overlay {
+		position: absolute;
+		top: 0px;
+		left: 0px;
+		z-index: 2;
+
+		height: 100%;
+		width: 100%;
+		background-color: #FFF;
+		opacity: 0.7;
+		display: none;
+	}
+
+	.spinner, .syncInProgress {
+		position: absolute;
+		//top: 50%;
+		top: 20%;
+		left: 50%;		
+		display: none;
+		//z-index: 3;
+		z-index:1000;
+		//position:absolute;
+		background-color: #222;
+        text-align:center;
+        vertical-align: middle;
+        opacity:0.6;
+        filter:alpha(opacity=60);
+	}
+
+    #blurybackground {
+        z-index:1000;
+        position:absolute;
+        left:0px;
+        top:0px;
+        width:100%;
+        height:100%;
+        text-align:center;
+        vertical-align: middle;
+        background-color: #222;
+        opacity:0.6;
+        filter:alpha(opacity=60);
+    }
+    
+    #statusBox {
+        // for Modzilla
+        -moz-background-clip:border;
+        -moz-background-inline-policy:continuous;
+        -moz-background-origin:padding;
+        -moz-border-radius-bottomleft:5px;
+        -moz-border-radius-bottomright:5px;
+        -moz-border-radius-topleft:5px;
+        -moz-border-radius-topright:5px;
+        -moz-box-shadow:1px 6px 5px #888888;
+        
+        -webkit-border-bottom-left-radius:5px;
+        -webkit-border-bottom-right-radius:5px;
+        -webkit-border-top-left-radius:5px;
+        -webkit-border-top-right-radius:5px;
+        -webkit-box-shadow:1px 6px 5px #888888;
+        
+        box-shadow: 1px 6px 5px #888888;
+        
+        z-index:1000;
+        
+        background:#FFFFFF none repeat scroll 0 0;
+        //height:42px;
+        height:52px;
+        //width:150px;
+        width:175px;
+        //left:45%;
+        left:20%;
+        //top:45%;
+        top:20%;
+        padding-left:15px;
+        padding-top:11px;
+        position:absolute;
+        vertical-align:middle;
+    }
+
+    #textBox {
+        margin-left:40px;
+        margin-top:-20px;
+        font-weight:bold;
+        font-size:14px;     
+    }
+
+	.spinner p, .syncInProgress p {
+		text-align: center;
+		font-weight: bold;
+		font-size: 13px;
+		color: #003;
+	}
+</style>
+
+<script type="text/javascript">
+
+function showUploadConfirmation() {
+	$(".overlay").fadeIn();
+	$("#uploadForm").fadeIn();
+}
+
+function uploadImageSpinner() {
+	$("#uploadForm").fadeOut();
+	showSpinner("Uploading file...");
+}
+
+function cancelUpload() {
+	$(".overlay").fadeOut();
+	$("#uploadForm").fadeOut();	
+}
+
+function connectToDrive() {
+	connectAndSyncFiles();
+
+	$(".manual_connect").fadeOut(function() {
+		showSpinner("Connecting to Drive...");
+
+		// setTimeout(function() {
+		// 	// window.location.href = window.location.href;
+		// 	console.log("something's happening...");
+		// }, 12000);
+	});
+
+	return false;
+}
+
+function showSpinner(text) {
+	//$(".spinner p").text(text);
+	//$(".spinner").fadeIn();
+	
+	$("#blurybackground").fadeIn();
+	$("#statusBox").fadeIn();	
+}
+
+function hideSpinner() {
+	//$(".spinner p").text('');
+	//$(".spinner").fadeOut();
+
+	$("#blurybackground").fadeOut();
+	$("#statusBox").fadeOut();
+	
+}
+
+function refreshPage() {
+	console.log("refreshing page");
+	window.location.href = window.location.href;
+}
+
+function uploadFile(evt) {
+	//debugger;
+	//$('.loadingId').show();
+	uploadImageSpinner();
+   	gapi.client.load('drive', 'v2', function() {
+       	//debugger;
+       	var file = evt.target.files[0];
+       	insertFile(file);
+	});
+}
+
+function insertFile(fileData, callback) {
+	const boundary = '-------314159265358979323846';
+       const delimiter = "\r\n--" + boundary + "\r\n";
+       const close_delim = "\r\n--" + boundary + "--";
+
+       var reader = new FileReader();
+       reader.readAsBinaryString(fileData);
+       reader.onload = function(e) {
+		//debugger;
+		var contentType = fileData.type || 'application/octet-stream';
+		var metadata = {
+		  'title': fileData.name,
+		  'mimeType': contentType,
+		  'parents': [{
+		                 //"id": "{!JSENCODE($CurrentPage.parameters.gdocsId)}"
+		                 "id": currentParentFolderId
+		               }]
+		};
+
+           var base64Data = btoa(reader.result);
+		var multipartRequestBody =
+		    delimiter +
+		    'Content-Type: application/json\r\n\r\n' +
+		    JSON.stringify(metadata) +
+		    delimiter +
+		    'Content-Type: ' + contentType + '\r\n' +
+		    'Content-Transfer-Encoding: base64\r\n' +
+		    '\r\n' +
+		    base64Data +
+		    close_delim;
+
+		var request = gapi.client.request({
+		    'path': '/upload/drive/v2/files',
+		    'method': 'POST',
+		    'params': {'uploadType': 'multipart'},
+		    'headers': {
+		      'Content-Type': 'multipart/mixed; boundary="' + boundary + '"',
+		      'Authorization' :  'Bearer ' + "{!accessToken}"
+		    },
+		    'body': multipartRequestBody});
+
+		if (!callback) {
+		  callback = function(file) {
+		    //console.log(file);
+
+		    //debugger;
+		    //j$('.loadingId').hide();
+
+		  	resetGdriveListFilesJS();
+		  	
+			hideSpinner();
+		  };
+		}
+		request.execute(callback);
+	}
+}
+
+</script>
+
+<apex:form id="formId">
+	<apex:actionFunction action="{!processJob}" name="processJob" reRender="msgId"/>
+	<apex:actionFunction action="{!connectAndSyncFiles}" name="connectAndSyncFiles" />
+	<apex:actionFunction action="{!resetGdriveListFiles}" name="resetGdriveListFilesJS" reRender="fileList,msgId,jsPanel" oncomplete="hideSpinner();" >
+    	<apex:param name="gdocsId" value="{!currentParentFolderId}" />
+	</apex:actionFunction>
+	<apex:actionFunction action="{!resetGdriveListFiles}" name="OpenFolderJS" reRender="fileList,msgId,jsPanel" oncomplete="hideSpinner();" >
+    	<apex:param name="gdocsId" value="param1" />
+    	<apex:param name="gdocsName" value="param2" />
+	</apex:actionFunction>
+	
+	<apex:actionPoller id="pollerId" enabled="{!enablePoller}" interval="8" action="{!methodForActionPoller}" reRender="fileList,msgId,jsPanel" oncomplete="refreshPage()"/>
+	<apex:outputPanel rendered="{!enablePoller}" id="progressMsg" styleclass="syncInProgress">
+		<img src="{!$Resource.spinner}" width="72" height="72" />
+		<p>Sync is in Progress</p>
+	</apex:outputPanel>
+</apex:form>
+
+<div id="blurybackground" class="blurybackground" style="display:none;"></div>
+<div id="statusBox" class="statusBox" style="display:none;">
+     <img src="/img/loading32.gif" />
+     <div id="textBox">Processing...</div>
+ </div>
+
+	<div id="uploadForm" style="display:none">
+		<div class="modal-container">
+				<input type="file" id="filePicker" class="uploadField" onchange="showUploadConfirmation();" style="display: none;" /> 
+
+			<br/><br/>
+			<a href="#" onclick="cancelUpload()">Cancel</a>
+		</div>
+	</div>
+
+<apex:outputPanel rendered="{!(NOT(ISBLANK(objectToView)) && !autoConnect && !enablePoller && !recordConnectionStatus)}" styleClass="manual_connect">
+	<!-- manual connect -->
+
+	<button class="btn bg-primary-btn btn--primary pvs size-full brm border border--3" label="Connect to Drive" onclick="connectToDrive()" style="margin-top: 50px">
+		<span class="text-color-5 f3 fw-semibold">Connect to Drive</span>
+	</button>
+
+	<p>Click 'Connect to Drive' to create the '{!recordCollectionName}' folder to begin.</p>
+
+</apex:outputPanel>
+
+<apex:outputPanel rendered="{!enablePoller}">
+	<button class="btn bg-secondary-btn btn--secondary pvs size-full brm border border--3" label="Refresh" onclick="refreshPage()">
+		<span class="text-color-4 f3 fw-semibold">Refresh</span>
+	</button>
+</apex:outputPanel>
+
+<apex:outputPanel id="fileList">
+	<apex:outputPanel rendered="{!NOT(ISBLANK(recordCollectionId))}">
+		<apex:outputPanel id="jsPanel">
+          	<script>
+           		//debugger;
+           		currentParentFolderId = "{!currentParentFolderId}";
+			</script>	
+		</apex:outputPanel>
+		<article class="sg-phone--container">
+			<div class="sg-phone--page fileList">
+				<section class="pam border-bottom border--3 clear" style="display:{!IF(ios8Device==true, 'none;', '')}" >
+					<!-- <button class="btn bg-secondary-btn btn--secondary pvs size-full brm border border--3" label="Upload to Drive" onclick="$('.uploadField').click();"> -->
+					<button class="btn bg-secondary-btn btn--secondary pvs size-full brm border border--3" label="Upload to Drive" onclick="filePicker.onchange=uploadFile; $('.uploadField').click();">
+						<span class="text-color-4 f3 fw-semibold">Upload to Drive</span>
+					</button>
+				</section>
+
+				<!-- folder navigation	-->
+				<section class="pam border-bottom border--3 clear">
+					<!-- TO DO - replace commandLink with native html button and remove apex:form tag -->
+					<apex:form >	
+			            <apex:outputPanel style="padding-left:10px;line-height:150%;">
+			            	<apex:variable var="counter" value="{!1}"/>
+							<apex:repeat value="{!drivePaths}" var="path">
+			                   	<apex:outputPanel rendered="{!counter!=1}">&nbsp;&nbsp;<i style="color:gray;" class="fa fa-caret-right"></i>&nbsp;&nbsp;</apex:outputPanel>
+								<apex:commandLink value="{!path.FolderName}" action="{!resetGdriveListFiles}" title="{!path.FolderName}" styleClass="folderContents" style="text-decoration: underline;color:gray;font-size:0.9em;{!if(counter==drivePaths.size, 'font-weight:bold;', '')}" status="splashStatus">	<!-- reRender="opId,fileList,msgId,jsPanel"  -->
+									<apex:param name="gdocsId" value="{!path.FolderId}" />
+									<apex:param name="gdocsName" value="{!path.folderName}" />
+								</apex:commandLink>
+								<apex:variable var="counter" value="{!counter+1}"/>
+							</apex:repeat>
+
+							<apex:commandLink value="Home" title="Home" styleClass="folderContents" style="color:gray;font-size:0.9em;font-weight:bold;" status="splashStatus" rendered="{!(NOT(ISBLANK(recordCollectionId)) && (ISBLANK(drivePaths) || drivePaths.size==0))}">	<!-- reRender="opId,fileList,msgId,jsPanel"  -->
+							</apex:commandLink>
+			            </apex:outputPanel>
+					</apex:form>
+				</section>
+
+				<section class="sg-phone--content clear">
+					<div>
+						<section class="sg-phone--content clear">
+							<ul class="border-bottom border--3 fw-normal man pan">
+								<apex:repeat value="{!Items}" var="item">
+									<li class="flag flag--top active--list-1 pam border-bottom border--3">
+
+										<div class="flag--image prm">
+											<img src="{!item.iconLink}" class="ht-30" />
+										</div>
+										<div class="flag--body">
+											<span class="db text-color-1 f4 fw-semibold">{!item.title}</span>
+											<span class="db text-color-2 f6">Last updated: {!item.modifiedDate} ? by {!item.lastModifyingUserName}</span>
+										</div>
+
+				                        <apex:outputPanel layout="block" rendered="{!!item.isFolder}">
+				                            <a href="{!item.alternateLink}" class="sf1link"><span class="btn-text text-color-4 f3 fw-semibold btn bg-secondary-btn btn--secondary border border--3 brm pvs">Open</span></a>
+				                        </apex:outputPanel>
+				                        <apex:outputPanel layout="block" rendered="{!item.isFolder}">
+				                        	<!-- TO DO - replace commandLink with native html button and remove apex:form tag -->
+				                        	<apex:form >
+				                            <apex:commandLink styleClass="sf1link" action="{!resetGdriveListFiles}" >	<!-- reRender="opId,fileList,msgId,jsPanel" -->
+				                                <span class="btn-text text-color-4 f3 fw-semibold btn bg-secondary-btn btn--secondary border border--3 brm pvs">Open</span>
+												<apex:param name="gdocsId" value="{!item.id}" />
+												<apex:param name="gdocsName" value="{!item.title}" />
+				                            </apex:commandLink>
+				                            </apex:form>
+				                        </apex:outputPanel>
+									</li>
+								</apex:repeat>
+							</ul>
+						</section>
+					</div>
+
+		            <div id="noFiles" style="display:{!IF(NOT(ISBLANK(recordCollectionId)) && (ISBLANK(Items) || Items.size==0), '', 'none;')}">
+		                <br/>No files to display
+		            </div>
+				</section>
+			</div>
+
+		</article>	
+	</apex:outputPanel>
+</apex:outputPanel>
+
+<!--
+<div class="spinner">
+	<p></p>
+	<img src="{!$Resource.spinner}" width="72" height="72" />
+</div>
+<div class="overlay"></div>
+-->
+
+</apex:component>

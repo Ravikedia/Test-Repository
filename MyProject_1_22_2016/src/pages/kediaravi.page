@@ -1,0 +1,136 @@
+<apex:page controller="AutoCompleteController">
+   
+  
+   
+           <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js" />
+           <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/jquery-ui.min.js" />
+           <apex:styleSheet value="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/themes/smoothness/jquery-ui.css" />
+     
+        
+        <script type="text/javascript">
+         var j$ = jQuery.noConflict();
+         var apexAccountList =[];
+       
+         <apex:repeat value="{!accountList}" var="accList">
+            //Store the name of the account in the array variable.
+            apexAccountList.push('{!accList.name}');
+         </apex:repeat>
+         
+         //on Document ready
+        j$(document).ready(function(){
+        j$("[id$=apexaccountautocomplete]").autocomplete(
+        {
+            source : apexAccountList,
+            select: function(e,ui)
+                {
+                    var sname = ui.item.value;  
+                    changevalue(sname);
+                }
+         });
+         });
+      </script>
+        
+        <apex:form >
+       
+   
+        <apex:actionFunction name="changevalue" action="{!Records}"  reRender="DataTable">
+          <apex:param name="firstParam" assignTo="{!searchvalue}" value="" />
+          </apex:actionFunction>
+        
+         <!-- <apex:pageBlock title="Typeahead table" >-->
+         <apex:pageBlock title="Autocomplete dynamic table"> 
+     
+        <b>Enter the name of record that you want to search </b>
+        <apex:inputtext id="apexaccountautocomplete" title="Please select account objcet record here"  size="35" value="{!searchvalue}"   /><br/><br/>
+          
+           <apex:outputPanel id="DataTable" >
+        
+           <apex:includeScript value="{!$Resource.draggable}"/>
+     
+         
+           <table id="demo" border="1"  class="draggable" >
+      
+    <tr>
+    <th>TIME</th>
+    <th>%user</th>
+    <th>%nice</th>
+    <th>%system</th>
+    <th>%iowait</th>
+    <th>%idle</th>
+    </tr>
+    <tr>
+    <td>12:10:01 AM</td>
+    <td>28.86</td>
+    <td>0.04</td>
+    <td>1.65</td>
+    <td>0.08</td>
+    <td>69.36</td>
+    </tr>
+    <tr>
+    <td>12:20:01 AM</td>
+    <td>26.54</td>
+    <td>0.00</td>
+    <td>1.64</td>
+    <td>0.08</td>
+    <td>71.74</td>
+    </tr>
+    <tr>
+    <td>12:30:01 AM</td>
+    <td>29.73</td>
+    <td>0.00</td>
+    <td>1.66</td>
+    <td>0.09</td>
+    <td>68.52</td>
+    </tr>
+ </table>
+       
+       
+        <apex:outputpanel rendered="{!if(RecordList==null,false,true)}" >
+         <table align="center" border="1" width="100%"  class="draggable" >
+                <tr>
+                    <th>Account Id</th>
+                    <th >Account Name</th>
+                    <th >Type</th>
+                    <th >Phone</th>
+               </tr>
+          <tbody>
+               <apex:repeat value="{!RecordList}"  var="item"    >
+                <tr>
+                    <td>{!item.id}</td>
+                    <td>{!item['name']}</td>
+                    <td>{!item['type']}</td>
+                    <td>{!item['Phone']}</td>
+                </tr>
+               </apex:repeat>
+           </tbody>
+       </table>
+           <apex:includeScript value="{!$Resource.draggable}"/>
+     
+   
+       
+
+       
+     </apex:outputpanel> 
+        
+     </apex:outputPanel>
+      
+     </apex:pageBlock>
+
+        
+     <!--   <apex:pageblockTable value="{!Records}"  var="item" id="DataTable" rendered="{!if(Records!= null && Records.size>1,false,true)}" >
+        <apex:column value="{!item.id}"   />
+        <apex:column value="{!item['name']}" />
+        <apex:column value="{!item['type']}" />
+        <apex:column value="{!item['Phone']}" />
+        
+        </apex:pageblockTable>
+        </apex:pageBlock>   -->
+     </apex:form>
+     
+      
+      
+ 
+     
+    
+   
+</apex:page>

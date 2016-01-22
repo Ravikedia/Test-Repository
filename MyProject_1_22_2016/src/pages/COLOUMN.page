@@ -1,0 +1,58 @@
+<apex:page >
+<html>
+    <head>
+        
+    <apex:includeScript value="{!$Resource.jQuerymin}" />
+    <apex:includeScript value="{!$Resource.jQueryuimin}" />
+    <apex:includeScript value="{!$Resource.jdragtable}" />
+    <apex:stylesheet value="{!$Resource.dragtable}" />
+
+    </head>
+        <script>
+        var j$ = jQuery.noConflict();
+        j$ (document).ready(function()
+        {
+        j$ ('#demo').dragtable();  
+       
+        });
+        </script>
+     
+      <!-- j$("[id$=demo]") -->
+
+<table id="demo" border="1" >
+ 
+    <tr>
+    <th>TIME</th>
+    <th>%user</th>
+    <th>%nice</th>
+    <th>%system</th>
+    <th>%iowait</th>
+    <th>%idle</th>
+    </tr>
+    <tr>
+    <td>12:10:01 AM</td>
+    <td>28.86</td>
+    <td>0.04</td>
+    <td>1.65</td>
+    <td>0.08</td>
+    <td>69.36</td>
+    </tr>
+    <tr>
+    <td>12:20:01 AM</td>
+    <td>26.54</td>
+    <td>0.00</td>
+    <td>1.64</td>
+    <td>0.08</td>
+    <td>71.74</td>
+    </tr>
+    <tr>
+    <td>12:30:01 AM</td>
+    <td>29.73</td>
+    <td>0.00</td>
+    <td>1.66</td>
+    <td>0.09</td>
+    <td>68.52</td>
+    </tr>
+ </table>
+</html>
+</apex:page>

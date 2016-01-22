@@ -1,0 +1,72 @@
+<apex:page controller="DemoAutoComplete">
+ <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+
+    
+    <script>
+                
+        if(typeof jQuery != 'undefined'){
+           $j =jQuery.noConflict();
+       }
+         $j(function() {            
+             $j("#auto001").autocomplete({
+                source: function(request, response){
+                    getMyData(response ,request.term);
+                },
+                select: function(event, ui){
+                    $j("#auto001").val(ui.item.value);
+                
+                    refresh();                    
+                    return false;
+                }            
+            });            
+            
+        });
+        
+
+        
+        function getMyData(response,param){
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.DemoAutoComplete.getAccounts}',
+                param, 
+                function(result, event){
+                    if (event.status) {                        
+                        var objList = [];
+                        for(var i = 0; i < result.length; i++){
+                            var obj = new Object();
+                            obj.label = result[i].Name;
+                            obj.value = result[i].Name;
+                          
+                            objList.push(obj);
+                        }
+                        response(objList);
+                    }else {
+                        alert(event.message);
+                    }
+                }, 
+                {escape: true}
+            );
+        }
+</script>
+    
+    <apex:form id="mainForm">    
+        <div class="filterOverview">
+            <div class="bFilterView">
+                <table border="0">                    
+                    <tr>    
+                        <td>Choose an account</td>                    
+                        <td>
+                            <div class="ui-widget">
+                                <apex:inputText id="auto001" styleClass="auto001" value="{!accName}" />
+                                                              
+                            </div>
+                        </td>                
+                    </tr>                
+                                                   
+                </table>
+            </div>
+        </div>
+    </apex:form>
+</apex:page>

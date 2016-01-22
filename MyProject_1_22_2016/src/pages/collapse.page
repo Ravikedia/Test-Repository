@@ -1,0 +1,84 @@
+<apex:page >
+<script type="text/javascript">
+ function toggleDiv(id1,id2) {
+  var tag = document.getElementById(id1).style;
+  var tagicon = document.getElementById(id2);
+
+  if(tag.display == "none") {
+   tag.display = "block";
+   tagicon.innerHTML = "&nbsp;-&nbsp;";
+  } else {
+   tag.display = "none";
+   tagicon.innerHTML = "&nbsp;+&nbsp;";
+  }
+ }
+
+ function expandAll(cnt) {
+  for(var x=1; x<=cnt; x++) {
+    document.getElementById('content'+x).style.display="block";
+    document.getElementById('icon'+x).innerHTML="&nbsp;-&nbsp;";  
+  }
+ }
+
+ function collapseAll(cnt) {
+  for(var x=1; x<=cnt; x++) {
+    document.getElementById('content'+x).style.display="none";
+    document.getElementById('icon'+x).innerHTML="&nbsp;+&nbsp;";  
+  }
+ }
+
+</script>
+
+<style type="text/css">
+ .title {
+  padding:5px; 
+  border:1px solid #CCCCCC;
+  font:15px arial; 
+  width:300px; 
+  cursor:pointer;
+  height:20px;
+ }
+
+ .item {
+  padding:5px; 
+  border:1px solid #CCCCCC; 
+  font:12px verdana; 
+  width:300px;
+ }
+
+ .item div {
+  border-bottom:1px dashed #CCCCCC;
+  padding:5px;
+ }
+
+ .button {
+  border:1px solid #CCCCCC; 
+  padding:5px;
+  cursor:pointer;
+ }
+
+</style>
+
+
+<body>
+
+ <div class="title" onClick="javascript:toggleDiv('content1','icon1');">
+  <span style="float:left">Sample Title 1</span>
+  <span id="icon1" style="float:right">&nbsp;-&nbsp;</span> 
+ </div>
+ <div id="content1" class="item">
+  <div>Item 1</div>
+  <div>Item 2</div>
+  <div>Item 3</div>
+ </div>
+ <div class="title" onClick="javascript:toggleDiv('content2','icon2');">
+  <span style="float:left">Sample Title 2</span>
+  <span id="icon2" style="float:right">&nbsp;-&nbsp;</span> 
+ </div>
+ <div id="content2" class="item">
+  <div>Item 1</div>
+  <div>Item 2</div>
+  <div>Item 3</div>
+ </div>
+ </body>
+</apex:page>

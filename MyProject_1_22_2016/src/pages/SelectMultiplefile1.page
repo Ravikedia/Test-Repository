@@ -1,0 +1,9 @@
+<apex:page controller="JSRemotingFileUploadController" contentType="application/x-pdf#Images.pdf" >
+   <apex:include pageName="SelectMultipleFile2"/>
+   <script>
+		
+			alert('CAlled');
+	
+		
+		</script>
+</apex:page>

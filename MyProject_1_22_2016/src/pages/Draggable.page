@@ -1,0 +1,76 @@
+<apex:page standardController="Account" recordSetVar="accounts" tabstyle="account" sidebar="false">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script> 
+
+  <!--<apex:pageBlock >
+    <apex:pageBlockTable value="{!accounts}" var="a">
+      <apex:column value="{!a.name}"/>
+    </apex:pageBlockTable>
+  </apex:pageBlock>-->
+  
+    <!-- <ul id="sortable">
+    <apex:repeat value="{!accounts}" var="a">
+        <li class="ui-state-default"> {!a.name} </li>
+    </apex:repeat>
+    </ul>-->
+    
+    <apex:dataList value="{!accounts}" var="a" styleClass="SideBarList " id="sortable">
+        <apex:outputLink value="/{!a.Id}" styleClass="ui-state-default">{!a.Name}</apex:outputLink>
+    </apex:dataList>
+
+
+
+
+<html lang="en">
+<head>
+  <title>jQuery UI Sortable - Default functionality</title>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+  <link rel="stylesheet" href="/resources/demos/style.css" />
+  <style>
+  #sortable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+  #sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
+  #sortable li span { position: absolute; margin-left: -1.3em; }
+  </style>
+  
+   <style>
+  .sortablestyle { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+  .sortablestyle  li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
+  .sortablestyle  li span { position: absolute; margin-left: -1.3em; }
+  </style>
+  
+  <script>
+  $(function() {
+    $('[id$="sortable"]').sortable();
+    $( "#sortablea" ).sortable();
+  });
+  </script>
+</head>
+<body>
+ 
+<!--<ul >
+  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 1</li>
+  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 2</li>
+  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 3</li>
+  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 4</li>
+  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 5</li>
+  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 6</li>
+  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 7</li>
+</ul>-->
+
+<ul id="sortablea">
+  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 1</li>
+  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 2</li>
+  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 3</li>
+  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 4</li>
+  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 5</li>
+  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 6</li>
+  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 7</li>
+</ul>
+
+
+ 
+ 
+</body>
+</html>
+</apex:page>

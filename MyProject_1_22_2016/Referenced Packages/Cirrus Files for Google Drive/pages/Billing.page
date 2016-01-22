@@ -1,0 +1,429 @@
+<apex:page showHeader="true" sidebar="true" controller="IGD.BillingController" tabStyle="IGD_Setup__tab">
+	<c:importvisualstrap theme="default" />
+	<script src="https://code.jquery.com/jquery-2.1.0.min.js"></script>
+	<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+	<script src="https://checkout.stripe.com/checkout.js"></script>
+	<script type="text/javascript">
+		var quote_result = null;
+		Stripe.setPublishableKey('{!StripePublishableKey}');
+
+		$(document).ready(function() {
+
+			// Calculate prices
+			$('.button-step1').click(function(e) {
+				e.preventDefault();
+
+				$("#quote-input").fadeOut(function() {
+					$("#circularG").fadeIn(function() {
+						var quantity = $('.field-quantity').val();
+						var promocode = $('.field-promocode').val();
+						if (!promocode) promocode = '';
+
+						if (quantity > 0) {
+							Visualforce.remoting.Manager.invokeAction(
+								'{!$RemoteAction.BillingController.getQuote}',
+								quantity, promocode,
+								function(result, e) {
+									if (e.type == "exception") {
+										$("#circularG").fadeOut(function() {
+											$("#exception").text(e.message);
+											$(".alert-danger").fadeIn();
+										});
+									} else {
+										quote_result = result; // for stripe handler
+										console.log("result", result);
+										var quote_text = "$" + result.salePrice + "/year for " + $('.field-quantity').val() + (result.isCustomer ? " new" : "") + " users.";
+										if (result.isCustomer) {
+											quote_text += "This will be prorated to terminate with your existing subscription.";
+										}
+
+										if (result.salePrice < result.listPrice) {
+											var pct = Math.round((result.listPrice - result.salePrice) / result.listPrice);
+											quote_text += "You save " + pct + "%!";
+										}
+
+										$("#quote_amount").html(quote_text);
+										$("#circularG").fadeOut(function() {
+											$("#quote-results").fadeIn();
+										});
+									}
+								}
+							);
+						} else {
+							$("#circularG").fadeOut(function() {
+								$("#quote-input").fadeIn();
+							});					
+						}
+					});
+				});
+			});
+
+			var handler = StripeCheckout.configure({
+				key: '{!StripePublishableKey}',
+				token: function(token, args) {
+					Visualforce.remoting.Manager.invokeAction(
+						'{!$RemoteAction.BillingController.createCustomer}',
+						token.id,
+						$('.field-quantity').val(),
+						$('.field-promocode').val(),
+						function(result, e) {
+							if (e.type == "exception") {
+								$("#circularG").fadeOut(function() {
+									$("#exception").text(e.message);
+									$(".alert-danger").fadeIn();
+								});
+							} else {
+								// customer created
+								$("#circularG").fadeOut(function() {
+									$("#create-customer").fadeIn();
+								});								
+							}
+						}
+					);
+				}
+			});
+
+			// Open Checkout with further options
+			$('.button-step2').click(function(e) {
+				$("#quote-results").fadeOut(function() {
+					$("#circularG").fadeIn();
+				});
+
+				handler.open({
+					name: 'Cirrus Files',
+					description: 'Cirrus Files subscription ('+$('.field-quantity').val()+' users)',
+					amount: quote_result.salePrice * 100
+				});
+
+				e.preventDefault();
+			});
+
+			// Update the subscription
+			$('.button-step4').click(function(e) {
+				$("#quote-results").fadeOut(function() {
+					$("#circularG").fadeIn(function() {
+						var quantity = $('.field-quantity').val();
+						var promocode = $('.field-promocode').val();
+						if (!promocode) promocode = '';
+
+						Visualforce.remoting.Manager.invokeAction(
+							'{!$RemoteAction.BillingController.updateSubscription}',
+							quantity, promocode,
+							function(result, e) {
+								if (e.type == "exception") {
+									$("#circularG").fadeOut(function() {
+										$("#exception").text(e.message);
+										$(".alert-danger").fadeIn();
+									});
+								} else {
+									// subscription updated
+									$("#circularG").fadeOut(function() {
+										$("#subscription-updated").fadeIn();
+										$(".plan-quantity").html(result.quantity);
+									});
+								}
+							}
+						);				
+					});
+				});
+
+		
+				e.preventDefault();
+			});
+
+			$('.button-update-card').click(function(e) {
+				Stripe.card.createToken({
+					number: $(".card-number").val(),
+					cvc: $(".card-cvc").val(),
+					exp_month: $(".card-exp-month").val(),
+					exp_year: $(".card-exp-year").val()
+				}, function(status, response) {
+					if (!!response.error) {
+						$("#quote-input").fadeOut(function() {
+							$("#exception").text(response.error.message);
+							$(".alert-danger").fadeIn();
+						});
+					} else {
+						// update the card for the customer
+						Visualforce.remoting.Manager.invokeAction(
+							'{!$RemoteAction.BillingController.updateCardForCustomer}',
+							response.id,
+							function(result, e) {
+								console.log("result", result);
+								console.log("e", e);
+
+								if (e.type == "exception") {
+									$("#circularG").fadeOut(function() {
+										$("#exception").text(e.message);
+										$(".alert-danger").fadeIn();
+									});
+								} else {
+									// customer updated
+									// update card info on screen
+									$(".info-card-type").text(result.stripeType);
+									$(".info-card-last4").text("**** **** **** " + result.last4);
+									$(".info-card-expiration").text(result.expiration);
+
+									$(".card-info").css({"background-color":"#CFC"});
+								}
+							}
+						);
+					}
+				});
+			});
+
+
+		});
+
+	</script>
+
+	<style type="text/css">
+		#quote_amount {
+			font-size: 120%;
+			font-weight: bold;
+			margin-bottom: 40px;
+		}
+
+		#quote-results, #create-customer, #subscription-updated, .alert-danger {
+			display: none;
+		}
+
+		#subscription-error, #customer-error {
+			color: #C00;
+		}
+
+		#circularG {
+			display: none;
+			margin: 0 auto;
+		}
+
+		h3 {
+			display: block !important;
+			margin-top: 0px !important;
+		}
+
+		.panel-box {
+			width: 400px;
+			margin: 0 auto;
+		}
+
+		.left {
+			float: left;
+		}
+
+		.right {
+			float: right;
+		}
+
+		div.formlabel {
+			font-size: 120%;
+			font-weight: bold;
+			margin-top: 5px;
+			margin-bottom: 10px;
+		}
+
+		input.change-card {
+			float: right;
+			position: relative;
+			top: -30px;
+		}
+
+		div.modal-content {
+			height: 300px;
+		}
+
+		div.modal-content input.form-control {
+			margin-bottom: 10px;
+		}
+
+		div.plan-info, div.card-info {
+			border-radius: 4px;
+			padding: 5px;
+		}
+
+		input:invalid, input:out-of-range {
+			border-color:hsl(0, 50%, 50%);
+			background:hsl(0, 50%, 90%);
+		}
+
+		input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+			-webkit-appearance: none;
+			margin: 0; 
+		}
+	</style>
+
+	<apex:sectionHeader title="Cirrus Files" subtitle="Billing Information" />
+
+	<apex:form >
+		<apex:outputPanel rendered="{!NOT(isProduction)}">
+			Thank you for using Cirrus Files. To purchase licenses, please install Cirrus Files in your Salesforce production org and place the order from there. Please <a href="http://cirrusfiles.net/support/" >contact us</a> if you have any questions.
+		</apex:outputPanel>
+
+		<apex:outputPanel rendered="{!isProduction}">
+		<p>Thank you for choosing Cirrus Files. Please enter the number of users below to calculate your pricing, then enter your credit card in the secure form to complete your order.</p>
+   
+		<c:visualstrapblock >
+			<apex:outputPanel rendered="{!(isCustomer==false)}">
+				<c:panel title="Purchase Cirrus Files" type="primary" styleclass="panel-box">
+
+					<div id="quote-input">
+						<c:formblock alignment="vertical">
+							
+							<c:formgroup >
+								<apex:outputLabel >Seats to Purchase</apex:outputLabel>
+								<apex:inputText styleClass="form-control field-quantity" style="width: 200px" />
+							</c:formgroup>
+
+							<c:formgroup >
+								<apex:outputLabel >Promo Code</apex:outputLabel>
+								<apex:inputText styleClass="form-control field-promocode" style="width: 200px" />	
+							</c:formgroup>
+
+						</c:formblock>
+
+						<apex:commandButton value="Continue" styleClass="btn-primary button-step1" />
+					</div>
+					
+					<div id="quote-results">
+						<apex:outputPanel layout="block" styleClass="alert alert-info">
+							<h3>Your Quote</h3>
+							<div id="quote_amount"></div>
+
+							<apex:commandButton value="Buy Now" styleClass="btn-success button-step2" />
+						</apex:outputPanel>
+					</div>
+
+					<div id="create-customer">
+						<c:alert type="success">
+							<c:glyph icon="ok" /> 
+							Success! Your payment is being processed. 
+							You will receive an email in a moment when your Cirrus Files license has been activated.
+						</c:alert>
+					</div>
+
+					<c:spinner />
+				</c:panel>
+			</apex:outputPanel>
+
+			<apex:outputPanel rendered="{!(isCustomer)}">
+				<c:row >
+					<apex:outputPanel layout="block" styleClass="alert alert-danger">
+						<b>There was a problem processing this request.</b><br/>
+						<span id="exception"></span>					
+					</apex:outputPanel>
+				</c:row>
+				<c:row >
+					<c:column type="col-md-1">&nbsp;</c:column>
+					<c:column type="col-md-5">
+						<c:panel title="Purchase Additional Seats" type="primary" styleclass="panel-box">
+							<div id="quote-input">
+
+								<c:formblock alignment="vertical">
+									<c:formgroup >
+										<apex:outputLabel >Additional Seats</apex:outputLabel>
+										<apex:inputText styleClass="form-control field-quantity" style="width: 200px" />
+									</c:formgroup>
+									<c:formgroup >
+										<apex:outputLabel >Promo Code</apex:outputLabel>
+										<apex:inputText styleClass="form-control field-promocode" style="width: 200px" />	
+									</c:formgroup>
+								</c:formblock>
+
+								<apex:commandButton value="Continue" styleClass="btn-primary button-step1" />
+							</div>
+							
+							<div id="quote-results">
+								<apex:outputPanel layout="block" styleClass="alert alert-info">
+									<h3>Your Quote</h3>
+									<div id="quote_amount"></div>
+
+									<apex:commandButton value="Buy Now" styleClass="btn-success button-step4" />
+								</apex:outputPanel>
+							</div>
+
+							<div id="subscription-updated">
+								<c:alert type="success">
+									<c:glyph icon="ok" /> 
+									Success! Your payment is being processed. 
+									You will receive an email confirming your purchase.
+								</c:alert>
+							</div>
+
+							<c:spinner />
+						</c:panel>						
+					</c:column>
+					<c:column type="col-md-5">
+						<c:panel title="Billing Information" type="info" styleclass="panel-box">
+							<div class="formlabel">Plan Info</div>
+							<c:formblock alignment="horizontal" styleClass="plan-info">
+								<c:formgroup >
+									<c:column type="col-md-4">Start Date</c:column>
+									<c:column type="col-md-4"><apex:outputText value="{0,date,MMMM d, yyyy}">
+										<apex:param value="{!planInfo.startDate}" />
+									</apex:outputText></c:column>
+								</c:formgroup>
+								<c:formgroup >
+									<c:column type="col-md-4">Renewal Date</c:column>
+									<c:column type="col-md-4"><apex:outputText value="{0,date,MMMM d, yyyy}">
+										<apex:param value="{!planInfo.renewalDate}" />
+									</apex:outputText></c:column>
+								</c:formgroup>
+								<c:formgroup >
+									<c:column type="col-md-4">Purchased Seats</c:column>
+									<c:column type="col-md-4" styleclass="plan-quantity">{!planInfo.quantity}</c:column>
+								</c:formgroup>
+							</c:formblock>
+
+							<div class="formlabel">Card Info</div>
+							<apex:commandButton styleClass="btn btn-xs btn-info change-card" value="Change Card" onclick="return false;" html-data-toggle="modal" html-data-target="#change-card-modal"/>
+							<c:formblock alignment="horizontal" styleClass="card-info">
+								<c:formgroup >
+									<c:column type="col-md-4">Card Type</c:column>
+									<c:column type="col-md-4" styleClass="info-card-type">{!cardInfo.type}</c:column>
+								</c:formgroup>
+								<c:formgroup >
+									<c:column type="col-md-4">Card Number</c:column>
+									<c:column type="col-md-4" styleClass="info-card-last4">**** **** **** {!cardInfo.last4}</c:column>
+								</c:formgroup>
+								<c:formgroup >
+									<c:column type="col-md-4">Expiration</c:column>
+									<c:column type="col-md-4" styleClass="info-card-expiration">{!cardInfo.expiration}</c:column>
+								</c:formgroup>
+							</c:formblock>
+						</c:panel>						
+					</c:column>
+					<c:column type="col-md-1">&nbsp;</c:column>
+				</c:row>
+			</apex:outputPanel>
+
+			<c:modal title="Update Credit Card Information" id="change-card-modal">
+				<c:formblock alignment="horizontal">
+					<c:formgroup >
+						<c:column type="col-md-3"><apex:outputLabel >Card Number</apex:outputLabel></c:column>
+						<c:column type="col-md-4"><input type="number" class="card-number form-control" maxlength="16" /></c:column>
+					</c:formgroup>
+					<c:formgroup >
+						<c:column type="col-md-3"><apex:outputLabel >Card Expiration</apex:outputLabel></c:column>
+						<c:column type="col-md-2"><input type="number" class="card-exp-month form-control" min="1" max="12" /></c:column>
+						<c:column type="col-md-2"><input type="number" class="card-exp-year form-control" min="2014" max="2029" /></c:column>
+					</c:formgroup>
+					<c:formgroup >
+						<c:column type="col-md-3"><apex:outputLabel >Card CVC</apex:outputLabel></c:column>
+						<c:column type="col-md-2"><input type="number" class="card-cvc form-control" min="0" maxlength="4" /></c:column>
+					</c:formgroup>
+					<c:formgroup >
+						<c:column type="col-md-3">
+							<apex:commandButton value="Cancel" styleClass="btn-warning left" html-data-dismiss="modal" />
+						</c:column>
+						<c:column type="col-md-5">
+							<apex:commandButton value="Update Card" styleClass="btn-primary right button-update-card" html-data-dismiss="modal" />
+						</c:column>
+					</c:formgroup>
+				</c:formblock>
+			</c:modal>
+
+		</c:visualstrapblock>
+		</apex:outputPanel>
+
+	</apex:form>
+</apex:page>

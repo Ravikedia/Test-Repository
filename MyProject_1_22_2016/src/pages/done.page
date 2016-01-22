@@ -1,0 +1,53 @@
+<apex:page controller="Customer">
+    <apex:form >
+        <apex:pageBlock title="New Customer Entry">
+            <p>First Name: 
+               <apex:inputText value="{!firstName}"/></p>
+            <p>Last Name: 
+               <apex:inputText value="{!lastName}"/></p>
+            <p>Company Name: 
+               <apex:inputText value="{!companyName}"/></p>
+            <p># Employees: 
+               <apex:inputText value="{!numEmployees}"/></p>
+            <p>Department: 
+               <apex:inputText value="{!department}"/></p>
+            <p>Email: 
+               <apex:inputText value="{!email}"/></p>
+            <p>Phone: 
+               <apex:inputText value="{!phone}"/></p>
+            <p>Title: 
+               <apex:inputText value="{!title}"/></p>
+            <p>Address</p>
+            <p>Street: 
+               <apex:inputText value="{!streetAddress}"/></p>
+            <p>City: 
+               <apex:inputText value="{!cityAddress}"/></p>
+            <p>State: 
+               <apex:inputText value="{!stateAddress}"/></p>
+            <p>Zip: 
+               <apex:inputText value="{!postalCodeAddress}"/></p>
+            <p>Country: 
+               <apex:inputText value="{!countryAddress}"/></p>
+
+            <p><apex:commandButton action="{!save}" 
+               value="Save New Customer"/></p>
+        </apex:pageBlock>
+    </apex:form>
+    
+    <apex:pageBlock title="Accounts">
+        <apex:pageBlockTable value="{!accountList}" var="acct">
+            <apex:column value="{!acct.Name}"/>
+            <apex:column value="{!acct.NumberOfEmployees}"/>
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+    <apex:pageBlock title="Contacts">
+        <apex:pageBlockTable value="{!contactList}" var="item">
+            <apex:column value="{!item.Name}"/>
+            <apex:column value="{!item.Phone}"/>
+            <apex:column value="{!item.Title}"/>
+            <apex:column value="{!item.Department}"/>
+            <apex:column value="{!item.Email}"/>
+        </apex:pageBlockTable>
+</apex:pageBlock>
+      <!-- Add related lists here -->
+</apex:page>

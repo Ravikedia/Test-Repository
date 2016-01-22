@@ -1,0 +1,46 @@
+<apex:page controller="fbcontroller"  standardStylesheets="false">
+ <style>
+ html {
+
+}
+.fileType {
+    display: block;
+    position: relative;
+    width: 200px;
+    margin: auto;
+    cursor: pointer;
+    border: 0;
+    height: 60px;
+    border-radius: 5px;
+    outline: 0;
+}
+.fileType:hover:after {
+    background: #FF1111;
+}
+.fileType:after {
+    transition: 200ms all ease;
+    border-bottom: 3px solid rgba(0,0,0,.2);
+    background: #000000;
+    background-image:url('http://i.stack.imgur.com/CVpp3.jpg');
+    text-shadow: 0 2px 0 rgba(0,0,0,.2);
+    color: #fff;
+    font-size: 20px;
+    text-align: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    content: 'Upload Something';
+    line-height: 60px;
+    border-radius: 5px;
+}
+ </style>
+ <apex:form >
+ <apex:inputfile value="{!file}" contentType="{!filetype}"  filename="{!filename}" id="file" styleclass="fileType"/>
+          <apex:commandButton action="{!uploadPhoto}"   value="Upload photo" /> 
+           
+           </apex:form>
+           <apex:insert name="includefile"/>
+</apex:page>

@@ -1,0 +1,23 @@
+<apex:page sidebar="false" showHeader="false">
+    <table align = "center" >
+        <form enctype="multipart/form-data" target="_parent" id="form" action="https://graph.facebook.com/v2.0/me/photos?access_token=CAAHNGSULfrUBAP35ZAhuTlo1JnAYRmtLjCGlWZCO0yt3a8r8EDoQlyZCFRUlX2LoQYy646oKPCC9vyWCjWXqMkyXgTooR8pbtp2NMnPtirSORIbQCMWMJgrCvYgWJYekcd9p29uk2EKMYtNhZBcZBwPhZATvgTZB7ZCIogr60RLmYjIuzsQJP2hwov6nlZAdhfnnhgIqksjYwmJdoN00UohqO" method="POST" >
+            <tr>
+                <td> <apex:outputLabel value="Please choose a photo:" /></td><td><input name="source" type="file" /></td><br/>
+            </tr>
+            <tr>
+                <td><apex:outputLabel value="Say something about this photo:" /></td><td> <input name="message" type="text" value="" /></td>
+            </tr>
+            <tr>
+                <td ><input type="submit" value="Upload"  style ="margin-left:80%"  /><br/></td>
+            </tr>
+        </form>  
+    </table>
+    
+    <script>
+        window.onunload =  function(e)
+        {
+            window.close();
+        }
+
+    </script>
+</apex:page>

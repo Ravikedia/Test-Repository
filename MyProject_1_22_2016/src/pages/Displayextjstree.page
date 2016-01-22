@@ -1,0 +1,28 @@
+<apex:page standardStylesheets="false" sidebar="false" showHeader="false">
+<html>
+<head>
+      <link href="ext-theme-classic-all.css" rel="stylesheet" type="text/css" />
+      <script type="text/javascript" async="" src="https://www.google-analytics.com/ga.js"></script>
+     <!-- <apex:includeScript value="{!URLFOR($Resource.Schedule,'Schedule/stub.js')}"/>-->
+      <apex:includeScript value="{!URLFOR($Resource.Schedule,'Schedule/ga.js')}"/>
+      <apex:includeScript value="{!URLFOR($Resource.Schedule,'Schedule/extalldebug.js')}"/>
+      <apex:includeScript value="{!URLFOR($Resource.Schedule,'Schedule/schalldebug.js')}"/>
+      <apex:includeScript value="{!URLFOR($Resource.Schedule,'Schedule/exampleshared.js')}"/>
+      <apex:includeScript value="{!URLFOR($Resource.Schedule,'Schedule/tree.js')}"/>
+      <apex:stylesheet value="{!URLFOR($Resource.Schedule,'Schedule/ext-theme-classic-all.css')}" />
+      <apex:stylesheet value="{!URLFOR($Resource.Schedule,'Schedule/sch-all.css')}" />
+      <apex:stylesheet value="{!URLFOR($Resource.Schedule,'Schedule/examples.css')}" />
+      <apex:stylesheet value="{!URLFOR($Resource.Schedule,'Schedule/ext-all.css')}" />
+     
+
+     
+
+ </head>
+ 
+  <body>
+    
+    <div id="example-container">
+    </div>
+  </body>
+</html>
+</apex:page>

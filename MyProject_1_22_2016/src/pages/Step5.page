@@ -1,0 +1,6 @@
+<apex:page controller="wizardcontroller" sidebar="false" showHeader="false" >
+
+
+
+<br/><br/><br/><br/> <center><b> "Hi you are in step 5" </b></center>
+</apex:page>

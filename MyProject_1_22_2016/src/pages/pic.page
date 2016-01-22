@@ -1,0 +1,14 @@
+<apex:page standardController="Merchandise__c" recordSetVar="item">
+
+<apex:form >
+<apex:pageblock >
+<apex:selectList size="1">
+<apex:selectOptions value="{!Merchandise__c.name}">
+
+
+
+</apex:selectOptions>
+</apex:selectList>
+</apex:pageblock>
+</apex:form>
+</apex:page>

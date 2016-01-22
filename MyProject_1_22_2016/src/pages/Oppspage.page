@@ -1,0 +1,15 @@
+<apex:page controller="OppsController">
+   <apex:form >
+    <apex:chart data="{!Opportunities}" width="1000" height="1000">
+        <apex:axis type="Category" position="left" fields="Name" title="Opportunities"/>
+        <apex:axis type="Numeric" position="bottom" fields="Amount" title="Amount"/>
+       <!-- <apex:barSeries orientation="horizontal" axis="bottom" 
+            xField="Name" yField="Amount"/>-->
+            <apex:barSeries orientation="horizontal" axis="bottom" xField="Amount" yField="Name"/>
+    </apex:chart>
+    <apex:dataTable value="{!Opportunities}" var="opp">
+        <apex:column headerValue="Opportunity" value="{!opp.name}"/>
+        <apex:column headerValue="Amount" value="{!opp.amount}"/>
+    </apex:dataTable>
+    </apex:form>
+</apex:page>

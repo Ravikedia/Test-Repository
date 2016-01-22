@@ -1,0 +1,54 @@
+<!--Please change redirect uri based on application-->
+<apex:page controller="GoogleDriveControllerWithOneButton">
+        
+   <script>
+    function authorizeGoogleDrive(redirectUrl,clientId,requestUri) 
+    { 
+        var code;
+        var  _url =requestUri+'client_id='+clientId+'&response_type=code&scope=https://www.googleapis.com/auth/drive&redirect_uri='+redirectUrl+'&state=B4FF1A8182A20FD096849D5518-0&approval_prompt=force'+'&login_hint=jsmith@example.com&access_type=offline'; 
+        
+            win         =   window.open(_url, "windowname1", 'width=800, height=600');
+            
+            var pollTimer   =   window.setInterval(function() 
+            { 
+                try 
+                {
+                   console.log('called'+win);
+                    if (win.document.URL.indexOf('code') != -1) 
+                    {
+                       console.log('called-inside');
+                        window.clearInterval(pollTimer);
+                        var url =   win.document.URL;
+                        code =   gup(url, 'code');
+                        win.close();
+                         uploadToDriveAF(code);
+                     }
+                } 
+                catch(e) 
+                {console.log('###########'+e);}
+            }, 400);
+  }
+  
+  function gup(url, name) 
+        {
+         name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+            var regexS = "[\\#&]"+name+"=([^&#]*)";
+            var regex = new RegExp( regexS );
+            var results = regex.exec( url );
+            if( results == null )
+                return "";
+            else
+                return results[1];
+        }
+    </script>
+    
+    
+    <apex:form >
+    
+    <apex:actionFunction name="uploadToDriveAF" action="{!accessToken}"   rerender="none" >
+      <apex:param name="para" assignTo="{!code}" value=""/>
+     </apex:actionFunction>
+     
+    <apex:commandbutton rerender="none"  onclick="authorizeGoogleDrive('{!redirectURL}', '377203344030-gb2vf2qgl6es5p2ulb5lj75c78mmv445.apps.googleusercontent.com', 'https://accounts.google.com/o/oauth2/auth?');" value="Google Drive Authentication" />
+    </apex:form>
+</apex:page>

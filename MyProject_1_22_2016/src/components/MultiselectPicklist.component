@@ -1,0 +1,138 @@
+<apex:component >
+  <apex:attribute name="leftLabel" description="Label on left listbox."
+    type="String" required="true" />
+  <apex:attribute name="rightLabel" description="Label on right listbox."
+    type="String" required="true" />
+  <apex:attribute name="size" description="Size of listboxes."
+    type="Integer" required="true" />
+  <apex:attribute name="width" description="Width of listboxes."
+    type="String" required="true" />
+
+  <apex:attribute name="leftOptions"
+    description="Options list for left listbox." type="SelectOption[]"
+    required="true" assignTo="{!leftOptions}" />
+  <apex:attribute name="rightOptions"
+    description="Options list for right listbox." type="SelectOption[]"
+    required="true" assignTo="{!rightOptions}" />
+
+
+    <table >
+      <tbody>
+        <tr>
+          <td >
+            <select id="a" 
+              class="multilist" multiple="multiple" size="{!size}" 
+              style="width: {!width};">
+              <apex:repeat value="{!leftOptions}" var="option">
+                <option value="{!option.value}">{!option.label}</option>
+              </apex:repeat>
+            </select>
+           
+          </td>
+          <td >
+             <apex:outputLink value="javascript:moveSelectedOptions('a', 
+                  'b')"
+                id="btnRight"><br/><br/><br/>
+                <apex:image value="/s.gif" alt="Add" styleClass="rightArrowIcon"
+                  title="Add" />
+              </apex:outputLink>
+              
+            
+               <!-- here value is a object used for a url link-->
+              <apex:outputLink value="javascript:moveSelectedOptions('b', 
+                  'a');"
+                id="btnLeft"><br/><br/><br/>
+                <apex:image value="/s.gif" alt="Remove" styleClass="leftArrowIcon" title="Remove" />
+              </apex:outputLink>
+          </td>
+          <td >
+            
+            <select id="b" 
+              class="multilist" multiple="multiple" size="{!size}" 
+              style="width: {!width};">
+              
+            </select>
+          </td>
+          <td >
+       
+              <apex:outputLink value="javascript:slideSelectedOptionsUp('b');"
+                id="upBtn"><br/><br/><br/>
+                <apex:image value="/s.gif" alt="Up" styleClass="upArrowIcon" title="Up" />
+              </apex:outputLink>
+          
+          
+              <apex:outputLink value="javascript:slideSelectedOptionsDown('b');"
+                id="downBtn"><br/><br/><br/>
+                <apex:image value="/s.gif" alt="Down" styleClass="downArrowIcon"
+                  title="Down" />
+              </apex:outputLink>
+           
+            
+          </td>
+        </tr>
+      </tbody>
+    </table>
+   
+ 
+  <script type="text/javascript">
+  
+    if (!moveSelectedOptions) {
+     
+      var moveSelectedOptions = function(idF, idT) {
+        listFrom = document.getElementById(idF);
+        listTo = document.getElementById(idT);
+
+       
+
+        for ( var x = 0; x < listFrom.options.length; x++) 
+        {
+          if (listFrom.options[x].selected == true) 
+          {
+             
+              var v=listFrom.options[x].index;
+              
+              listTo.appendChild(listFrom.options[x]);
+            
+            x--;
+          }
+         <!-- listTo.sort();-->
+             
+       
+        }
+     
+      }
+    }
+
+    if (!slideSelectedOptionsUp) {
+   
+      var slideSelectedOptionsUp = function(id) {
+        listBox = document.getElementById(id);
+
+        var len = listBox.options.length;
+      for ( var x = 1; x < len; x++) {
+          if (listBox.options[x].selected == true) {
+            listBox.insertBefore(listBox.options[x],
+                listBox.options[x - 1]);
+          }
+        }
+      }
+    }
+
+    if (!slideSelectedOptionsDown) {
+    
+      var slideSelectedOptionsDown = function(id) {
+        listBox = document.getElementById(id);
+
+        var len = listBox.options.length;
+
+
+        for ( var x = listBox.options.length - 2; x >= 0; x--) {
+          if (listBox.options[x].selected == true) {
+            listBox.insertBefore(listBox.options[x + 1],
+                listBox.options[x]);
+          }
+        }
+
+      }}
+  </script>
+</apex:component>

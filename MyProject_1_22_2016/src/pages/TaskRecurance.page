@@ -1,0 +1,302 @@
+<apex:page standardController="Task" extensions="PMTask" sidebar="true" showheader="true">
+ <apex:sectionHeader title="Task" subtitle="New Task"/>
+
+<style>
+    h3 { 
+    color:Black;
+    }
+</style>
+
+ <style>
+        #blockbckanim{
+        background-color:rgba(234, 241, 255, 0.7);
+        width:100%;
+        height:100%;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        z-index: 1000;
+        rgba(0, 0, 0, 0.71);
+        cursor: wait;
+        }
+        #apimgld{
+        top:49%;
+        left:45%;
+        position:fixed;
+        border-radius: 2px;
+        -webkit-border-radius: 2px ;
+        -moz-border-radius: 2px ;
+        }
+    </style>
+ 
+    <script type="text/javascript" language="javascript">
+        function ShowLoading() {
+            document.getElementById('blockbckanim').style.display="block";
+        }
+        function HideLoading() {
+            document.getElementById('blockbckanim').style.display="none";
+        }
+    </script>
+
+    <div id="blockbckanim" style="display:none">
+        <img src="/img/loading32.gif" style="height: 25px;" id="apimgld"/> 
+    </div>
+    
+	<script>
+	    function CheckDiv(value)
+	    { 
+	        if(value==true)
+	        {    
+	             document.getElementById("Recurrencediv").style.display='block'; 
+	        }
+	        else
+	        {
+	            document.getElementById("Recurrencediv").style.display='none';
+	        }
+	    }  
+	</script>
+
+      <script>
+      function togglePanel(panelType)
+        {
+         
+            if(panelType == 'Daily') 
+            {               
+                document.getElementById('pnlDaily').style.visibility = 'visible';
+                document.getElementById('pnlWeekly').style.visibility = 'hidden';
+                document.getElementById('pnlMonthly').style.visibility = 'hidden'; 
+                document.getElementById('pnlYearly').style.visibility = 'hidden';
+                              
+                document.getElementById('pnlYearly').style.display = 'none'; 
+                document.getElementById('pnlDaily').style.display = 'block';
+                document.getElementById('pnlWeekly').style.display = 'none';
+                document.getElementById('pnlMonthly').style.display = 'none'; 
+    
+                 document.getElementById("{!$Component.SearchForm.selectedMonthItem}").value = 'RecursEveryWeekday';
+                 Frequencyname(panelType);
+            }
+            else if(panelType == 'Weekly')
+            {
+                document.getElementById('pnlDaily').style.visibility = 'hidden';
+                document.getElementById('pnlWeekly').style.visibility = 'visible';
+                document.getElementById('pnlMonthly').style.visibility = 'hidden';
+                document.getElementById('pnlYearly').style.visibility = 'hidden'; 
+                              
+                document.getElementById('pnlYearly').style.display = 'none'; 
+                document.getElementById('pnlDaily').style.display = 'none';
+                document.getElementById('pnlWeekly').style.display = 'block';
+                document.getElementById('pnlMonthly').style.display = 'none'; 
+            }
+            else if(panelType == 'Monthly')
+            {                                               
+                document.getElementById('pnlDaily').style.visibility = 'hidden';
+                document.getElementById('pnlWeekly').style.visibility = 'hidden';
+                document.getElementById('pnlMonthly').style.visibility = 'visible'; 
+                document.getElementById('pnlYearly').style.visibility = 'hidden';
+                              
+                document.getElementById('pnlYearly').style.display = 'none'; 
+                document.getElementById('pnlDaily').style.display = 'none';
+                document.getElementById('pnlWeekly').style.display = 'none';
+                document.getElementById('pnlMonthly').style.display = 'block';  
+                document.getElementById('radioDayNo').checked = true;
+             
+                 document.getElementById("{!$Component.SearchForm.selectedMonthItem}").value = 'RecursMonthly';
+              //  toggleMonthItems(1);
+            }
+            else if(panelType == 'Yearly') 
+            {               
+                document.getElementById('pnlDaily').style.visibility = 'hidden';
+                document.getElementById('pnlWeekly').style.visibility = 'hidden';
+                document.getElementById('pnlMonthly').style.visibility = 'hidden'; 
+                document.getElementById('pnlYearly').style.visibility = 'visible';
+                              
+                document.getElementById('pnlDaily').style.display = 'none';
+                document.getElementById('pnlWeekly').style.display = 'none';
+                document.getElementById('pnlMonthly').style.display = 'none'; 
+                document.getElementById('pnlYearly').style.display = 'block'; 
+                document.getElementById('radioDayNo1').checked = true; 
+               /*  document.getElementById("selectedMonthItem").value = 'RecursYearly'; */
+                document.getElementById("{!$Component.SearchForm.selectedMonthItem}").value = 'RecursYearly';
+                
+            }                    
+           /*  document.getElementById("selectedFrequency").value = panelType; */
+            document.getElementById("{!$Component.SearchForm.selectedFrequency}").value =panelType;
+           // Frequencyname(panelType);
+        }
+        
+      
+      </script>
+    <apex:form id="SearchForm" >
+    <apex:pagemessages id="msg"/>
+    <apex:actionFunction name="actfun" rerender="showdivid"/>
+    <apex:inputHidden value="{!selectedFrequencyType}" id="selectedFrequency"/>
+    <apex:inputHidden value="{!selectedMonthItem}" id="selectedMonthItem"/>
+ 
+        <apex:pageBlock title="Task Edit"> 
+        <apex:pageBlockButtons >
+            <apex:commandButton action="{!Save}" value="Save" title="Save" rerender="msg"/>
+            <apex:commandButton action="{!SaveNewTask}" value="Save & New Task" title="Save & New Task"/>
+            <apex:commandButton action="{!SaveNewEvent}" value="Save & New Event" title="Save & New Event"/>
+            <apex:commandButton action="{!Cancel}" value="Cancel" title="Cancel"/>
+        </apex:pageBlockButtons>
+           
+ 
+    <!-- Popup for Schedule  ----->
+    <div id="SchedualMAinBlock">
+    <script>
+        function toggleMonthItems(itemType)
+        {                                 
+      
+        /*  document.getElementById("selectedMonthItem").value = itemType; */
+         document.getElementById("{!$Component.SearchForm.selectedMonthItem}").value = itemType;
+        if(itemType == 1)
+        { 
+            document.getElementById("{!$Component.SearchForm.lstMonthDay}").disabled = false;
+            document.getElementById("{!$Component.SearchForm.lstDayOccurance}").disabled= true;
+            document.getElementById("{!$Component.SearchForm.lstWeekDay}").disabled= true;
+        }
+        else if(itemType == 2)
+        {
+            document.getElementById("{!$Component.SearchForm.lstMonthDay}").disabled= true;
+            document.getElementById("{!$Component.SearchForm.lstDayOccurance}").disabled= false;
+            document.getElementById("{!$Component.SearchForm.lstWeekDay}").disabled= false;
+        }
+            document.getElementById("{!$Component.SearchForm.selectedMonthItem}").value = itemType;
+        }    
+    </script>
+    
+ 
+    
+<div style="border: 0px solid rgb(0,191,255); width:100%;height:25px; background:#cfeef8;"><p style="margin-left:20px;"><table width="100%"><tr><td  align="left" style="color : white;" width="50%"><B style="color:Black;">&nbsp;&nbsp;Recurrence </B></td></tr></table></p></div>
+
+    <apex:pageBlockSection id="pbs3" >
+        <apex:inputfield value="{!ta.IsRecurrence}" onclick="CheckDiv(this.checked)" > 
+            <apex:actionSupport event="onchange" immediate="true" action="{!checkdates}" reRender="outerpanel,startchekboxid, endcheckboxid" status="status"    /> 
+            <apex:actionStatus id="status" onStart="ShowLoading();" onstop="HideLoading();hideInputoption();"  /> 
+        </apex:inputField>
+    </apex:pageBlockSection>
+    <apex:outputPanel id="showdivid">
+    <apex:outputPanel rendered="true"> 
+    <div id="Recurrencediv"  style="display:none;">   
+    
+    <apex:pageBlockSection columns="1" id="pbs4" >
+        <apex:pageBlockSectionItem id="pbsi1" >
+            <apex:panelGroup >
+                <table border="0px">
+                    <tr>
+                        <td style="width:120px;">&nbsp;</td>
+                        <td><b>Frequency</b></td>
+                        <td style="width:80px;"> 
+                            <div >    
+                                <apex:repeat var="frequencyType" value="{!frequencyTypeList}">
+                                    <input id="radio{!HTMLENCODE(frequencyType.Value)}" type="radio" name="frequencyType" value="{!HTMLENCODE(frequencyType.value)}" onclick="javascript:togglePanel('{!JSENCODE(frequencyType.value)}')"
+                                    onchange="document.getElementById('{!JSENCODE($Component.selectedFrequency)}').value = '{!JSENCODE(frequencyType.value)}';"/>
+                                    <label for="radio{!frequencyType.Value}">{!frequencyType.Name}</label><br/>
+                                </apex:repeat>
+                            </div>
+                        </td>
+                        <td>
+                    <div id="pnlDaily" >
+                        <table>
+                            <tr> 
+                                <td>
+                                    <input type="radio" id="RecursEveryWeekday"   name="recurrencetype" value="RecursEveryWeekday" onclick="javascript:toggleMonthItems(this.value)"/>
+                                </td>
+                                <td>
+                                    <apex:outputLabel value="Every weekday" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="radio" id="RecursDaily"   name="recurrencetype" value="RecursDaily"  onclick="javascript:toggleMonthItems(this.value)" />
+                                </td>
+                                <td>Every &nbsp;<apex:inputtext value="{!everydaysValue}"   style="width :50px;"/>&nbsp; day(s)
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                               
+                    <div id="pnlWeekly" style="visibility:hidden;display:none;height:90px">
+                        Recurs every &nbsp;<apex:inputtext value="{!everyweekValue}"  style="width :50px;" />&nbsp; week(s) on
+                        <apex:selectCheckboxes value="{!selectedWeekDays}">
+                            <apex:selectOptions value="{!weekDayList}"/>
+                        </apex:selectCheckboxes>
+                    </div>
+                                
+                     <div id="pnlMonthly" style="visibility:hidden;display:none;">
+                         <input id="radioDayNo" type="radio" name="monthPanel" value="RecursMonthly" onclick="javascript:toggleMonthItems(this.value)">On day</input>
+                         
+                         <apex:selectList id="lstMonthDay" value="{!selectedMonthDay}" multiselect="false" size="1">
+                                <apex:selectOptions value="{!monthDayList}" />       
+                         </apex:selectList> of every &nbsp;<apex:inputtext value="{!everymonthValue}" style="width :50px;" />&nbsp; month(s)<br/>
+                                                                                                                
+                          <input id="radioDayOccurance" type="radio" name="monthPanel" value="RecursMonthlyNth" onclick="javascript:toggleMonthItems(this.value)">On the</input>
+                          
+                          <apex:selectList id="lstDayOccurance" value="{!selectedDayOccurance}" multiselect="false" size="1">
+                                <apex:selectOptions value="{!dayOccuranceList}" />       
+                          </apex:selectList> 
+                          
+                          <apex:selectList id="lstWeekDay" value="{!selectedmonthWeek}" multiselect="false" size="1">
+                            <apex:selectOptions value="{!monthweekList}" />       
+                          </apex:selectList> of every &nbsp;<apex:inputtext value="{!everymonthValue1}" style="width :50px;" />&nbsp; month(s)
+                      </div>
+                                
+                       <div id="pnlYearly" style="visibility:hidden;display:none;">
+                       
+                           <input id="radioDayNo1" type="radio" name="yearPanel" value="RecursYearly" onclick="javascript:toggleMonthItems(this.value)">On every</input>
+                           <apex:selectList id="lstMonthDay1" value="{!selectedMonth}" multiselect="false" size="1">
+                                <apex:selectOptions value="{!yearMonthList}" />       
+                           </apex:selectList> 
+                           
+                           <apex:selectList id="lstMonthDayinyearlist" value="{!selectedMonthDayforyear}" multiselect="false" size="1">
+                                <apex:selectOptions value="{!monthDayList}" />       
+                           </apex:selectList> <br/>
+                                                                                                                    
+                           <input id="radioDayOccurance1" type="radio" name="yearPanel" value="RecursYearlyNth" onclick="javascript:toggleMonthItems(this.value)">On the</input>
+                           <apex:selectList id="lstDayOccurance1" value="{!selectedDayOccuranceforyear}" multiselect="false" size="1">
+                                <apex:selectOptions value="{!dayOccuranceList}" />       
+                           </apex:selectList>
+                            
+                           <apex:selectList id="lstWeekDay1" value="{!selectedmonthWeekforyearvalue}" multiselect="false" size="1">
+                                <apex:selectOptions value="{!monthweekList}" />       
+                           </apex:selectList> of  &nbsp;
+                           <apex:selectList id="lstMonthDay2" value="{!selectedMonthvalue}" multiselect="false" size="1">
+                                <apex:selectOptions value="{!yearMonthList}" />       
+                           </apex:selectList> 
+                           
+                        </div>
+                        </td>
+                    </tr>  
+                </table> 
+            </apex:panelGroup>
+        </apex:pageBlockSectionItem>
+    </apex:pageBlockSection> 
+ 
+    <apex:outputpanel id="outerpanel">
+        <apex:outputpanel rendered="true"> 
+             <apex:pageBlockSection id="startchekboxid" >
+                     <apex:inputField value="{!ta.RecurrenceStartDateOnly}" styleclass="target1" required="{!showdates}"/> 
+             </apex:pageBlockSection>
+             <apex:pageBlockSection id="endcheckboxid">
+                    <apex:inputField value="{!ta.RecurrenceEndDateOnly}"  styleclass="target1" required="{!showdates}"/>
+             </apex:pageBlockSection>
+             
+        </apex:outputpanel>
+    </apex:outputpanel> 
+    
+   </div> 
+    </apex:outputPanel>
+ </apex:outputPanel>                                 
+    
+    <script>
+        document.getElementById('radioDaily').checked = true;
+        document.getElementById('RecursEveryWeekday').checked = true;   
+        document.getElementById("{!$Component.SearchForm.selectedFrequency}").value = 'Daily';
+        document.getElementById("{!$Component.SearchForm.selectedMonthItem}").value = 'RecursEveryWeekday';
+    </script> 
+
+        
+        </div>
+ </apex:pageBlock>
+</apex:form>
+</apex:page>

@@ -1,0 +1,12 @@
+<apex:page controller="GenerateCSV" >
+    <head>
+     	<apex:stylesheet value="{!$Resource.Bootstrapss}"/>
+
+    </head>
+    
+    <apex:form >
+    <apex:pageblock title="Generate csv file" >
+        <apex:commandButton action="{!sendEmailforPdf}" value="Generate csv file" styleClass="btn-primary" />
+        </apex:pageblock>
+    </apex:form>  
+</apex:page>

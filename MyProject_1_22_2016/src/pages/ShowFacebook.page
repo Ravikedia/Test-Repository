@@ -1,0 +1,12 @@
+<apex:Page >
+      <html>
+          <body>
+              <form enctype="multipart/form-data" action="https://graph.facebook.com/v2.0/me/photos?access_token=CAAHNGSULfrUBAP35ZAhuTlo1JnAYRmtLjCGlWZCO0yt3a8r8EDoQlyZCFRUlX2LoQYy646oKPCC9vyWCjWXqMkyXgTooR8pbtp2NMnPtirSORIbQCMWMJgrCvYgWJYekcd9p29uk2EKMYtNhZBcZBwPhZATvgTZB7ZCIogr60RLmYjIuzsQJP2hwov6nlZAdhfnnhgIqksjYwmJdoN00UohqO" method="POST" >
+                  Please choose a photo: <input name="source" type="file" /><br/><br/>
+                  Say something about this photo: 
+                  <input name="message" type="text" value="" /><br/><br/>
+                  <input type="submit" value="Upload" /><br/>
+              </form>
+          </body>
+      </html>     
+</apex:page>

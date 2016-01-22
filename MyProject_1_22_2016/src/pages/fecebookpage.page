@@ -1,0 +1,10 @@
+<apex:page controller="fecebookController" >
+<apex:form >
+<apex:pageBlock title="Social Application Authorization ">
+   <apex:pageblockSection >
+    <!-- <apex:commandLink action="{!doAuthorization}" value="Authorize" id="lnCommandLink" t />-->
+  
+  </apex:pageBlockSection>
+ </apex:pageBlock>
+</apex:form>
+</apex:page>

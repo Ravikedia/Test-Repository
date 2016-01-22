@@ -1,0 +1,38 @@
+<apex:component >
+	<apex:attribute name="textid" description="This is the id for the textarea field." type="String" required="true" />
+	<apex:attribute name="text" description="This is the value for the textarea field." type="String" required="true" />
+	<apex:attribute name="type" description="This sets the visibility of the textarea field." type="String" />
+
+	<script src="{!URLFOR($Resource.Clipboard,'ZeroClipboard.js')}"></script>
+	<link href="{!URLFOR($Resource.Clipboard,'clipboard.css')}" rel="stylesheet" type="text/css"/>
+	
+	<script>
+		j$(document).ready(function() {
+		
+			var clip = new ZeroClipboard(j$('.copybtn'), {
+            					moviePath: "{!URLFOR($Resource.Clipboard,'ZeroClipboard.swf')}"
+            				});
+
+			$("pre.htmlCode").snippet("html",{style:"whitengrey"});
+			$("pre.styles").snippet("css",{style:"whitengrey"});
+			$("pre.js").snippet("javascript",{style:"whitengrey"});
+
+			// hidden
+			if ("{!type}"=='hidden') {
+				j$("#{!textid}").css("display", "none");
+			}
+
+			// read Only
+			if ("{!type}"=='readOnly') {
+				j$("#{!textid}").attr('readonly', true);
+			}
+		});
+	</script>
+
+	<div class="clipboardContainer">
+		<pre class="htmlCode" ><apex:outputText value="{!text}" escape="false" /></pre>
+		<textarea id="{!textid}" class="textCode" rows="4" ><apex:outputText value="{!text}" escape="false" /></textarea>
+		<input type="button" value="Copy to Clipboard" title="Copy to Clipboard" data-clipboard-target="{!textid}" class="btn btn-xs btn-primary {!textid}-copy copybtn" />
+	</div>
+
+</apex:component>

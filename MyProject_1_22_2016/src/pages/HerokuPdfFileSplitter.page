@@ -1,0 +1,519 @@
+<apex:page controller="HerokuPdfFileSplitterController"  standardStylesheets="false" sidebar="false" >
+    <apex:stylesheet value="{!$Resource.Bootstrapss}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.Bootbox, 'bootbox/bootstrap.min.css')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.Bootbox, 'bootbox/jquery.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.Bootbox, 'bootbox/bootstrap.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.Bootbox, 'bootbox/bootbox.js')}"/>
+    
+    <apex:includeScript value="{!URLFOR($Resource.pdfOpner, 'pdfOpner/pdfopenjquery.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.pdfOpner, 'pdfOpner/pdfopenjquery-ui.js')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.pdfOpner, 'pdfOpner/pdfopenjquery-ui.css')}"/>
+    
+    <apex:includeScript value="{!URLFOR($Resource.BlockUIfiles, 'Blockuifiles/Jquery.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.BlockUIfiles, 'Blockuifiles/Jquery.BlockUI.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.BlockUIfiles, 'Blockuifiles/BlockUi.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.BlockUIfiles, 'Blockuifiles/Jquery.min.js')}"/>
+     
+    <script type="text/javascript">  
+        $(function () {
+            var fileName = "{!filename}";
+            $("#btnShow").click(function () {
+                $("#dialog").dialog({
+                    modal: true,
+                    title: fileName,
+                    width: 1000,
+                    height: 850,
+                    buttons: {
+                        Close: function () {
+                            $(this).dialog('close');
+                        }
+                    },
+                    open: function () {
+                        var object = "<object data=\"{FileName}\" type=\"application/pdf\" width=\"950px\" height=\"800px\">";
+                        object += "If you are unable to view file, you can download from <a href=\"{FileName}\">here</a>";
+                        object += " or download <a target = \"_blank\" href = \"http://get.adobe.com/reader/\">Adobe PDF Reader</a> to view the file.";
+                        object += "</object>";
+                        object = object.replace(/{FileName}/g, "{!baseUrl}/servlet/servlet.FileDownload?file={!attchId}" );
+                        $("#dialog").html(object);
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+     var j$ = jQuery.noConflict();
+     function radioWithText(d)
+     {
+        var radiobuttonvalue=d;
+        
+        if(radiobuttonvalue=="group")
+        {
+            j$.blockUI();
+            OpenPages(1);
+        }
+        if(radiobuttonvalue=="particular")
+        {
+            j$.blockUI();
+            OpenPages(2); 
+        }   
+        if(radiobuttonvalue=="range")
+        {
+            j$.blockUI();
+            OpenPages(3); 
+        }
+        if(radiobuttonvalue=="extract")
+        {
+            j$.blockUI();
+            OpenPages(0); 
+        }
+         document.getElementById('one').style.display = "none"
+         document.getElementById('two').style.display = "none"; 
+         document.getElementById('three').style.display = "none";
+         document.getElementById('four').style.display = "none";
+         document.getElementById('extract').style.display = "none";
+         document.getElementById(d).style.display='inline'; 
+     }
+    </script>
+    
+    <script >
+    var j$ = jQuery.noConflict();
+    var i;
+    function Pagenumber()
+    {
+        var ppage=j$("input.infield");
+        
+        for(i=0; i<ppage.length; i++)
+        {
+             if(ppage[i].value=='null' || ppage[i].value=='')
+             {
+                 j$(ppage[i]).css('border', '1px solid red');
+             }
+        }
+        for(i=0; i<ppage.length; i++)
+        {
+            if(ppage[i].value=='null' || ppage[i].value=='')
+            {
+                j$.unblockUI();
+                bootbox.alert("Plese fill text box value");
+                return false;
+            }
+        }
+        callactionfunction();
+    }
+    function removetextbox()
+    {
+        callremovefunction();
+    }
+    </script>
+        
+    <SCRIPT language="Javascript">
+    var chechzero=0;
+    function isNumberKey(evt)
+    {
+        var charCode = (evt.which) ? evt.which : event.keyCode;
+        if(charCode !=48)
+        {
+            chechzero=1;
+            
+        }
+        if(charCode==48 && chechzero==0)
+        {
+            j$.blockUI();
+            bootbox.alert("Please enter 1-9  in first position");
+            j$.unblockUI();
+            return false;
+        }    
+             
+        if (charCode != 46 && charCode > 31 
+        && (charCode < 48 || charCode > 57))
+        {
+            j$.blockUI();
+            bootbox.alert("Please enter number only");  
+            j$.unblockUI();  
+            return false;
+        }
+        if(charCode ==46)
+        {
+            j$.blockUI();
+            bootbox.alert("Please enter number only");
+            j$.unblockUI();    
+            return false;
+        }
+        return true;
+    }
+    </SCRIPT>
+          
+    <script >
+        var j$ = jQuery.noConflict();
+        var i;
+        function changeIt()
+        {
+            var left = j$(".leftValue");
+            var right = j$(".rightValue");
+            
+            for(var L = 0; L < left.length; L++ )
+            {
+                if(parseInt(left[L].value) == 0 || parseInt(right[L].value) == 0)
+                {
+                     bootbox.alert("Zero is not valid page size, please enter correct value.");
+                     j$.unblockUI();
+                     return false;
+                }
+                if(parseInt(left[L].value) > parseInt(right[L].value))
+                {
+                   bootbox.alert("Left value should be less then right value."); 
+                   j$(left[L]).css('border', '1px solid red');
+                   j$(right[L]).css('border', '1px solid red');
+                   j$.unblockUI();
+                   return false; 
+                }
+            }
+            
+            var ppage=j$("input.infield");
+            
+            for(i=0; i<ppage.length; i++)
+            {
+                 if(ppage[i].value=='null' || ppage[i].value=='')
+                 {
+                     j$(ppage[i]).css('border', '1px solid red');
+                 }
+            }
+        
+            for(i=0; i<ppage.length; i++)
+            {      
+                if(ppage[i].value=='null' || ppage[i].value=='')
+                {
+                    bootbox.alert("Plese fill text box value ");
+                    j$.unblockUI();
+                    return false;  
+                }
+            }
+              
+            callactionfunctionforrangetextbox();
+        }
+        function removeit()
+        {
+            callactionfunctionforremoverangetextbox();
+        }
+    </script>
+      
+           
+    <script>
+     var j$ = jQuery.noConflict();
+     function ButtonText()
+     {
+        var aaa= j$("[id$=fileid]").val();
+        if(aaa=='')
+        {
+            bootbox.alert("Please select pdf file ");
+            j$.unblockUI();
+            return false;
+        }
+        if($('[id$="fileid"]')[0].files[0].size > 3000000)
+        {
+            bootbox.alert("You can't send file more then 3 mb in HttpRequest! ");
+            j$.unblockUI();
+            return false;
+        }
+        
+        disappearfile();
+     }
+    </script>
+    
+    <script>
+    function ButtonTextCheck()
+    {
+    
+    }
+    </script>
+    
+    <script>
+        var j$ = jQuery.noConflict();
+        var i;
+        var j;
+        function ButtonTextCheckvalidation()
+        {
+            var left = j$(".leftValue");
+            var right = j$(".rightValue");
+            
+            for(var L = 0; L < left.length; L++ )
+            {
+                if(parseInt(left[L].value) == 0 || parseInt(right[L].value) == 0)
+                {
+                     bootbox.alert("Zero is not valid page size, please enter correct value.");
+                     j$.unblockUI();
+                     return false;
+                }
+                
+                if(parseInt(left[L].value) > parseInt(right[L].value))
+                {
+                   bootbox.alert("Left value should be less then right value."); 
+                   j$(left[L]).css('border', '1px solid red');
+                   j$(right[L]).css('border', '1px solid red');
+                   j$.unblockUI();
+                   return false; 
+                }
+            }
+            
+            var ppage=j$("input.infield");
+            for(i=0; i<ppage.length; i++)
+            {
+                 if(ppage[i].value=='null' || ppage[i].value=='')
+                 {
+                     j$(ppage[i]).css('border', '1px solid red');
+                 }
+            }
+            for(i=0; i<ppage.length; i++)
+            {
+                  if(ppage[i].value=='null' || ppage[i].value=='')
+                  {
+                      bootbox.alert("Plese fill text box value ");
+                      j$.unblockUI();
+                      return false;
+                  }
+           }
+              j$.blockUI();
+              passfile(); 
+        } 
+    
+    </script>
+    <script>  
+    var j$ = jQuery.noConflict();
+    function beforemethod()
+    {
+         j$.blockUI();
+    }
+    </script>
+   
+    <script>
+    var j$ = jQuery.noConflict();
+    function aftermethod()
+    {
+        j$.unblockUI();
+
+    }
+    </script>
+    <script>
+    function checkfunction()
+    {
+    }
+    </script>
+    
+    <style>
+    .btn-custom
+    {
+          background-color: hsl(0, 69%, 22%) !important;
+          background-repeat: repeat-x !important;
+          width: 100% !important;
+          height: 40px !important;
+          filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#b42121", endColorstr="#5e1111") !important;
+          background-image: -khtml-gradient(linear, left top, left bottom, from(#b42121), to(#5e1111)) !important;
+          background-image: -moz-linear-gradient(top, #b42121, #5e1111) !important;
+          background-image: -ms-linear-gradient(top, #b42121, #5e1111) !important;
+          background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #b42121), color-stop(100%, #5e1111)) !important;
+          background-image: -webkit-linear-gradient(top, #b42121, #5e1111) !important;
+          background-image: -o-linear-gradient(top, #b42121, #5e1111) !important;
+          background-image: linear-gradient(#b42121, #5e1111) !important;
+          border-color: #5e1111 #5e1111 hsl(0, 69%, 17%) !important;
+          color: #fff !important; 
+          text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.33) !important;
+          -webkit-font-smoothing: antialiased !important;
+     }
+     </style>
+        
+    <apex:form id="secondform" >
+    <div style="background-image: url('https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQ1ydwT_zOUkj0kXVVA_Mj4u0Oy3e4uepns-RQwdCxbFwbBH81X');background-size: contain;font-family: monospace;" >
+    <br/><br/>
+    <div class="container"   >
+        <div class="row">
+        <apex:actionFunction action="{!savefiel}" name="disappearfile"  onbeforedomupdate="javascript:checkfunction()" />
+        <apex:outputPanel id="messagepage1" style="font-size: large;">
+            <apex:pagemessages ></apex:pagemessages>      
+        </apex:outputPanel>
+        
+        <apex:outputpanel rendered="{!if(hidevalue=='0',true,false)}" >
+            <apex:pageblock title="PDF splitter form"  >
+                <div style="    height: 126px;">
+                    <div class="col-md-5" >
+                           <b> Choose pdf file:</b><apex:inputFile fileName="{!filename}"  value="{!file}"    contentType="{!type}" id="fileid" styleclass="paginationButtons"> </apex:inputFile>
+                    </div>
+                    <div class="col-md-3" >
+                              <input type="button"  onclick="javascript:ButtonText()" Class="btn-custom"  value="Upload file!"  />
+                    </div>
+                    <div class="col-md-3" >
+                    </div>
+                </div>
+            </apex:pageblock>
+        </apex:outputPanel>
+
+        <apex:actionFunction action="{!Sendfiel}"  name="passfile" reRender="messagepage,secondform"  onbeforedomupdate="javascript:beforemethod()" oncomplete="javascript:aftermethod()" />
+            
+        <apex:outputpanel rendered="{!if(secondform== 2,true,false)}">
+            <apex:pageblock title="PDF file link"  >
+                <apex:outputLink value="{!baseUrl}/servlet/servlet.FileDownload?file={!attachId}" target="_blank" style="margin-left: 433px;"  ><b>Click here!</b></apex:outputLink><br/><br/>
+                <apex:outputPanel id="messagepage" style="font-size: large;">
+                    <apex:commandButton value="Back to select new file" style="margin-left: 413px;width: 15% !important;" onclick="beforemethod();" oncomplete="aftermethod();" styleClass="btn-custom" action="{!refreshpage}" rendered="{!if(secondform== 2,true,false)}" rerender="secondform" />
+                </apex:outputPanel>
+            </apex:pageblock>
+        </apex:outputpanel>
+        
+        <apex:outputpanel rendered="{!if(hidevalue=='3' && secondform==1 ,true,false)}">   
+            <apex:actionFunction action="{!redirect}" name="OpenPages" reRender="group" onbeforedomupdate="javascript:beforemethod()" oncomplete="javascript:aftermethod()">
+                <apex:param assignTo="{!radiobuttonvalue}" value="" name="param1"/>
+            </apex:actionFunction>
+
+            <apex:actionFunction action="{!Addtextbox}" name="callactionfunction" rerender="group" oncomplete="aftermethod();">
+            </apex:actionFunction>
+            
+            <apex:actionFunction action="{!Removetextbox}" name="callremovefunction" reRender="group" oncomplete="aftermethod();" />
+       
+            <apex:actionFunction action="{!Addsecondtextbox}" name="callactionfunctionforrangetextbox" rerender="group" oncomplete="aftermethod();" />
+            <apex:actionFunction action="{!Removesecondtextbox}" name="callactionfunctionforremoverangetextbox" reRender="group" oncomplete="aftermethod();" />
+   
+        
+        <apex:pageBlock title="Split pdf file">
+            <div class="row" style="padding: 10px;">
+                <div class="col-md-4" >
+                    <apex:outputLabel value="Extract image from pdf file"/>
+                </div>
+                <div class="col-md-2" >  
+                    <input type="Radio" name="split" value="radiob" onclick="javascript:radioWithText('extract')" checked="checked" styleClass="radioButtonalign" /> 
+                </div>
+                <div class="col-md-6" >  
+                </div>
+            </div>
+             
+            <div class="row" style="padding: 10px;">   
+                <div class="col-md-4" >
+                    <apex:outputLabel value="Extract pdf into multiple pdf" />
+                </div>
+                <div class="col-md-2" > 
+                    <input type="Radio" name="split" value="radiob" onclick="javascript:radioWithText('group')" checked="checked" styleClass="radioButtonalign" />
+                </div>
+                <div class="col-md-6" >  
+                </div>
+             </div>
+
+               
+             <div class="row" style="padding: 10px;">   
+                <div class="col-md-4" >
+                    <apex:outputLabel value="Extract particular page from pdf file"/> 
+                 </div>
+                <div class="col-md-2" >                  
+                    <input type="Radio" name="split" value="radiob" onclick="javascript:radioWithText('particular')" checked="checked" styleClass="radioButtonalign" /> 
+                </div>
+                <div class="col-md-6" >  
+                </div>
+              </div>
+              
+              <div class="row" style="padding: 10px;">   
+                <div class="col-md-4" >
+                    <apex:outputLabel value="Extract pdf file in diffrent diffrent part"/>  
+                </div>
+                <div class="col-md-2" > 
+                    <input type="Radio" name="split" value="radiob" onclick="javascript:radioWithText('range')" checked="checked" styleClass=".radioButtonalign" />
+                </div>
+                <div class="col-md-6" >  
+                </div>
+              </div> <br/><br/>
+              
+              <apex:outputPanel id="group">
+              <apex:outputPanel rendered="{!if(radiobuttonvalue== 1,true,false)}" >
+                <div class="row" style="    border: 1px solid #FDE5E5;height: 79px;    color: blue; margin-left: 1px;margin-right: 1px;">   
+                    <div class="col-md-5" >
+                        <apex:outputLabel value="Number of page in one pdf file " style="margin-top: 25px;"/> 
+                    </div>
+                    <div class="col-md-5" style="margin-top: 25px;" > 
+                        <apex:inputtext value="{!Numberofpage}" id="nopage"  maxlength="3" onkeypress="return isNumberKey(event)" styleClass="form-control infield" style="display: inherit !important;"/>
+                    </div>
+                    <div class="col-md-2" >  
+                    </div>
+                </div> 
+               </apex:outputPanel>
+                
+                  
+                <apex:outputPanel rendered="{!if(radiobuttonvalue== 2,true,false)}" >
+                    <apex:repeat value="{!wrapperclasslist}" var="wclist" id="repeatid" >
+                        <div class="row" style="    border: 1px solid #FDE5E5;height: 79px;    color: blue; margin-left: 1px;margin-right: 1px;">   
+                            <div class="col-md-5" style="margin-top: 25px;" >            
+                                <apex:outputLabel value="Enter page number that you want to split"  />
+                             </div>
+                             <div class="col-md-5" style="margin-top: 25px;" >  
+                                <apex:inputtext value="{!wclist.fromvalue}" maxlength="3"  onkeypress="return isNumberKey(event)"  styleClass="form-control infield" style="display: inherit !important;" />
+                              </div>
+                              <div class="col-md-2" >  
+                              </div>
+                          </div> 
+                    </apex:repeat>
+                         
+                    <div class="row">   
+                        <div class="col-md-4" > 
+                         </div>
+                         <div class="col-md-4" > 
+                         </div>
+                         <div class="col-md-4" > 
+                             <input type="button" onclick="beforemethod();Pagenumber()" Class="btn-primary"  value="Add" style="margin-top: 10px;" />
+                             <input type="button" onClick="beforemethod();removetextbox()"  Class="btn-primary"  value="Remove"  style="margin-top: 10px;"/> 
+                         </div>
+                     </div>  
+                 </apex:outputPanel>
+               
+              
+                <apex:outputPanel rendered="{!if(radiobuttonvalue== 3,true,false)}" >
+                    <apex:repeat value="{!wrappertextbox}" var="wclist">
+                        <div class="row" style="    border: 1px solid #FDE5E5;height: 79px;    color: blue;    margin-left: 1px;margin-right: 1px;">   
+                            <div class="col-md-4" style="margin-top: 25px;" >
+                                <apex:outputLabel value="Enter a range of page :"  />
+                            </div>  
+                             <div class="col-md-2" >
+                                 <b>FROM: </b><apex:inputText styleClass="form-control infield leftValue"  label="From:" maxlength="3" onkeypress="return isNumberKey(event)" value="{!wclist.startvalue}" style="display: inherit !important;"  /> 
+                             </div>
+                             <div class="col-md-2" >    
+                                <b> To:</b> <apex:inputText styleClass="form-control infield rightValue" label="To:" onkeypress="return isNumberKey(event)"  maxlength="3" value="{!wclist.endvalue}" style="display: inherit !important;" />  
+                             </div>
+                              <div class="col-md-4" >
+                              </div>
+                         </div>
+                     </apex:repeat>
+         
+                      <div class="row">   
+                          <div class="col-md-4" >
+                           </div>
+                          <div class="col-md-4" > 
+                          </div>
+                         <div class="col-md-4" >  
+                             <input type="button" onClick="beforemethod();changeIt()"  Class="btn-primary"  value="Add" style="margin-top: 10px;" />
+                             <input type="button" onClick="beforemethod();removeit()"  Class="btn-primary"  value="Remove" style="margin-top: 10px;" />
+                         </div>
+                       </div>              
+                </apex:outputPanel>
+            </apex:outputPanel>
+        
+        
+             <br/><br/>
+             <div class="row">   
+                 <div class="col-md-3" >
+                 </div>
+                 <div class="col-md-2" > 
+                     <input id="btnShow" type="button" value="Show PDF" Class="btn-custom" />
+                     <div id="dialog" style="display: none">
+                     </div>
+                 </div>
+                 <div class="col-md-2" > 
+                     <apex:commandButton value="Split file!" rerender="none"   onclick="javascript:ButtonTextCheckvalidation()"  styleClass="btn-custom" id="cb"  />
+                 </div>
+                 <div class="col-md-2" > 
+                     <apex:commandButton value="Select new pdf file"  action="{!refreshpage}"   styleClass="btn-custom"    />
+                 </div>
+    
+                 <div class="col-md-3" >  
+                 </div>
+             </div>                        
+        </apex:pageBlock>
+      </apex:outputPanel>
+      </div>
+    </div>
+   <br/><br/>
+    </div>
+    </apex:form>
+</apex:page>

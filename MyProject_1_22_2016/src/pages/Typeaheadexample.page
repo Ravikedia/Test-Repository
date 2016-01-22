@@ -1,0 +1,96 @@
+<apex:page controller="Typeaheadexample"  >  
+  
+     <script>
+            function method()
+            {
+            alert("i am alert");
+            }
+       </script>
+    <apex:outputPanel id="obj" >
+                   <head> 
+                   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js" >
+                   </script>
+
+              <script>
+
+                     var jq = $.noConflict();
+                     jq (document).ready(function(){
+                     jq ("#a").click(function()
+                     {
+                         alert('{!FilterId}') ;
+                          seachvalue();
+                     });
+                     });
+            </script>
+           
+            </head>
+  
+    </apex:outputPanel>
+   <!--Allows users to enter input-->
+    <apex:form >
+   <apex:actionFunction name="seachvalue" action="{!view}"  reRender="DataTable,obj" />
+    <!--An area of a page that uses styling -->
+        <apex:pageblock title="Dynamic Table">
+           <!-- List for selecting object from picklist-->
+            <apex:selectList size="1"  id="myvalue"  value="{!filterId}">
+          
+          
+          
+                   <!--Actionsupport component that adds AJAX support to another component, 
+                   allowing the component to be refreshed asynchronously by the server when a particular event occurs-->
+                   <apex:actionSupport event="onchange" action="{!view}" rerender="DataTable,obj"/>
+                 
+                   Select Object From List &nbsp;  <apex:selectOptions value="{!Myname}" id="select" />
+             </apex:selectList> 
+            &nbsp; Enter The Name of Record That You Want To search &nbsp;<apex:inputText value="{!searchvalue}"  onkeyup="Method" />
+           <input type="button" id="a"  value="SEARCH!"  />
+          
+          
+          
+          
+           <!-- <apex:commandButton action="{!view}" value="SEARCH!"  reRender="DataTable" id="bt"/>-->
+            
+         
+            <br/><br/>
+             <apex:outputPanel id="DataTable">
+              
+             
+            <!--creating table for storing fields value of object-->
+            <apex:pageblockTable value="{!recordList}"   var="item"    Title="Select value from Picllist" rendered="{!if(recordList!= null && recordList.size>0,true,false)}"  >
+                <apex:column headerValue="Checkbox" width="10%" >
+                
+                 <apex:inputCheckbox value="{!item.selected}"/>
+                 </apex:column>
+                
+                <apex:column headerValue="Name"><a target="_blank" href="/{!item.con.id}"> {!item.con['name']}</a></apex:column>
+                <apex:column value="{!item.con.id}" />
+                <!--<apex:column value="{!item.con['name']}"/>-->
+                
+            </apex:pageblockTable>
+              <!-- <apex:outputPanel rendered="{!if(recordList!= null && recordList.size=0,true,false)}">
+               <apex:outputLabel > Not found any record</apex:outputLabel>
+               </apex:outputPanel>-->
+            
+          
+          
+               
+              <apex:outputPanel rendered="{!if(recordList!= null && recordList.size>0,true,false)}" id="mypanel" >
+               
+             
+ 
+
+               Total Records# {!total_size} 
+                &nbsp; Page Number# {!PageNumber}
+                
+                <input type="text" name="lname"  value="{!filterId}" id="feth" hidden="true"  />
+                
+             <apex:commandButton action="{!Beginning}" title="Beginning" value="  <<  " disabled="{!disablePrevious}" reRender="mypanel,DataTable"/>
+             <apex:commandButton action="{!Previous}" title="Previous" value="  <  " disabled="{!disablePrevious}" reRender="mypanel,DataTable"/>        
+             <apex:commandButton action="{!Next}" title="Next" value="  >  " disabled="{!disableNext}" reRender="mypanel,DataTable"/>
+             <apex:commandButton action="{!End}" title="End" value="  >>  " disabled="{!disableNext}" reRender="mypanel,DataTable"/>        
+                 <apex:commandButton value=" Export" action="{!processSelected}" /> 
+              </apex:outputPanel> 
+      </apex:outputPanel>
+       </apex:pageBlock>   
+     </apex:form>
+</apex:page>

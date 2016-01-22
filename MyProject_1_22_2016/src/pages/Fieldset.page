@@ -1,0 +1,9 @@
+<apex:page standardController="Contact">
+    <apex:pageBlock title="Fields in Proper Names">
+        <apex:pageBlockTable value="{!$ObjectType.Contact.FieldSets.fieldset}" var="f">
+            <apex:column value="{!f}">
+                <apex:facet name="header">Name</apex:facet>
+            </apex:column> 
+        </apex:pageBlockTable> 
+    </apex:pageBlock> 
+</apex:page>

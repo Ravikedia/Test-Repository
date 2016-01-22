@@ -1,0 +1,431 @@
+<apex:page >
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
+    <!--<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css" />-->
+  <!--  <script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js">
+
+</script>
+   <!-- <script>
+        var j$ = jQuery.noConflict();
+        j$(document).ready(function()
+        {
+       j$("#reg").click(function(){
+           reg();
+        });
+        });
+    </script>
+      <script>
+      
+          j$(document).ready(function(){
+              j$("[id$=a]").click(function()
+              {
+                  var name = j$("[id$=username]").val();
+                  var password = j$("[id$=password]").val();
+                  if ((name.length == 0))
+                  {
+                  alert("Please enter your name");
+                  j$("[id$=username]").focus();
+                   return false;
+                  }
+                  if ((password.length == 0))
+                  {
+                  alert("Please enter your pasword");
+                  return false;
+                  }
+                  
+             });
+           });
+    </script>
+    
+    <script>
+    var v=1;
+    var flag=0;
+    function checksteps()
+    {
+    
+    
+    if(v==1)
+    {
+     var j$ = jQuery.noConflict();
+    var name = j$("[id$=username]").val();
+    var password = j$("[id$=password]").val();
+    flag=1;
+
+    if((name.length==0))
+    {
+    alert("Please enter your name");
+    j$("[id$=username]").focus();
+    return false;
+    }
+    
+    if((password.length==0))
+    {
+    alert("Please enter your password");
+    j$("[id$=password]").focus();
+    return false;
+    }
+    
+
+    }
+    
+    
+    
+      if(v==2)
+    {
+     var j$ = jQuery.noConflict();
+    var qualification= j$("[id$=qualification]").val();
+    var college= j$("[id$=college]").val();
+
+    if((qualification.length==0))
+    {
+    alert("Please enter your qualification");
+    j$("[id$=qualification]").focus();
+    return false;
+    }
+    
+    if((college.length==0))
+    {
+    alert("Please enter your college");
+    j$("[id$=college]").focus();
+    return false;
+    }
+    }
+    
+    
+    
+      if(v==3)
+    {
+     var j$ = jQuery.noConflict();
+    var city= j$("[id$=city]").val();
+    var pincode= j$("[id$=pincode]").val();
+
+    if((city.length==0))
+    {
+    alert("Please enter your city");
+    j$("[id$=city]").focus();
+    return false;
+    }
+    
+    if((pincode.length==0))
+    {
+    alert("Please enter your pincode");
+    j$("[id$=pincode]").focus();
+    return false;
+    }
+    }
+    
+    
+    
+      if(v==4)
+    {
+     var j$ = jQuery.noConflict();
+    var userage= j$("[id$=userage]").val();
+    var userdob = j$("[id$=userdob]").val();
+
+    if((userage.length==0))
+    {
+    alert("Please enter your age");
+    j$("[id$=userage]").focus();
+    return false;
+    }
+    
+    if((userdob.length==0))
+    {
+    alert("Please enter your date of birth");
+    j$("[id$=userdob]").focus();
+    return false;
+    }
+    }
+    
+    
+    
+      if(v==5)
+    {
+     var j$ = jQuery.noConflict();
+    var colleagename = j$("[id$=colleagename]").val();
+    var schoolname = j$("[id$=schoolname]").val();
+
+    if((colleagename.length==0))
+    {
+    alert("Please enter your collage name");
+    j$("[id$=colleagename]").focus();
+    return false;
+    }
+    
+    if((schoolname.length==0))
+    {
+    alert("Please enter your school name");
+    j$("[id$=schoolname]").focus();
+    return false;
+    }
+    }
+    
+    
+    
+    if(flag==1)
+    {
+    
+    v++;
+    recordmaintain();
+    
+    }
+    
+    }
+    function myfunctio()
+    {
+          reg();
+     
+    }
+   
+    function myfunction1()
+    {
+         if(v>1)
+        {
+             registration();
+        }
+        else
+        {
+        alert("Please first complete step 1");
+        return false;
+        }
+    }
+     function myfunction()
+    {
+       if(v>2)
+       {
+       
+        reg3();
+       }
+        if(v==1)
+        {
+        alert("Please first complete step1");
+        return false;
+        }
+        if(v==2)
+        {
+        alert("Please first complete step2");
+        return false;
+        }
+    }
+    function myfunction2()
+    {
+       if(v>3)
+       {
+        registration4();
+       }
+       if(v==1 || v==2 ||v==3)
+       {
+       alert("Please complete privious steps");
+       }
+    }
+    function myfunction3()
+    {
+        if(v>4)
+        {
+        registration5(); 
+        }
+        if(v==1 || v==2 || v==3 || v==4)
+        {
+        alert("Please complete privious steps");
+        }
+    }
+    </script>
+
+    <apex:form >
+    <apex:actionFunction name="reg" action="{!Step1}" reRender="steps" />
+    <apex:actionFunction name="registration" action="{!Step2}" reRender="steps" />
+    <apex:actionFunction name="reg3" action="{!Step3}" reRender="steps" />
+    <apex:actionFunction name="registration4" action="{!Step4}" reRender="steps" />
+    <apex:actionFunction name="registration5" action="{!Step5}" reRender="steps" />
+    <apex:actionfunction name="recordmaintain" action="{!Recordmaintains}" reRender="steps"/>
+    
+   <apex:pageBlock title="" >
+  
+    <apex:outputPanel id="steps" >
+     
+    
+
+    <table  width="95%" align="center" border="1" >
+    <tr>
+    <td width="30%" bgcolor="cyan" rowspan="5" >
+    
+        <ol  class="nav nav-pills nav-stacked"  >
+        
+           <apex:outputpanel rendered="{!checkstep1}">
+           
+           
+        <ol  class="nav nav-pills nav-stacked"  >
+          <li class="active" id="reg" onclick="myfunctio()" ><a href=""><span class="glyphicon glyphicon-play"></span>  Step 1<span class="glyphicon glyphicon-ok-circle"></span> &nbsp;&nbsp;&nbsp; Student registration </a></li><br/>
+         </ol>
+         </apex:outputPanel>
+         <apex:outputpanel rendered="{!check}"> 
+          <ol  class="nav nav-pills nav-stacked"  >
+          <li class="active" id="register" onclick="myfunction1()" ><a href=""><span class="glyphicon glyphicon-play"></span> Step 2   &nbsp;&nbsp;&nbsp; Student  qualification</a></li><br/>
+                 
+                    </ol>
+                  </apex:outputPanel>
+         
+         <apex:outputpanel rendered="{!checkstep3}"> 
+          <ol  class="nav nav-pills nav-stacked"  >
+         
+          <li class="active" id="reg3" onclick="myfunction()" ><a href=""><span class="glyphicon glyphicon-play"></span> Step 3 &nbsp;&nbsp;&nbsp;   Student address</a></li><br/>
+           
+              </ol>
+           </apex:outputPanel>
+         
+          <apex:outputpanel rendered="{!checkstep4}">
+           <ol  class="nav nav-pills nav-stacked"  >
+         
+          <li class="active" id="reg4" onclick="myfunction2()"><a href=""><span class="glyphicon glyphicon-play"></span> Step 4 &nbsp;&nbsp;&nbsp;   Student age</a></li><br/>
+            </ol>
+                  </apex:outputPanel>
+         
+            <apex:outputpanel rendered="{!checkstep5}"  >
+          <ol  class="nav nav-pills nav-stacked"  >
+          <li class="active" id="reg5"  onclick="myfunction3()"><a href=""><span class="glyphicon glyphicon-play"></span> Step 5  &nbsp;&nbsp;&nbsp;  Student's Collage name </a></li><br/><br/>
+          
+                     </ol>
+                  
+                   </apex:outputPanel>
+          
+          <br/><br/><br/>
+        </ol>
+    </td >
+    <td bgcolor="silver">
+    <apex:outputpanel rendered="{!checkstep1}">
+    
+        
+             <table align="center" >
+        <tr><td>
+        
+          
+     
+            <td bgcolor="silver" align="center"><b><i><u>You are in step 1!</u></i></b><br/><br/><br/>
+            <table>
+            <tr><td>
+                  Enter your registration name:  </td><td><apex:inputField value="{!c.Registration__c}" /></td></tr>
+               <tr><td> Enter your name :</td><td><apex:inputtext id="username" value="{!username}" /></td></tr>
+              <tr><td>  Enter Your password :</td><td> <apex:inputsecret id="password" value="{!password}" /></td></tr></table>
+                <!--<apex:inputField value="{!registration.Contact__c}" />
+                  <apex:inputField value="{!c.Registration__c}" />-->
+                  
+            
+            -->
+          <!--  </td>
+              
+     
+       
+        
+        </td>
+        </tr>
+        </table>
+      
+    </apex:outputpanel>
+          
+          
+     
+     <apex:outputpanel rendered="{!check}"> 
+     
+        
+               <table align="center" >
+        <tr><td>
+        
+          
+     
+            <td bgcolor="silver" align="center"><b><i><u>You are in step 2!</u></i></b><br/><br/><br/>
+                Enter your qualification :  &nbsp;&nbsp;<apex:inputtext id="qualification"  /><br/><br/>
+                Enter your college name :<apex:inputtext id="college" />
+               
+            </td>
+     
+       
+        
+        </td>
+        </tr>
+        </table>
+             </apex:outputpanel>
+             
+          <apex:outputpanel rendered="{!checkstep3}">        
+       
+            <table width="100%" height="100%" align="center">
+        <tr><td>
+        
+        
+            <td bgcolor="silver" align="center"><b><i><u>You are in step 3!</u></i></b><br/><br/><br/>
+                Enter your city :  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <apex:inputtext id="city" /><br/><br/>
+                Enter Your pincode : <apex:inputText id="pincode" />
+            
+            </td>
+   
+        
+        </td>
+        </tr>
+        </table>
+          </apex:outputpanel>
+          
+          
+          <apex:outputpanel rendered="{!checkstep4}">        
+       
+           
+               <table align="center" >
+        <tr><td>
+        
+          
+     
+            <td bgcolor="silver" align="center"><b><i><u>You are in step 4!</u></i></b><br/><br/><br/>
+                Enter your age :<apex:inputtext id="userage" /><br/><br/>
+                Enter your dob :<apex:inputtext id="userdob" />
+               
+            </td>
+     
+       
+        
+        </td>
+        </tr>
+        </table>
+          </apex:outputpanel>
+         
+          <apex:outputpanel rendered="{!checkstep5}"  >        
+       
+       
+           
+                 <table align="center" >
+        <tr><td>
+        
+          
+     
+            <td bgcolor="silver" align="center"><b><i><u>You are in step 5!</u></i></b><br/><br/><br/>
+                Enter your college name :<apex:inputtext id="colleagename" /><br/><br/>
+                Enter your school name &nbsp;:<apex:inputtext id="schoolname"  />
+               
+            </td>
+     
+       
+        
+        </td>
+        </tr>
+        </table>
+          </apex:outputpanel>
+          
+          
+      </td>
+ </tr>
+ 
+ 
+    <tr>
+        <td align="center" bgcolor="silver">
+            
+           
+          
+           
+                <apex:commandButton value="Click Me!"  id="a" rerender="none"  onclick="return checksteps()"/>
+            
+        </td>
+    </tr>
+
+    </table>
+</apex:outputpanel>
+</apex:pageBlock>
+ </apex:form>
+ -->
+</apex:page>

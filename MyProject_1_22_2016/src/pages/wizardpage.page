@@ -1,0 +1,11 @@
+<apex:page controller="wizardcontroller">
+<apex:pageblock >
+<apex:outputLabel >Step1</apex:outputLabel>
+<apex:outputLabel >Step2</apex:outputLabel>
+<apex:outputLabel >Step3</apex:outputLabel>
+<apex:outputLabel >Step4</apex:outputLabel>
+<apex:outputLabel >Step5</apex:outputLabel>
+
+</apex:pageblock>
+
+</apex:page>

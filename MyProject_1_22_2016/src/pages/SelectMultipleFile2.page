@@ -1,0 +1,9 @@
+<apex:page controller="JSRemotingFileUploadController" renderAs="pdf" >
+   <apex:repeat value="{!attachmentid}" var="attach" id="theRepeat">
+
+       <apex:image value="https://c.ap1.content.force.com/servlet/servlet.FileDownload?file={!attach}" />
+		<DIV style="page-break-after:always"></DIV>
+		
+    </apex:repeat>
+  
+</apex:page>

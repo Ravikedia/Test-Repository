@@ -1,0 +1,45 @@
+<apex:page standardStylesheets="false" sidebar="false" showheader="true" showHeader="false">
+<head> 
+    <title>Create New Account</title>
+
+       <apex:stylesheet value="{!URLFOR($Resource.bootstrap,'BootStrap/css/bootstrap.min.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.bootstrap,'BootStrap/css/bootstrap-theme.min.css')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.bootstrap,'BootStrap/js/bootstrap.min.js')}"/>
+
+       <apex:includeScript value="{!URLFOR($Resource.bootstrap, 'bootstrap/js/bootstrap.js')}"/>
+       <apex:stylesheet value="{!URLFOR($Resource.bootstrap, 'bootstrap/css/bootstrap.css')}"/>
+
+</head>
+
+<table class="table table-bordered">
+   <caption>Basic Table Layout</caption>
+   <thead>
+      <tr>
+         <th>Name</th>
+         <th>City</th> 
+         <th>DOB</th>
+      </tr>
+   </thead>
+   <tbody>
+      <tr>
+         <td>Tanmay</td>
+         <td>Bangalore</td>
+          <td>Bangalore</td>
+      </tr>
+      <tr>
+         <td>Sachin</td>
+         <td>Mumbai</td>
+          <td>Bangalore</td>
+      </tr>
+
+   </tbody>
+</table>
+
+<apex:form >
+
+<apex:commandButton value="Click ME!" styleClass="btn-success" />
+<button value="click" Class="btn btn-dange"  >CLICK me</button>
+
+<apex:commandButton value="Click ME!" styleClass="btn btn-primary btn-lg btn-block" />
+</apex:form>
+</apex:page>

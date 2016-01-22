@@ -1,0 +1,69 @@
+<apex:page standardController="Task" extensions="extensionsEx">
+<script type="text/javascript">
+function displayControls()
+{
+var ctrl = document.getElementById("RecurrenceSet");
+alert('hi');
+if(ctrl!=null)
+
+{
+ctrl.style.display ='';
+}
+}
+</script>
+<apex:form >
+<apex:sectionHeader title="Task" subtitle="New Task" help="javascript:openPopupFocusEscapePounds(%27/help/doc/user_ed.jsp?loc=help&target=creating_tasks.htm&section=Activities%27, %27Help%27, 700, 600, %27width=700,height=600,resizable=yes,toolbar=yes,status=no,scrollbars=yes,menubar=yes,directories=no,location=no,dependant=no%27, false, false);"/>
+<apex:pageBlock title="Task Edit" id="thePageBlock" mode="edit">
+<apex:pageMessages ></apex:pageMessages>
+<apex:pageBlockButtons >
+<apex:commandButton value="Save" id="btnSave" action="{!save}" />
+<apex:commandButton value="Save" id="btnSaveNew" action="{!quicksave}" />
+<apex:commandButton value="Save" id="btnSaveNewEvent" action="{!save}" />
+<apex:commandButton value="Cancel" id="btnCancel" action="{!cancel}" />
+</apex:pageBlockButtons>
+<apex:actionRegion >
+<apex:pageBlockSection title="Task Information" columns="2">
+<apex:inputField value="{!Task.whatId}" />
+<apex:inputField value="{!Task.subject}" />
+<apex:inputField value="{!Task.whoid}" />
+<!--<apex:inputField value="{!Task.Call_Disposition__c}" />-->
+<!--<apex:inputField value="{!Task.Manager_Attended_Meeting__c}" />-->
+<apex:inputField value="{!Task.Description}" />
+<!--<apex:inputField value="{!Task.Appt_Set_on_this__c}" />-->
+<!--<apex:inputField value="{!Task.biz__c}" />
+<apex:inputField value="{!Task.Activity_Count__c}" />-->
+</apex:pageBlockSection>
+<apex:pageBlockSection title="Additional Information" columns="2">
+<apex:inputField value="{!Task.Priority}" />
+<apex:inputField value="{!Task.ActivityDate}" />
+<apex:inputField value="{!Task.Status}" />
+</apex:pageBlockSection>
+<apex:pageBlockSection title="Other Information" columns="2">
+<apex:outputText value="{!contact.Phone}"></apex:outputText>
+<apex:outputText value="{!contact.Email}"></apex:outputText>
+</apex:pageBlockSection>
+<apex:pageBlockSection title="System Information">
+<apex:inputField value="{!contact.ownerId}" />
+</apex:pageBlockSection>
+<apex:pageBlockSection title="Recurrence" columns="2">
+<apex:inputCheckbox value="{!Task.IsRecurrence}" onclick="javascript:displayControls();" dir="LTR" />
+<apex:outputPanel id="RecurrenceSet">
+<apex:inputField value="{!Task.RecurrenceStartDateOnly}" />
+<apex:inputField value="{!Task.RecurrenceEndDateOnly}" />
+</apex:outputPanel>
+</apex:pageBlockSection>
+<apex:pageBlockSection title="Reminder">
+<apex:pageBlockSectionItem >
+<apex:outputLabel value="Reminder">
+</apex:outputLabel>
+<apex:inputField value="{!Task.IsReminderSet}" onselect="javascript:enablecontrol();"/>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+<apex:inputField value="{!Task.ReminderDateTime}" />
+</apex:pageBlockSectionItem>
+</apex:pageBlockSection>
+</apex:actionRegion>
+</apex:pageBlock>
+</apex:form>
+  <!-- End Default Content REMOVE THIS -->
+</apex:page>

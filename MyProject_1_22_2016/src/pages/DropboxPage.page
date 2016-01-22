@@ -1,0 +1,11 @@
+<apex:page controller="DropboxController">
+<apex:form >
+    <apex:pageblock >
+        <apex:commandbutton action="{!DropAuth}" value="Dropbox Authentication">
+    </apex:commandbutton>
+        <apex:inputfile value="{!file}" contentType="{!type}"  filename="{!filename}"/>
+    <apex:commandButton value="Upload fiel" action="{!UploadFile}"/>
+    <apex:commandButton value="Download file" action="{!DownloadFile}"/>
+    </apex:pageblock>
+</apex:form>
+</apex:page>

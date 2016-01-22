@@ -1,0 +1,12 @@
+<apex:page >
+    <apex:panelGrid columns="3" id="theGrid">
+        <apex:outputText value="First" id="theFirst"/>
+              <apex:panelGroup id="theGroup" style="background-color:red">
+        <apex:outputText value="Second" id="theSecond"/>
+  
+            <apex:outputText value="Third" id="theThird"/>
+            <apex:outputText value="Fourth" id="theFourth"/>
+                  <apex:outputText value="Fifth" id="theFifth"/>
+        </apex:panelGroup>
+    </apex:panelGrid>
+</apex:page>

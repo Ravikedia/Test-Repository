@@ -1,0 +1,93 @@
+<apex:page controller="MetadataOrgIntegrationController"  standardStylesheets="true">
+
+       <!-- <apex:commandbutton action="{!SalesforceAuth}" value="Salesforce to Salesforce Authentication" />
+        <apex:commandButton value="Retrive Client Data" action="{!externaldata}" rerender="accId"/><br/><br/>
+        <apex:outputPanel id="accId">
+        <apex:pageBlock title="Client data">
+            <apex:outputPanel rendered="{!If(listOfAccount.size > 0, true, false)}">
+                <apex:pageBlockTable value="{!listOfAccount}" var="acc">
+                    <apex:column headerValue="First Name" value="{!acc.First_Name__c}"/>
+                    <apex:column headerValue="Last Name" value="{!acc.Last_Name__c }"/>
+                
+                </apex:pageBlockTable>
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!If(listOfAccount.size > 0, false, true)}">
+            No record exist.
+            </apex:outputPanel>
+        </apex:pageBlock>
+        </apex:outputPanel>-->
+        
+       <!-- <apex:includeScript value="{!URLFOR($Resource.jQuery)}"/>-->
+
+         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <apex:outputLabel id="nonevalue">
+            <script language="javascript">
+                    $(function() {        
+                        $('select.RemoveNone option[value=""]').remove();     
+                    });
+            </script> 
+        </apex:outputLabel>
+        
+        
+        
+        
+                <apex:pagemessages id="msg_cred"/> 
+                <apex:form > 
+                <apex:pageblock title="Add Organizations">
+                            <apex:pageBlockSection id="creds" rendered="true" columns="1"> 
+                              <!--  <apex:pageBlockSectionItem >
+                                   <apex:outputlabel value="Oraga" />
+                                   <apex:inputField value="{!organizationRecord.Name}" />
+                               </apex:pageBlockSectionItem>
+                               <apex:pageBlockSectionItem >
+                                   <apex:outputlabel value="{!$ObjectType.Organisation__c.fields.Username__c.label}" />
+                                   <apex:inputField value="{!organizationRecord.Username__c}" />
+                               </apex:pageBlockSectionItem>
+                               <apex:pageBlockSectionItem >
+                                   <apex:outputlabel value="{!$ObjectType.Organisation__c.fields.Organisation_Type__c.label}" />
+                                   <apex:inputField value="{!organizationRecord.Organisation_Type__c}" styleClass="RemoveNone" />
+                               </apex:pageBlockSectionItem>-->
+                               <apex:pageBlockSectionItem id="passBlock">
+                                   <apex:outputlabel value="Authorization Code" />
+                                   <apex:inputsecret value="{!password}" styleclass="pkp"/>   
+                               </apex:pageBlockSectionItem>
+                            </apex:pageBlockSection>
+                        <apex:actionfunction name="checkAndSave" action="{!externaldata}" rerender="creds,msg_cred,nonevalue" oncomplete="hide();"/>
+                        <apex:actionfunction name="authorize" action="{!processLogin}" oncomplete="prompt('Copy the following link and open in other browser or in incognito mode to get autorization code', '{!JSENCODE(loginUrl)}');" rerender="msg,nonevalue"></apex:actionfunction> 
+                      
+                    <apex:pageBlockButtons location="bottom">      
+                            <apex:commandbutton value="Authorize" onclick="auth(); return false;"/>
+                             <apex:commandButton value="Retrive Client Data" action="{!externaldata}" rerender="accId"/>
+                          <!--  <apex:commandbutton action="{!cancelSave}" value="Cancel" />-->
+                    </apex:pageBlockButtons>
+                    
+                     <apex:outputPanel id="accId">
+                        <apex:outputPanel rendered="{!If(clientWrap.size > 0, true, false)}">
+                            <apex:pageBlockTable value="{!clientWrap}" var="acc">
+                                <apex:column headerValue="First Name" value="{!acc.fName}"/>
+                                <apex:column headerValue="Last Name" value="{!acc.lName  }"/>
+                            
+                            </apex:pageBlockTable>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!If(clientWrap.size > 0, false, true)}">
+                        No record exist.
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                    
+                    
+                </apex:pageblock>
+                </apex:form>
+                <script>
+                    
+                    function auth() {
+                            if($(".pkp").val() == '') {
+                                authorize();
+                            } else {
+                                show();
+                                checkAndSave();
+                            }
+                        return false;
+                    }
+                </script>
+     
+</apex:page>

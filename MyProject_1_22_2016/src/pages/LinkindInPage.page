@@ -1,0 +1,73 @@
+<apex:page controller="LinkIndController" sidebar="false">
+    <head> 
+	    <script type="text/javascript">
+	        var $j = jQuery.noConflict();
+	    </script>
+	    <apex:stylesheet value="{!$Resource.Bootstrapss}"/>
+	</head>
+
+    <apex:form > 
+	    <apex:pageblock title="Linked In salesforce integration">
+	    	<apex:pageBlockSection title="Linked In salesforce integration" columns="1">
+	        	<apex:pageBlockSectionItem >
+	            	<apex:outputLabel value="Authentication :" />
+	             		<apex:commandbutton action="{!DriveAuth}" value="LinkedIn Authentication" rerender="none" styleClass="btn-primary"  />
+	         		</apex:pageBlockSectionItem>
+	    
+	         	<apex:pageBlockSectionItem >
+	         		<apex:outputLabel value="Self information :" />
+	           		 	<apex:commandButton action="{!getPeopleInformation}" value="Retrive information" styleClass="btn-primary" rerender="eventtable" />
+	         	</apex:pageBlockSectionItem>
+	         	
+	         	<apex:pageBlockSectionItem >
+	         		<apex:outputLabel value="Connection information :" />
+	           		 	<apex:commandButton action="{!getConnectionInformation}" value="Retrive information" styleClass="btn-primary" rerender="eventtable1" />
+	         	</apex:pageBlockSectionItem>
+	            
+	            <apex:pageBlockSectionItem >
+	            	<apex:outputLabel value="Search candidate :" />
+	            		<apex:panelGroup >
+	            			<apex:inputText value="{!candidateName}"/> 
+	            			<apex:commandButton action="{!SearchPerson}" value="Search" styleClass="btn-primary"  rerender="eventtable1"  />
+	            		</apex:panelGroup>
+	           </apex:pageBlockSectionItem>
+	    
+	   		</apex:pageBlockSection>
+	   	</apex:pageblock>
+    </apex:form>   
+    
+    
+     <apex:outputPanel id="eventtable"  >
+         <apex:pageblock title="Self Information" rendered="{!if(personalInformation!= null && personalInformation.size>0,true,false)}" >
+	         <apex:pageBlockTable value="{!personalInformation}" var="p"  >
+	         	<apex:column value="{!p.firstName}" headerValue="First Name" width="20%" />
+	            <apex:column value="{!p.lastName}" headerValue="Last Name" width="20%" />
+	            <apex:column value="{!p.headline}" headerValue="Headline" width="20%"/>
+	            <apex:column value="{!p.title}" headerValue="Title" width="20%"/>
+	            <!-- <apex:column value="{!p.publicProfileUrl}" headerValue="PublicProfileUrl" width="20%"/> -->
+	            <apex:column headerValue="Profile image" width="20%" >
+	            	<apex:image url="{!p.publicProfileUrl}" width="100" height="100"/>
+	            </apex:column>
+	        </apex:pageBlockTable>
+        </apex:pageblock>
+    </apex:outputPanel> 
+      
+      <apex:outputPanel id="eventtable1"  >
+         <apex:pageblock title="Connection Information" rendered="{!if(personalInformation!= null && personalInformation.size>0,true,false)}" >
+	         <apex:pageBlockTable value="{!personalInformation}" var="p"  >
+	         	<apex:column value="{!p.firstName}" headerValue="First Name" width="10%" />
+	            <apex:column value="{!p.lastName}" headerValue="Last Name" width="10%" />
+	            <apex:column value="{!p.headline}" headerValue="Headline" width="20%"/>
+	            <apex:column value="{!p.title}" headerValue="Title" width="15%"/>
+	            <apex:column headerValue="Image" width="15%" >
+	            	<apex:image url="{!p.pictureUrl}" width="100" height="100"/>
+	            </apex:column>
+	            <apex:column headerValue="Profile url" width="50%" >
+	            	<apex:outputLink value="{!p.publicProfileUrl}" id="theLink" target="_blank" >{!p.publicProfileUrl}</apex:outputLink>
+	            </apex:column>
+	        </apex:pageBlockTable>
+        </apex:pageblock>
+    </apex:outputPanel> 
+    
+    
+</apex:page>
