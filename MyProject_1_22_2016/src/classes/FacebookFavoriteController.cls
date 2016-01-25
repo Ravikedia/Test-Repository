@@ -1,6 +1,6 @@
-global with sharing class FacebookFavoriteController 
-extends FacebookLoginController {
-    public static String getAccessToken() {
+global with sharing class FacebookFavoriteController {
+//extends FacebookLoginController {
+  /*  public static String getAccessToken() {
         return FacebookToken.getAccessToken();
     }
 
@@ -122,5 +122,5 @@ extends FacebookLoginController {
         friendsFavorites = null;
 
         return null;
-    }    
+    }    */
 }
