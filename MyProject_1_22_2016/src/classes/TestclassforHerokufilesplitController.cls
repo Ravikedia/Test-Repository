@@ -152,7 +152,7 @@ public class TestclassforHerokufilesplitController implements HttpCalloutMock
         herokusplitconsss.Addsecondtextbox();
         herokusplitconsss.Removesecondtextbox();
         herokusplitconsss.refreshpage();
-         herokusplitconsss.radiobuttonvalue=0;
+         herokusplitconsss.radiobuttonvalue=0;//
         
         String testBody = 'Please enter  less value :-)';
         
